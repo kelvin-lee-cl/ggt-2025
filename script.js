@@ -10,6 +10,8 @@ const languages = ['en', 'zh-tw', 'zh-cn'];
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function () {
     initializeNetlifyIdentity();
+    // expose for other scripts (e.g., index.html button enabling)
+    window.currentUser = currentUser;
     loadUserData();
     setupEventListeners();
     animateOnScroll();
@@ -35,27 +37,47 @@ function initializeNetlifyIdentity() {
     if (window.netlifyIdentity) {
         window.netlifyIdentity.on("init", user => {
             currentUser = user;
+            window.currentUser = currentUser;
             updateAuthUI();
             console.log("Netlify Identity initialized");
         });
 
         window.netlifyIdentity.on("login", user => {
             currentUser = user;
+            window.currentUser = currentUser;
             updateAuthUI();
             console.log("User logged in:", user);
             showAlert(`Welcome back, ${user.user_metadata?.full_name || user.email}!`, 'success');
+            // trigger index page buttons to enable immediately
+            if (typeof window.updateButtonStates === 'function') {
+                try { window.updateButtonStates(); } catch (e) { }
+            }
         });
 
         window.netlifyIdentity.on("logout", () => {
             currentUser = null;
+            window.currentUser = null;
             updateAuthUI();
             console.log("User logged out");
             showAlert("You have been logged out successfully.", 'info');
+            if (typeof window.updateButtonStates === 'function') {
+                try { window.updateButtonStates(); } catch (e) { }
+            }
         });
     } else {
         console.log("Netlify Identity not available - using demo mode");
         setupDemoAuth();
     }
+
+    // Wait a bit for Netlify Identity to load if it's being loaded dynamically
+    setTimeout(() => {
+        if (!currentUser && window.netlifyIdentity && window.netlifyIdentity.currentUser()) {
+            currentUser = window.netlifyIdentity.currentUser();
+            window.currentUser = currentUser;
+            updateAuthUI();
+            console.log("Netlify Identity user found after delay:", currentUser);
+        }
+    }, 2000);
 }
 
 // Demo authentication for local development

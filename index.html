@@ -58,8 +58,8 @@
                                 data-zh-tw="使用AI創建自定義圖像來可視化您的想法和概念。" data-zh-cn="使用AI创建自定义图像来可视化您的想法和概念。">Create custom
                                 images using AI to visualize your ideas
                                 and concepts.</p>
-                            <a href="#" class="btn btn-primary disabled" data-en="Generate Images" data-zh-tw="生成圖像"
-                                data-zh-cn="生成图像">Generate Images</a>
+                            <a href="#" data-href-original="image-generator.html" class="btn btn-primary disabled"
+                                data-en="Generate Images" data-zh-tw="生成圖像" data-zh-cn="生成图像">Generate Images</a>
                         </div>
                     </div>
                 </div>
@@ -73,8 +73,8 @@
                                 data-en="Generate essays, summaries, and creative content with AI assistance."
                                 data-zh-tw="使用AI輔助生成文章、摘要和創意內容。" data-zh-cn="使用AI辅助生成文章、摘要和创意内容。">
                             </p>
-                            <a href="#" class="btn btn-primary disabled" data-en="Generate Text" data-zh-tw="生成文本"
-                                data-zh-cn="生成文本">Generate Text</a>
+                            <a href="#" data-href-original="text-generator.html" class="btn btn-primary disabled"
+                                data-en="Generate Text" data-zh-tw="生成文本" data-zh-cn="生成文本">Generate Text</a>
                         </div>
                     </div>
                 </div>
@@ -98,8 +98,8 @@
                             <p class="card-text" data-en="Submit your completed assignments and projects."
                                 data-zh-tw="提交您完成的作業和項目。" data-zh-cn="提交您完成的作业和项目。">Submit your completed assignments
                                 and projects.</p>
-                            <a href="#" class="btn btn-success disabled" data-en="Upload Work" data-zh-tw="上傳作業"
-                                data-zh-cn="上传作业">Upload
+                            <a href="#" data-href-original="upload.html" class="btn btn-success disabled"
+                                data-en="Upload Work" data-zh-tw="上傳作業" data-zh-cn="上传作业">Upload
                                 Work</a>
                         </div>
                     </div>
@@ -113,8 +113,8 @@
                             <p class="card-text" data-en="Test your understanding with interactive quizzes."
                                 data-zh-tw="通過互動測驗測試您的理解。" data-zh-cn="通过互动测验测试您的理解。">Test your understanding with
                                 interactive quizzes.</p>
-                            <a href="#" class="btn btn-info disabled" data-en="Take Quiz" data-zh-tw="參加測驗"
-                                data-zh-cn="参加测验">Take Quiz</a>
+                            <a href="#" data-href-original="quiz.html" class="btn btn-info disabled" data-en="Take Quiz"
+                                data-zh-tw="參加測驗" data-zh-cn="参加测验">Take Quiz</a>
                         </div>
                     </div>
                 </div>
@@ -163,9 +163,17 @@
             script.onload = function () {
                 if (window.netlifyIdentity) {
                     window.netlifyIdentity.init();
+                    console.log("Netlify Identity loaded and initialized");
+                } else {
+                    console.log("Netlify Identity script loaded but window.netlifyIdentity not available");
                 }
             };
+            script.onerror = function () {
+                console.error("Failed to load Netlify Identity script");
+            };
             document.head.appendChild(script);
+        } else {
+            console.log("Running on localhost - using demo mode");
         }
     </script>
     <script src="navbar.js"></script>
@@ -292,10 +300,9 @@
                     button.classList.remove('disabled');
                     button.removeAttribute('disabled');
                     // Restore original href
-                    const lessonId = button.getAttribute('href').split('lesson=')[1];
-                    if (lessonId) {
-                        button.setAttribute('href', `lesson.html?lesson=${lessonId}`);
-                    }
+                    const href = button.getAttribute('href');
+                    const match = href && href.includes('lesson=') ? href.split('lesson=')[1] : null;
+                    if (match) button.setAttribute('href', `lesson.html?lesson=${match}`);
                 } else {
                     button.classList.add('disabled');
                     button.setAttribute('disabled', 'disabled');
@@ -310,11 +317,8 @@
                     button.classList.remove('disabled');
                     button.removeAttribute('disabled');
                     // Restore original hrefs
-                    if (button.textContent.includes('Generate Images')) {
-                        button.setAttribute('href', 'image-generator.html');
-                    } else if (button.textContent.includes('Generate Text')) {
-                        button.setAttribute('href', 'text-generator.html');
-                    }
+                    const original = button.getAttribute('data-href-original');
+                    if (original) button.setAttribute('href', original);
                 } else {
                     button.classList.add('disabled');
                     button.setAttribute('disabled', 'disabled');
@@ -329,11 +333,8 @@
                     button.classList.remove('disabled');
                     button.removeAttribute('disabled');
                     // Restore original hrefs
-                    if (button.textContent.includes('Upload Work')) {
-                        button.setAttribute('href', 'upload.html');
-                    } else if (button.textContent.includes('Take Quiz')) {
-                        button.setAttribute('href', 'quiz.html');
-                    }
+                    const original = button.getAttribute('data-href-original');
+                    if (original) button.setAttribute('href', original);
                 } else {
                     button.classList.add('disabled');
                     button.setAttribute('disabled', 'disabled');
@@ -351,8 +352,8 @@
 
         // Listen for authentication changes
         document.addEventListener('DOMContentLoaded', function () {
-            // Check for authentication changes every 2 seconds
-            setInterval(updateButtonStates, 2000);
+            // Check for authentication changes every 1 second
+            setInterval(updateButtonStates, 1000);
         });
     </script>
 </body>

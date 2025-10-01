@@ -222,14 +222,17 @@ class QuizPopup {
         modal.id = 'quizModal';
         modal.setAttribute('data-bs-backdrop', 'static');
         modal.setAttribute('data-bs-keyboard', 'false');
+        modal.setAttribute('role', 'dialog');
+        modal.setAttribute('aria-labelledby', 'quizModalTitle');
+        modal.setAttribute('aria-hidden', 'false');
         modal.innerHTML = `
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">
+                        <h5 class="modal-title" id="quizModalTitle">
                             <i class="fas fa-question-circle me-2"></i>${this.quizData.title}
                         </h5>
-                        <button type="button" class="btn-close" onclick="quizPopup.closeQuiz()"></button>
+                        <button type="button" class="btn-close" onclick="quizPopup.closeQuiz()" aria-label="Close quiz"></button>
                     </div>
                     <div class="modal-body" id="quizContent">
                         ${this.renderQuestion()}
@@ -477,6 +480,7 @@ class QuizPopup {
         const backdrop = document.getElementById('quizBackdrop');
 
         if (modal) {
+            modal.setAttribute('aria-hidden', 'true');
             modal.remove();
         }
         if (backdrop) {
