@@ -107,29 +107,35 @@ function setupEventListeners() {
         window.location.hostname.includes('localhost');
 
     // Login button
-    document.getElementById('loginBtn').addEventListener('click', function (e) {
-        e.preventDefault();
-        if (isLocalhost || !window.netlifyIdentity) {
-            // Demo mode - show login options
-            showDemoLoginOptions();
-        } else {
-            window.netlifyIdentity.open();
-        }
-    });
+    const loginBtn = document.getElementById('loginBtn');
+    if (loginBtn) {
+        loginBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            if (isLocalhost || !window.netlifyIdentity) {
+                // Demo mode - show login options
+                showDemoLoginOptions();
+            } else {
+                window.netlifyIdentity.open();
+            }
+        });
+    }
 
     // Logout button
-    document.getElementById('logoutBtn').addEventListener('click', function (e) {
-        e.preventDefault();
-        if (isLocalhost || !window.netlifyIdentity) {
-            // Demo mode logout
-            demoLogout();
-        } else {
-            window.netlifyIdentity.logout();
-        }
-    });
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            if (isLocalhost || !window.netlifyIdentity) {
+                // Demo mode logout
+                demoLogout();
+            } else {
+                window.netlifyIdentity.logout();
+            }
+        });
+    }
 
     // Smooth scrolling for navigation links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    document.querySelectorAll('a[href^="#"]:not([href="#"])').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
             const target = document.querySelector(this.getAttribute('href'));
