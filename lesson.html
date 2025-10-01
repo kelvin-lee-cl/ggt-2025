@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="pageTitle">Lesson - Educational Hub</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="assets/fa/css/all.min.css" rel="stylesheet">
     <link href="styles.css" rel="stylesheet">
     <style>
         /* Dark mode: Force white text for all lesson content */
@@ -120,7 +120,7 @@
             <div class="col-lg-8 mx-auto">
                 <!-- Lesson Header -->
                 <div class="text-center mb-5">
-                    <h1 class="display-4 fw-bold text-primary" id="lessonTitle">Loading...</h1>
+                    <h1 class="display-6 fw-bold text-primary" id="lessonTitle">Loading...</h1>
                     <p class="lead text-muted" id="lessonSubtitle">Loading...</p>
                     <div class="mb-3">
                         <span class="badge" id="lessonStatusBadge">Loading...</span>
@@ -146,14 +146,11 @@
         </div>
     </div>
 
-    <!-- Netlify Identity Widget -->
-    <div id="netlify-identity-widget"></div>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
     <script src="navbar.js"></script>
     <script src="script.js"></script>
     <script src="quiz-popup.js"></script>
@@ -161,6 +158,27 @@
     <script>
         let lessonsData = null;
         let currentLesson = null;
+
+        // Convert YouTube URL to embed format
+        function getYouTubeEmbedUrl(url) {
+            if (!url) return '';
+
+            // Handle different YouTube URL formats
+            let videoId = '';
+            if (url.includes('youtu.be/')) {
+                videoId = url.split('youtu.be/')[1].split('?')[0];
+            } else if (url.includes('youtube.com/watch?v=')) {
+                videoId = url.split('v=')[1].split('&')[0];
+            } else if (url.includes('youtube.com/embed/')) {
+                return url; // Already an embed URL
+            }
+
+            if (videoId) {
+                return `https://www.youtube.com/embed/${videoId}`;
+            }
+
+            return url; // Return original if can't parse
+        }
 
         // Load lessons data
         async function loadLessonsData() {
@@ -331,7 +349,18 @@
                                             <div id="collapse${index}" class="accordion-collapse collapse ${index === 0 ? 'show' : ''}" data-bs-parent="#lessonAccordion">
                                                 <div class="accordion-body">
                                                     <p>${item.description}</p>
-                                                    <pre><code>${item.code}</code></pre>
+                                                    ${item.type === 'video' && item.link ? `
+                                                        <div class="ratio ratio-16x9 mb-3">
+                                                            <iframe src="${getYouTubeEmbedUrl(item.link)}" title="${item.title}" allowfullscreen></iframe>
+                                                        </div>
+                                                        <a href="${item.link}" target="_blank" class="btn btn-outline-primary btn-sm">
+                                                            <i class="fab fa-youtube me-1"></i>Watch on YouTube
+                                                        </a>
+                                                    ` : item.type === 'article' && item.link ? `
+                                                        <a href="${item.link}" target="_blank" class="btn btn-primary btn-sm">
+                                                            <i class="fas fa-external-link-alt me-1"></i>Read Article
+                                                        </a>
+                                                    ` : item.code ? `<pre><code>${item.code}</code></pre>` : ''}
                                                 </div>
                                             </div>
                                         </div>
@@ -372,84 +401,24 @@
             }
         }
 
-        // Render lesson actions
+        // Render lesson actions (exercise-only completion)
         function renderLessonActions(lesson) {
             const actionTitle = document.getElementById('actionTitle');
             const actionDescription = document.getElementById('actionDescription');
             const actionButtons = document.getElementById('actionButtons');
 
-            // Set action title and description based on status
-            if (lesson.status === 'completed') {
-                actionTitle.textContent = 'Lesson Complete!';
-                actionDescription.textContent = 'You\'ve successfully completed this lesson. Ready to test your knowledge?';
-            } else {
-                actionTitle.textContent = 'Start This Lesson';
-                actionDescription.textContent = 'Begin your journey into this topic.';
-            }
+            actionTitle.textContent = 'Submit Exercise to Complete';
+            actionDescription.textContent = 'Complete this lesson by submitting your exercise.';
 
             // Render action buttons
             let buttonsHTML = '';
 
-            // Primary action button
-            if (lesson.actions.primary) {
-                const primaryAction = lesson.actions.primary;
-                if (lesson.status === 'completed') {
-                    buttonsHTML += `
-                        <button class="btn btn-primary" onclick="restartLesson('${lesson.id}')">
-                            <i class="fas fa-redo me-2"></i>Restart Lesson
-                        </button>
-                    `;
-                } else {
-                    buttonsHTML += `
-                        <button class="btn btn-primary" onclick="${primaryAction.onclick}">
-                            <i class="fas fa-play me-2"></i>Start Lesson
-                        </button>
-                    `;
-                }
-            }
-
-            // Quiz button
-            if (lesson.actions.quiz) {
-                buttonsHTML += `
-                    <a href="${lesson.actions.quiz.href}" class="btn btn-outline-primary">
-                        <i class="fas fa-question-circle me-2"></i>${lesson.actions.quiz.text}
-                    </a>
-                `;
-            }
-
-            // Exercise button
+            // Exercise button only
             if (lesson.actions.exercise) {
                 buttonsHTML += `
                     <button class="btn btn-outline-info" onclick="${lesson.actions.exercise.onclick}">
                         <i class="fas fa-paper-plane me-2"></i>${lesson.actions.exercise.text}
                     </button>
-                `;
-            }
-
-            // Project button (for lesson 3)
-            if (lesson.actions.project) {
-                buttonsHTML += `
-                    <a href="${lesson.actions.project.href}" class="btn btn-outline-success">
-                        <i class="fas fa-upload me-2"></i>${lesson.actions.project.text}
-                    </a>
-                `;
-            }
-
-            // Next lesson button
-            if (lesson.actions.next) {
-                buttonsHTML += `
-                    <a href="${lesson.actions.next.href}" class="btn btn-outline-success">
-                        <i class="fas fa-arrow-right me-2"></i>${lesson.actions.next.text}
-                    </a>
-                `;
-            }
-
-            // Home button
-            if (lesson.actions.home) {
-                buttonsHTML += `
-                    <a href="${lesson.actions.home.href}" class="btn btn-outline-secondary">
-                        <i class="fas fa-home me-2"></i>${lesson.actions.home.text}
-                    </a>
                 `;
             }
 
@@ -494,54 +463,14 @@
         let db = null;
         let auth = null;
 
-        // Initialize Firebase (demo mode for localhost)
+        // Initialize Firebase (always real, even on localhost)
         function initializeFirebase() {
-            const isLocalhost = window.location.hostname === 'localhost' ||
-                window.location.hostname === '127.0.0.1' ||
-                window.location.hostname === '0.0.0.0' ||
-                window.location.hostname.includes('localhost');
-
-            if (isLocalhost) {
-                console.log("Running locally - using demo Firebase mode");
-                setupDemoFirebase();
-            } else {
-                // In production, initialize real Firebase
-                if (typeof firebase !== 'undefined') {
-                    firebase.initializeApp(firebaseConfig);
-                    db = firebase.firestore();
-                    auth = firebase.auth();
-                }
+            if (typeof firebase === 'undefined') return;
+            if (!firebase.apps || !firebase.apps.length) {
+                try { firebase.initializeApp(firebaseConfig); } catch (e) { /* ignore if already initialized */ }
             }
-        }
-
-        // Setup demo Firebase for localhost
-        function setupDemoFirebase() {
-            db = {
-                collection: (name) => ({
-                    doc: (id) => ({
-                        get: () => Promise.resolve({ exists: false, data: () => null }),
-                        set: (data) => {
-                            console.log('Demo Firebase: Setting doc', id, data);
-                            return Promise.resolve();
-                        },
-                        update: (data) => {
-                            console.log('Demo Firebase: Updating doc', id, data);
-                            return Promise.resolve();
-                        }
-                    }),
-                    add: (data) => {
-                        console.log('Demo Firebase: Adding to', name, data);
-                        return Promise.resolve({ id: 'demo-id-' + Date.now() });
-                    }
-                })
-            };
-
-            auth = {
-                currentUser: {
-                    uid: 'demo-user-id',
-                    email: 'student@gmail.com'
-                }
-            };
+            db = firebase.firestore();
+            auth = firebase.auth();
         }
 
         // Get current user ID from Netlify Identity or Firebase Auth
@@ -683,10 +612,46 @@
             });
         }
 
+        // Check Firebase connectivity (read-only)
+        async function checkFirebaseConnectivity() {
+            try {
+                if (typeof firebase === 'undefined') {
+                    console.warn('Firebase SDK not loaded');
+                    if (typeof showAlert === 'function') showAlert('Firebase SDK not loaded', 'warning');
+                    return false;
+                }
+                if (!firebase.apps || !firebase.apps.length) {
+                    console.warn('Firebase app not initialized');
+                    if (typeof showAlert === 'function') showAlert('Firebase app not initialized', 'warning');
+                    return false;
+                }
+                if (db && typeof db.collection === 'function') {
+                    // In demo mode, our mock does not support limit().get(), so just call collection
+                    if (typeof db.collection('diagnostics').limit === 'function') {
+                        await db.collection('diagnostics').limit(1).get();
+                    } else {
+                        await db.collection('diagnostics').get?.();
+                    }
+                    console.log('Firebase Firestore connectivity: OK');
+                    if (typeof showAlert === 'function') showAlert('Connected to Firebase', 'success');
+                    return true;
+                } else {
+                    console.log('Firebase app initialized (no Firestore check)');
+                    if (typeof showAlert === 'function') showAlert('Firebase app initialized', 'info');
+                    return true;
+                }
+            } catch (err) {
+                console.error('Firebase connectivity check failed:', err);
+                if (typeof showAlert === 'function') showAlert('Firebase connection failed. See console.', 'danger');
+                return false;
+            }
+        }
+
         // Initialize when page loads
         document.addEventListener('DOMContentLoaded', function () {
             initializeFirebase();
             initLesson();
+            setTimeout(checkFirebaseConnectivity, 300);
         });
     </script>
 </body>

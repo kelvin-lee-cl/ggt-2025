@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Profile - Girl Go Tech AI Application</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/fa/css/all.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+
+<body>
+    <div id="navbar-root"></div>
+
+    <div class="container mt-5 pt-5">
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="h3 mb-0"><i class="fas fa-user me-2"></i>Your Profile</h1>
+                    <span class="badge bg-primary" id="userEmail">Loading...</span>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-header"><i class="fas fa-clipboard-check me-2"></i>Lesson Progress</div>
+                            <div class="card-body" id="lessonProgressBody">
+                                <div class="text-muted">Loading...</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-header"><i class="fas fa-question-circle me-2"></i>Quiz Results</div>
+                            <div class="card-body" id="quizResultsBody">
+                                <div class="text-muted">Loading...</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header"><i class="fas fa-paper-plane me-2"></i>Exercise Submissions</div>
+                            <div class="card-body" id="exerciseBody">
+                                <div class="text-muted">Loading...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="navbar.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Show exercise feedback for a lesson
+        async function showExerciseFeedback(lessonId) {
+            if (!currentUser || !window.firebaseDb) {
+                showAlert('Please log in to view feedback.', 'warning');
+                return;
+            }
+
+            try {
+                const db = window.firebaseDb;
+                const submissionsRef = db.collection('exerciseSubmissions')
+                    .where('userId', '==', currentUser.uid)
+                    .where('lessonId', '==', lessonId);
+
+                const snapshot = await submissionsRef.get();
+                const submissions = [];
+
+                snapshot.docs.forEach(doc => {
+                    const data = doc.data();
+                    submissions.push({
+                        id: doc.id,
+                        ...data
+                    });
+                });
+
+                if (submissions.length === 0) {
+                    showAlert('No submissions found for this lesson.', 'info');
+                    return;
+                }
+
+                // Create modal to show feedback
+                const modal = document.createElement('div');
+                modal.className = 'modal fade show';
+                modal.style.display = 'block';
+                modal.innerHTML = `
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">
+                                    <i class="fas fa-comments me-2"></i>Exercise Feedback - ${lessonId}
+                                </h5>
+                                <button type="button" class="btn-close" onclick="closeFeedbackModal()"></button>
+                            </div>
+                            <div class="modal-body">
+                                ${submissions.map((submission, index) => `
+                                    <div class="card mb-3">
+                                        <div class="card-header">
+                                            <h6 class="mb-0">Submission #${index + 1}</h6>
+                                            <small class="text-muted">${new Date(submission.timestamp).toLocaleString()}</small>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="mb-3">
+                                                <strong>Your Submission:</strong>
+                                                <div class="mt-2 p-3 bg-light rounded">
+                                                    <pre style="white-space: pre-wrap; font-family: inherit;">${submission.content || submission.description || 'No content'}</pre>
+                                                </div>
+                                            </div>
+                                            ${submission.feedback ? `
+                                                <div class="alert alert-info">
+                                                    <strong>Admin Feedback:</strong>
+                                                    <div class="mt-2">${submission.feedback}</div>
+                                                    ${submission.feedbackAt ? `<small class="text-muted">Given on: ${new Date(submission.feedbackAt).toLocaleString()}</small>` : ''}
+                                                </div>
+                                            ` : `
+                                                <div class="alert alert-secondary">
+                                                    <i class="fas fa-clock me-1"></i>No feedback yet. Your submission is being reviewed.
+                                                </div>
+                                            `}
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" onclick="closeFeedbackModal()">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // Add backdrop
+                const backdrop = document.createElement('div');
+                backdrop.className = 'modal-backdrop fade show';
+                backdrop.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+                document.body.appendChild(backdrop);
+                document.body.appendChild(modal);
+                document.body.classList.add('modal-open');
+            } catch (error) {
+                console.error('Error loading feedback:', error);
+                showAlert('Error loading feedback. Please try again.', 'danger');
+            }
+        }
+
+        function closeFeedbackModal() {
+            const modal = document.querySelector('.modal.show');
+            const backdrop = document.querySelector('.modal-backdrop');
+            if (modal) modal.remove();
+            if (backdrop) backdrop.remove();
+            document.body.classList.remove('modal-open');
+        }
+
+        document.addEventListener('DOMContentLoaded', async function () {
+            // require auth
+            if (!window.firebaseAuth || !window.firebaseDb) return;
+            const auth = window.firebaseAuth;
+            const db = window.firebaseDb;
+
+            auth.onAuthStateChanged(async (user) => {
+                if (!user) {
+                    showAlert('Please log in to view your profile.', 'warning');
+                    return;
+                }
+                document.getElementById('userEmail').textContent = user.email;
+
+                try {
+                    // Lesson progress
+                    const userRef = db.collection('userProgress').doc(user.uid);
+                    const snap = await userRef.get();
+                    const data = snap.exists ? snap.data() : { lessons: {} };
+                    const lessons = data.lessons || {};
+
+                    // Quiz results - get from userProgress.quizzes
+                    console.log('Profile data loaded:', data);
+                    console.log('All data keys:', Object.keys(data));
+
+                    // Check for quizzes in different possible locations
+                    let quizzesData = data.quizzes;
+                    if (!quizzesData) {
+                        // Check if quizzes are stored directly in the document
+                        const allKeys = Object.keys(data);
+                        const quizKeys = allKeys.filter(key => key.startsWith('quizzes.'));
+                        console.log('Found quiz keys:', quizKeys);
+
+                        if (quizKeys.length > 0) {
+                            quizzesData = {};
+                            quizKeys.forEach(key => {
+                                const quizId = key.replace('quizzes.', '');
+                                quizzesData[quizId] = data[key];
+                            });
+                        }
+                    }
+
+                    console.log('Quizzes data:', quizzesData);
+
+                    const quizItems = [];
+                    if (quizzesData) {
+                        Object.entries(quizzesData).forEach(([quizId, quizData]) => {
+                            console.log('Processing quiz:', quizId, quizData);
+                            quizItems.push({
+                                lessonId: quizId,
+                                score: quizData.score,
+                                total: quizData.total,
+                                percentage: quizData.percentage,
+                                passed: quizData.percentage >= 70,
+                                timestamp: quizData.timestamp,
+                                correct: quizData.score // for display compatibility
+                            });
+                        });
+                    }
+                    console.log('Quiz items to render:', quizItems);
+
+                    // Sort by timestamp desc and limit to 20
+                    quizItems.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                    renderQuizResults(quizItems.slice(0, 20));
+
+                    // Exercise submissions
+                    const exSnap = await db.collection('exerciseSubmissions').where('userId', '==', user.uid).get();
+                    const exItems = exSnap.docs.map(d => ({ __id: d.id, ...d.data() })).sort((a, b) => (new Date(b.timestamp)) - (new Date(a.timestamp)));
+                    renderExercises(exItems.slice(0, 20));
+                    renderLessonProgress(lessons, exItems);
+                } catch (e) {
+                    console.error('Profile load failed', e);
+                    showAlert('Failed to load your profile. Please try again.', 'danger');
+                }
+            });
+        });
+
+        function renderLessonProgress(lessons, submissions) {
+            const body = document.getElementById('lessonProgressBody');
+            const entries = Object.entries(lessons);
+            if (entries.length === 0) {
+                body.innerHTML = '<div class="text-muted">No progress yet.</div>';
+                return;
+            }
+            // Group submissions by lessonId
+            const subsByLesson = (submissions || []).reduce((acc, s) => {
+                const lid = s.lessonId || 'unknown';
+                (acc[lid] = acc[lid] || []).push(s);
+                return acc;
+            }, {});
+
+            let html = '<div class="list-group">';
+            entries.forEach(([lessonId, info]) => {
+                // Rule: exercise submission counts as completed
+                const status = (info.status === 'completed' || (info.exercise && info.exercise.submitted)) ? 'completed' : 'not-started';
+                const feedback = (info.feedback === true || info.feedback === 'yes') ? 'Yes' : 'No';
+                const listId = `subs-${lessonId}`;
+                const subs = subsByLesson[lessonId] || [];
+                html += `
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>${lessonId}</strong>
+                                <div class="small text-muted">Exercise: ${info.exercise?.submitted ? 'Submitted' : '—'}</div>
+                                ${subs.length > 0 ? `
+                                    <div class="mt-2">
+                                        <button class="btn btn-sm btn-outline-info" onclick="showExerciseFeedback('${lessonId}')">
+                                            <i class="fas fa-comments me-1"></i>View Feedback
+                                        </button>
+                                    </div>
+                                ` : ''}
+                            </div>
+                            <div class="d-flex align-items-center gap-2">
+                                <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#${listId}">
+                                    (${subs.length})
+                                </button>
+                                <span class="badge bg-${status === 'completed' ? 'success' : 'secondary'}">${status.replace('-', ' ')}</span>
+                            </div>
+                        </div>
+                        <div class="collapse mt-3" id="${listId}">
+                            ${renderSubmissionList(subs)}
+                        </div>
+                    </div>`;
+            });
+            html += '</div>';
+            body.innerHTML = html;
+        }
+
+        function renderQuizResults(items) {
+            console.log('renderQuizResults called with:', items);
+            const body = document.getElementById('quizResultsBody');
+            if (!items || items.length === 0) {
+                console.log('No quiz items to display');
+                body.innerHTML = '<div class="text-muted">No quiz results yet.</div>';
+                return;
+            }
+            let html = '<div class="list-group">';
+            items.forEach(item => {
+                html += `
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>${item.lessonId}</strong>
+                            <div class="small text-muted">${new Date(item.timestamp).toLocaleString()}</div>
+                            <div class="small text-muted">Score: ${item.score}/${item.total} (${item.percentage}%)</div>
+                        </div>
+                        <div class="d-flex flex-column align-items-end">
+                            <span class="badge bg-${item.passed ? 'success' : 'danger'} mb-1">${item.passed ? 'Passed' : 'Failed'}</span>
+                            <span class="badge bg-primary">${item.score}/${item.total}</span>
+                        </div>
+                    </div>`;
+            });
+            html += '</div>';
+            body.innerHTML = html;
+        }
+
+        function renderExercises(items) {
+            const body = document.getElementById('exerciseBody');
+            if (!items || items.length === 0) {
+                body.innerHTML = '<div class="text-muted">No exercise submissions yet.</div>';
+                return;
+            }
+            let html = '<div class="list-group">';
+            items.forEach(item => {
+                html += `
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>${item.title || '(Untitled)'} - ${item.lessonId}</strong>
+                            <div class="small text-muted">${new Date(item.timestamp).toLocaleString()}</div>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge bg-primary">${item.type}</span>
+                            <button class="btn btn-sm btn-outline-primary" onclick="viewSubmission('${item.__id}')"><i class="fas fa-eye"></i></button>
+                            <button class="btn btn-sm btn-outline-warning" onclick="editSubmission('${item.__id}')"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteSubmission('${item.__id}')"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>`;
+            });
+            html += '</div>';
+            body.innerHTML = html;
+        }
+
+        function renderSubmissionList(items) {
+            if (!items || items.length === 0) {
+                return '<div class="text-muted">No submissions yet.</div>';
+            }
+            let html = '<div class="list-group">';
+            items.forEach(item => {
+                html += `
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>${item.title || '(Untitled)'} (${item.type})</strong>
+                            <div class="small text-muted">${new Date(item.timestamp).toLocaleString()}</div>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <button class="btn btn-sm btn-outline-primary" onclick="viewSubmission('${item.__id}')"><i class="fas fa-eye"></i></button>
+                            <button class="btn btn-sm btn-outline-warning" onclick="editSubmission('${item.__id}')"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteSubmission('${item.__id}')"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>`;
+            });
+            html += '</div>';
+            return html;
+        }
+
+        async function viewSubmission(id) {
+            try {
+                const db = window.firebaseDb;
+                const doc = await db.collection('exerciseSubmissions').doc(id).get();
+                if (!doc.exists) return;
+                const data = doc.data();
+                showSubmissionModal('View Submission', data, false, id);
+            } catch (e) { console.error(e); }
+        }
+
+        async function editSubmission(id) {
+            try {
+                const db = window.firebaseDb;
+                const doc = await db.collection('exerciseSubmissions').doc(id).get();
+                if (!doc.exists) return;
+                const data = doc.data();
+                showSubmissionModal('Edit Submission', data, true, id);
+            } catch (e) { console.error(e); }
+        }
+
+        async function deleteSubmission(id) {
+            if (!confirm('Delete this submission?')) return;
+            try {
+                const db = window.firebaseDb;
+                await db.collection('exerciseSubmissions').doc(id).delete();
+                showAlert('Submission deleted', 'info');
+                location.reload();
+            } catch (e) { console.error(e); showAlert('Delete failed', 'danger'); }
+        }
+
+        function showSubmissionModal(title, data, editable, id) {
+            const existing = document.getElementById('submissionModal');
+            if (existing) existing.remove();
+            const modal = document.createElement('div');
+            modal.className = 'modal fade show';
+            modal.style.display = 'block';
+            modal.id = 'submissionModal';
+            const readOnly = !editable ? 'readonly' : '';
+            const disabled = !editable ? 'disabled' : '';
+            modal.innerHTML = `
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">${title}</h5>
+                            <button type="button" class="btn-close" onclick="closeSubmissionModal()"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label">Title</label>
+                                <input class="form-control" id="subTitle" value="${data.title || ''}" ${readOnly}>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Type</label>
+                                <input class="form-control" value="${data.type || ''}" readonly>
+                            </div>
+                            ${data.type === 'text' ? `
+                                <div class="mb-3">
+                                    <label class="form-label">Content</label>
+                                    <textarea class="form-control" id="subContent" rows="6" ${readOnly}>${data.content || ''}</textarea>
+                                </div>` : ''}
+                            ${data.type === 'link' ? `
+                                <div class="mb-3">
+                                    <label class="form-label">URL</label>
+                                    <input class="form-control" id="subUrl" value="${data.url || ''}" ${readOnly}>
+                                </div>` : ''}
+                            ${data.type === 'image' ? `
+                                <div class="mb-3">
+                                    <label class="form-label">Image</label>
+                                    ${data.imageUrl ? `<img src="${data.imageUrl}" class="img-fluid rounded border">` : '<div class="text-muted">No image URL</div>'}
+                                </div>` : ''}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" onclick="closeSubmissionModal()">Close</button>
+                            ${editable ? `<button type="button" class="btn btn-primary" onclick="saveEditedSubmission('${id}', '${data.type || ''}')">Save</button>` : ''}
+                        </div>
+                    </div>
+                </div>`;
+            document.body.appendChild(modal);
+        }
+
+        async function saveEditedSubmission(id, type) {
+            try {
+                const db = window.firebaseDb;
+                const payload = {};
+                const titleEl = document.getElementById('subTitle');
+                if (titleEl) payload.title = titleEl.value;
+                if (type === 'text') {
+                    payload.content = document.getElementById('subContent')?.value || '';
+                } else if (type === 'link') {
+                    payload.url = document.getElementById('subUrl')?.value || '';
+                }
+                await db.collection('exerciseSubmissions').doc(id).set(payload, { merge: true });
+                showAlert('Submission updated', 'success');
+                closeSubmissionModal();
+                location.reload();
+            } catch (e) { console.error(e); showAlert('Update failed', 'danger'); }
+        }
+
+        function closeSubmissionModal() {
+            const modal = document.getElementById('submissionModal');
+            if (modal) modal.remove();
+        }
+    </script>
+</body>
+
+</html>

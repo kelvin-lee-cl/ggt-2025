@@ -2,64 +2,60 @@
     "lessons": [
         {
             "id": "lesson1",
-            "title": "Introduction to Web Development",
-            "subtitle": "Basic concepts and fundamentals",
-            "progress": 0,
-            "status": "not-started",
-            "statusText": "Not started",
+            "title": "Introduction to Generative AI: Understanding How AI Creates",
+            "subtitle": "Discover how AI learns, creates, and improves content.",
+            "progress": 100,
+            "status": "completed",
+            "statusText": "Lesson completed",
             "objectives": [
-                "Understand basic web development concepts",
-                "Learn HTML structure and syntax",
-                "Introduction to CSS styling",
-                "Basic JavaScript functionality"
+                "Define Artificial Intelligence and Generative AI in simple terms",
+                "Explain the four core steps of Generative AI: learning from data, creating content, receiving feedback, and improving output, using the chef analogy",
+                "Identify the five major types of Generative AI applications: design, writing, simplifying information, chatbots, and multimedia"
             ],
             "sections": [
                 {
-                    "title": "What is Web Development?",
-                    "content": "Web development is the process of creating websites and web applications. It involves several key technologies:",
+                    "title": "What is Gen-AI?",
+                    "content": "Generative AI follows four main steps: learning from data, creating new content, receiving feedback, and improving its output. It generates content in five core types: design and illustrations, writing and storytelling, simplifying information, chatbot assistants, and multimedia like short videos and music.",
                     "type": "text"
                 },
                 {
-                    "title": "Key Technologies",
+                    "title": "Tools Used",
                     "content": [
                         {
-                            "name": "HTML",
-                            "icon": "fas fa-code",
+                            "name": "Elmo Chat",
+                            "icon": "fas fa-comments",
                             "color": "text-primary",
-                            "description": "Structure and content"
+                            "description": "AI-powered chat assistant"
                         },
                         {
-                            "name": "CSS",
-                            "icon": "fas fa-paint-brush",
+                            "name": "Immersive Translate",
+                            "icon": "fas fa-language",
                             "color": "text-success",
-                            "description": "Styling and design"
+                            "description": "Real-time translation tool"
                         },
                         {
-                            "name": "JavaScript",
-                            "icon": "fas fa-cogs",
+                            "name": "Google Translate",
+                            "icon": "fas fa-globe",
                             "color": "text-warning",
-                            "description": "Interactivity and behavior"
+                            "description": "Multi-language translation"
                         }
                     ],
                     "type": "technologies"
                 },
                 {
-                    "title": "Key Concepts",
+                    "title": "Supplement Content",
                     "content": [
                         {
-                            "title": "HTML Basics",
-                            "description": "HTML (HyperText Markup Language) is the foundation of web pages. It uses tags to structure content:",
-                            "code": "<h1>Welcome to Web Development</h1>\n<p>This is a paragraph of text.</p>\n<a href=\"https://example.com\">Visit our website</a>"
+                            "title": "How Students Are Using AI For Homework: But How Good Is ChatGPT At School? | Talking Point",
+                            "description": "The journalist got the worst results in standardized by directly copied whatever responses were generated",
+                            "link": "https://youtu.be/WlIWKp2yHf0?t=2026",
+                            "type": "video"
                         },
                         {
-                            "title": "CSS Styling",
-                            "description": "CSS (Cascading Style Sheets) controls the appearance of HTML elements:",
-                            "code": "h1 {\n    color: blue;\n    font-size: 24px;\n    text-align: center;\n}"
-                        },
-                        {
-                            "title": "JavaScript Basics",
-                            "description": "JavaScript adds interactivity to web pages:",
-                            "code": "function greetUser() {\n    alert('Welcome to our website!');\n}\n\ndocument.getElementById('button').onclick = greetUser;"
+                            "title": "【生成AI起源🔍】ChatGPT AI核心科技點樣靠Google八神創?🔥",
+                            "description": "Explore how ChatGPT's journey began with the introduction of the transformer architecture in 2017 and the release of OpenAI's GPT-1 model in 2018, which revolutionized AI and eventually surpassed earlier RNN models from 2012.",
+                            "link": "https://youtu.be/rLkPLO3dT4I?t=260",
+                            "type": "video"
                         }
                     ],
                     "type": "accordion"
@@ -86,65 +82,84 @@
         },
         {
             "id": "lesson2",
-            "title": "Advanced JavaScript Concepts",
-            "subtitle": "Deeper dive into complex subjects",
-            "progress": 0,
-            "status": "not-started",
-            "statusText": "Not started",
+            "title": "Mastering AI Text Prompts: Shot Techniques and Frameworks",
+            "subtitle": "Learn to craft effective AI prompts using shot techniques, frameworks, and chaining methods.",
+            "progress": 75,
+            "status": "in-progress",
+            "statusText": "In progress",
             "objectives": [
-                "Advanced JavaScript concepts",
-                "DOM manipulation techniques",
-                "Event handling and callbacks",
-                "Asynchronous programming"
+                "Understand zero-shot, single-shot, and few-shot prompting",
+                "Learn various AI prompt frameworks to improve prompt writing",
+                "Explore chaining prompt techniques: sequential, interactive, and conditional"
             ],
             "sections": [
                 {
-                    "title": "Advanced JavaScript Concepts",
-                    "content": "This lesson covers more complex JavaScript topics that are essential for modern web development.",
+                    "title": "Insights of prompting",
+                    "content": "The Persona-Problem-Solution (PPS) method is a popular way to guide AI and a good fallback if you forget other frameworks. AI performs better when given clear examples, multiple steps, and continuous feedback to understand problems and provide better answers.",
                     "type": "text"
                 },
                 {
-                    "title": "Advanced Topics",
+                    "title": "Popular AI Models",
                     "content": [
                         {
-                            "name": "Functions & Closures",
-                            "icon": "fas fa-code",
+                            "name": "GPT (OpenAI)",
+                            "icon": "fas fa-brain",
                             "color": "text-primary",
-                            "description": "Understanding function scope and closure behavior"
+                            "description": "Advanced language model by OpenAI"
                         },
                         {
-                            "name": "Async/Await",
-                            "icon": "fas fa-sync",
+                            "name": "Gemini (Google DeepMind)",
+                            "icon": "fas fa-gem",
                             "color": "text-success",
-                            "description": "Modern asynchronous programming patterns"
+                            "description": "Google's multimodal AI model"
                         },
                         {
-                            "name": "Modules",
-                            "icon": "fas fa-puzzle-piece",
+                            "name": "Copilot (Microsoft / GitHub)",
+                            "icon": "fas fa-code",
                             "color": "text-warning",
-                            "description": "Organizing code with ES6 modules"
+                            "description": "AI-powered coding assistant"
                         },
                         {
-                            "name": "APIs",
-                            "icon": "fas fa-cogs",
+                            "name": "DeepSeek (DeepSeek AI)",
+                            "icon": "fas fa-search",
                             "color": "text-info",
-                            "description": "Working with external data sources"
+                            "description": "Open-source AI research model"
+                        },
+                        {
+                            "name": "Claude (Anthropic)",
+                            "icon": "fas fa-user-tie",
+                            "color": "text-danger",
+                            "description": "Constitutional AI assistant"
+                        },
+                        {
+                            "name": "Llama (Meta / Facebook)",
+                            "icon": "fas fa-horse",
+                            "color": "text-secondary",
+                            "description": "Meta's open-source language model"
                         }
                     ],
                     "type": "technologies"
                 },
                 {
-                    "title": "Code Examples",
+                    "title": "Supplement Content",
                     "content": [
                         {
-                            "title": "Closures in JavaScript",
-                            "description": "Closures allow functions to access variables from their outer scope:",
-                            "code": "function createCounter() {\n    let count = 0;\n    return function() {\n        count++;\n        return count;\n    };\n}\n\nconst counter = createCounter();\nconsole.log(counter()); // 1\nconsole.log(counter()); // 2"
+                            "title": "How Stanford Teaches AI-Powered Creativity in Just 13 MinutesㅣJeremy Utley",
+                            "description": "This video teaches how to treat AI as teammate rather than a tool",
+                            "link": "https://youtu.be/wv779vmyPVY?t=186",
+                            "type": "video"
                         },
                         {
-                            "title": "Async/Await Pattern",
-                            "description": "Modern way to handle asynchronous operations:",
-                            "code": "async function fetchData() {\n    try {\n        const response = await fetch('/api/data');\n        const data = await response.json();\n        return data;\n    } catch (error) {\n        console.error('Error:', error);\n    }\n}"
+                            "title": "The Best AI Prompt Framework For Work (2025)",
+                            "description": "Learn the 3 essential prompting techniques (zero-shot, one-shot, few-shot) and discover the CLEAR, SMART, and QUEST frameworks for business tasks",
+                            "link": "https://stealthesethoughts.com/2024/07/29/the-best-ai-prompt-frameworks-for-business-2024/",
+                            "type": "article"
+                        },
+                        {
+                            "title": "9 Best Prompting Frameworks to Supercharge Your Research with LLMs",
+                            "description": "Explore 9 powerful prompting frameworks including CLEAR, SMART, QUEST, GUIDE, FOCUS, IDEA, RISEN, RHODES, and CREATE for enhanced AI interactions",
+                            "link": "https://felix-pappe.medium.com/9-best-prompting-frameworks-to-supercharge-your-everyday-research-with-llms-9b5383a3eb7a",
+                            "type": "article"
                         }
                     ],
                     "type": "accordion"
@@ -173,7 +188,7 @@
             "id": "lesson3",
             "title": "Practical Applications",
             "subtitle": "Real-world examples and case studies",
-            "progress": 0,
+            "progress": 25,
             "status": "not-started",
             "statusText": "Not started",
             "objectives": [

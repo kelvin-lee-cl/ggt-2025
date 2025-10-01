@@ -213,12 +213,30 @@ function submitQuiz() {
         const score = calculateScore();
         const percentage = Math.round((score / quizData.questions.length) * 100);
 
-        // Update student progress
-        updateStudentProgress('quiz_completed', {
+        console.log('Quiz completed:', {
             quizId: currentQuiz,
             score: score,
-            total: quizData.questions.length
+            total: quizData.questions.length,
+            percentage: percentage
         });
+
+        // Update student progress (local + Firestore)
+        try {
+            if (typeof updateStudentProgress === 'function') {
+                updateStudentProgress('quiz_completed', {
+                    quizId: currentQuiz,
+                    lessonId: currentQuiz,
+                    score: score,
+                    total: quizData.questions.length,
+                    percentage: percentage
+                });
+                console.log('updateStudentProgress called successfully');
+            } else {
+                console.error('updateStudentProgress function not found');
+            }
+        } catch (error) {
+            console.error('Error calling updateStudentProgress:', error);
+        }
 
         // Show results
         document.getElementById('quizContainer').style.display = 'none';

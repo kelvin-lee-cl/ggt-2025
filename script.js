@@ -9,81 +9,201 @@ const languages = ['en', 'zh-tw', 'zh-cn'];
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function () {
-    initializeNetlifyIdentity();
-    // expose for other scripts (e.g., index.html button enabling)
-    window.currentUser = currentUser;
+    initializeFirebaseAuth();
     loadUserData();
     setupEventListeners();
     animateOnScroll();
     initializeLanguage();
     initializeTheme();
+
+    // Login gate button wires to existing login flow
+    const gateBtn = document.getElementById('loginGateLoginBtn');
+    if (gateBtn) {
+        gateBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            const isLocalhost = window.location.hostname === 'localhost' ||
+                window.location.hostname === '127.0.0.1' ||
+                window.location.hostname === '0.0.0.0' ||
+                window.location.hostname.includes('localhost');
+
+            if (isLocalhost || !window.netlifyIdentity) {
+                if (typeof showDemoLoginOptions === 'function') {
+                    showDemoLoginOptions();
+                }
+            } else {
+                window.netlifyIdentity.open();
+            }
+        });
+    }
 });
 
-// Initialize Netlify Identity
-function initializeNetlifyIdentity() {
-    // Check if we're running locally but NOT with netlify dev (which provides real Identity)
-    const isLocalhost = window.location.hostname === 'localhost' ||
-        window.location.hostname === '127.0.0.1' ||
-        window.location.hostname === '0.0.0.0' ||
-        window.location.hostname.includes('localhost');
-
-    // Check if Netlify Identity is available (either from netlify dev or production)
-    const hasNetlifyIdentity = window.netlifyIdentity || 
-        document.querySelector('script[src*="netlify-identity-widget"]') ||
-        window.location.search.includes('netlify_identity');
-
-    if (isLocalhost && !hasNetlifyIdentity) {
-        console.log("Running locally without Netlify Identity - using demo authentication");
-        setupDemoAuth();
-        return;
-    }
-
-    // Only use Netlify Identity in production
-    if (window.netlifyIdentity) {
-        window.netlifyIdentity.on("init", user => {
-            currentUser = user;
-            window.currentUser = currentUser;
-            updateAuthUI();
-            console.log("Netlify Identity initialized");
-        });
-
-        window.netlifyIdentity.on("login", user => {
-            currentUser = user;
-            window.currentUser = currentUser;
-            updateAuthUI();
-            console.log("User logged in:", user);
-            showAlert(`Welcome back, ${user.user_metadata?.full_name || user.email}!`, 'success');
-            // trigger index page buttons to enable immediately
-            if (typeof window.updateButtonStates === 'function') {
-                try { window.updateButtonStates(); } catch (e) { }
+// Initialize Firebase Authentication (Google Sign-In)
+function initializeFirebaseAuth() {
+    try {
+        if (typeof firebase === 'undefined') {
+            console.warn('Firebase SDK not loaded');
+            // retry a few times in case SDK loads slightly later on slower networks
+            window.__firebaseInitRetries = (window.__firebaseInitRetries || 0) + 1;
+            if (window.__firebaseInitRetries <= 10) {
+                return setTimeout(initializeFirebaseAuth, 300);
             }
-        });
-
-        window.netlifyIdentity.on("logout", () => {
-            currentUser = null;
-            window.currentUser = null;
-            updateAuthUI();
-            console.log("User logged out");
-            showAlert("You have been logged out successfully.", 'info');
-            if (typeof window.updateButtonStates === 'function') {
-                try { window.updateButtonStates(); } catch (e) { }
-            }
-        });
-    } else {
-        console.log("Netlify Identity not available - using demo mode");
-        setupDemoAuth();
-    }
-
-    // Wait a bit for Netlify Identity to load if it's being loaded dynamically
-    setTimeout(() => {
-        if (!currentUser && window.netlifyIdentity && window.netlifyIdentity.currentUser()) {
-            currentUser = window.netlifyIdentity.currentUser();
-            window.currentUser = currentUser;
-            updateAuthUI();
-            console.log("Netlify Identity user found after delay:", currentUser);
+            return;
         }
-    }, 2000);
+        if (!firebase.apps || !firebase.apps.length) {
+            if (typeof firebaseConfig === 'undefined') {
+                console.warn('firebaseConfig not found');
+                return;
+            }
+            firebase.initializeApp(firebaseConfig);
+        }
+        const auth = firebase.auth();
+        try {
+            auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+                .catch(e => console.warn('Auth persistence not set', e));
+        } catch (e) { console.warn('Auth persistence not set', e); }
+        const db = firebase.firestore();
+        try {
+            // Improve connectivity behind proxies/VPNs
+            if (!window.__dbSettingsApplied) {
+                db.settings({ experimentalAutoDetectLongPolling: true, useFetchStreams: false });
+                window.__dbSettingsApplied = true;
+            }
+        } catch (e) { /* ignore for compat */ }
+        window.firebaseAuth = auth;
+        window.firebaseDb = db;
+        auth.onAuthStateChanged(async user => {
+            if (user) {
+                currentUser = {
+                    email: user.email,
+                    user_metadata: { full_name: user.displayName || user.email },
+                    uid: user.uid
+                };
+                // Ensure per-user progress doc exists
+                try {
+                    const userRef = db.collection('userProgress').doc(user.uid);
+                    const snap = await userRef.get();
+                    if (!snap.exists) {
+                        await userRef.set({ userId: user.uid, email: user.email, lessons: {}, createdAt: new Date().toISOString(), lastUpdated: new Date().toISOString() });
+                    }
+                } catch (e) { console.warn('Init userProgress failed', e); }
+            } else {
+                currentUser = null;
+            }
+            updateAuthUI();
+        });
+    } catch (e) {
+        console.error('Failed to initialize Firebase Auth:', e);
+    }
 }
+
+async function firebaseGoogleLogin() {
+    try {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        await firebase.auth().signInWithPopup(provider);
+    } catch (e) {
+        console.error('Google sign-in failed:', e);
+        showAlert('Google sign-in failed. Please try again.', 'danger');
+    }
+}
+
+async function firebaseLogout() {
+    try {
+        await firebase.auth().signOut();
+        showAlert('You have been logged out successfully.', 'info');
+    } catch (e) {
+        console.error('Logout failed:', e);
+        showAlert('Logout failed. Please try again.', 'danger');
+    }
+}
+
+// ---- Firebase lesson progress helpers ----
+async function recordQuizResult(lessonId, correctAnswers, totalQuestions) {
+    try {
+        if (!window.firebaseDb || !currentUser) return;
+        const db = window.firebaseDb;
+        const userId = currentUser.uid;
+        const passed = correctAnswers >= 3 && totalQuestions >= 5;
+        const batch = db.batch();
+
+        const quizRef = db.collection('quizResults').doc();
+        batch.set(quizRef, {
+            userId,
+            email: currentUser.email,
+            lessonId,
+            correct: correctAnswers,
+            total: totalQuestions,
+            passed,
+            timestamp: new Date().toISOString()
+        });
+
+        const userRef = db.collection('userProgress').doc(userId);
+        batch.set(userRef, {
+            lessons: {
+                [lessonId]: {
+                    quiz: { correct: correctAnswers, total: totalQuestions, passed, updatedAt: new Date().toISOString() }
+                }
+            },
+            lastUpdated: new Date().toISOString()
+        }, { merge: true });
+
+        await batch.commit();
+        await evaluateAndMarkCompleted(lessonId);
+    } catch (e) {
+        console.error('recordQuizResult failed', e);
+    }
+}
+
+async function recordExerciseSubmission(lessonId) {
+    try {
+        if (!window.firebaseDb || !currentUser) return;
+        const db = window.firebaseDb;
+        const userId = currentUser.uid;
+        await db.collection('userProgress').doc(userId).set({
+            lessons: {
+                [lessonId]: {
+                    exercise: { submitted: true, submittedAt: new Date().toISOString() }
+                }
+            },
+            lastUpdated: new Date().toISOString()
+        }, { merge: true });
+        await evaluateAndMarkCompleted(lessonId);
+    } catch (e) {
+        console.error('recordExerciseSubmission failed', e);
+    }
+}
+
+async function evaluateAndMarkCompleted(lessonId) {
+    try {
+        if (!window.firebaseDb || !currentUser) return;
+        const db = window.firebaseDb;
+        const userRef = db.collection('userProgress').doc(currentUser.uid);
+        const snap = await userRef.get();
+        const data = snap.exists ? snap.data() : null;
+        const lesson = data && data.lessons ? data.lessons[lessonId] : null;
+        const exerciseSubmitted = lesson && lesson.exercise ? lesson.exercise.submitted === true : false;
+        const alreadyCompleted = lesson && lesson.status === 'completed';
+
+        // Rule: Exercise submission alone completes the lesson
+        if (!alreadyCompleted && exerciseSubmitted) {
+            await userRef.set({
+                lessons: {
+                    [lessonId]: {
+                        status: 'completed',
+                        completedAt: new Date().toISOString()
+                    }
+                },
+                lastUpdated: new Date().toISOString()
+            }, { merge: true });
+            if (typeof showAlert === 'function') showAlert('Lesson completed! Great job!', 'success');
+        }
+    } catch (e) {
+        console.error('evaluateAndMarkCompleted failed', e);
+    }
+}
+
+// expose helpers
+window.recordQuizResult = recordQuizResult;
+window.recordExerciseSubmission = recordExerciseSubmission;
 
 // Demo authentication for local development
 function setupDemoAuth() {
@@ -100,6 +220,9 @@ function updateAuthUI() {
     const loginBtn = document.getElementById('loginBtn');
     const logoutBtn = document.getElementById('logoutBtn');
     const adminLink = document.getElementById('adminLink');
+    const profileLink = document.getElementById('profileLink');
+    const loginGate = document.getElementById('loginGate');
+    const appContent = document.getElementById('appContent');
 
     if (currentUser) {
         if (loginBtn) loginBtn.style.display = 'none';
@@ -109,16 +232,27 @@ function updateAuthUI() {
         if (currentUser.email && isAdminUser(currentUser.email) && adminLink) {
             adminLink.style.display = 'block';
         }
+        if (profileLink) profileLink.style.display = 'block';
+
+        // Show app, hide login gate
+        if (loginGate) loginGate.style.display = 'none';
+        if (appContent) appContent.style.display = '';
     } else {
         if (loginBtn) loginBtn.style.display = 'block';
         if (logoutBtn) logoutBtn.style.display = 'none';
         if (adminLink) adminLink.style.display = 'none';
+        if (profileLink) profileLink.style.display = 'none';
+
+        // Hide app, show login gate
+        if (loginGate) loginGate.style.display = '';
+        if (appContent) appContent.style.display = 'none';
     }
 }
 
 // Check if user is admin
 function isAdminUser(email) {
     const adminEmails = [
+        'admin@futureleadersunion.com',
         'admin@educationalhub.com',
         'teacher@educationalhub.com'
     ];
@@ -133,64 +267,63 @@ function setupEventListeners() {
         window.location.hostname === '0.0.0.0' ||
         window.location.hostname.includes('localhost');
 
-    // Check if Netlify Identity is available
-    const hasNetlifyIdentity = window.netlifyIdentity || 
-        document.querySelector('script[src*="netlify-identity-widget"]') ||
-        window.location.search.includes('netlify_identity');
-
-    // Login button
-    const loginBtn = document.getElementById('loginBtn');
-    if (loginBtn) {
-        loginBtn.addEventListener('click', function (e) {
+    // Login button -> Firebase Google Sign-In
+    const loginBtnEl = document.getElementById('loginBtn');
+    if (loginBtnEl) {
+        loginBtnEl.addEventListener('click', function (e) {
             e.preventDefault();
-            if (isLocalhost && !hasNetlifyIdentity) {
-                // Demo mode - show login options
-                showDemoLoginOptions();
-            } else {
-                // Use real Netlify Identity
-                if (window.netlifyIdentity) {
-                    window.netlifyIdentity.open();
-                } else {
-                    console.log("Netlify Identity not available, falling back to demo");
-                    showDemoLoginOptions();
-                }
-            }
+            firebaseGoogleLogin();
         });
     }
 
-    // Logout button
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', function (e) {
+    // Logout button -> Firebase signOut
+    const logoutBtnEl = document.getElementById('logoutBtn');
+    if (logoutBtnEl) {
+        logoutBtnEl.addEventListener('click', function (e) {
             e.preventDefault();
-            if (isLocalhost && !hasNetlifyIdentity) {
-                // Demo mode logout
-                demoLogout();
-            } else {
-                // Use real Netlify Identity
-                if (window.netlifyIdentity) {
-                    window.netlifyIdentity.logout();
-                } else {
-                    console.log("Netlify Identity not available, falling back to demo");
-                    demoLogout();
-                }
-            }
+            firebaseLogout();
         });
     }
 
-    // Smooth scrolling for navigation links
-    document.querySelectorAll('a[href^="#"]:not([href="#"])').forEach(anchor => {
+    // Smooth scrolling for navigation links (ignore bare '#')
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
+            const href = this.getAttribute('href');
+            if (!href || href === '#' || href.trim().length <= 1) {
+                return; // let default do nothing for '#'
             }
+            const target = document.querySelector(href);
+            if (!target) {
+                return;
+            }
+            e.preventDefault();
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
     });
+
+    // Protect key navigation links to require login
+    function guardLink(selector) {
+        document.querySelectorAll(selector).forEach(a => {
+            a.addEventListener('click', function (e) {
+                const href = this.getAttribute('href') || '';
+                if (!currentUser) {
+                    e.preventDefault();
+                    showAlert('Please log in to continue.', 'warning');
+                    if (typeof firebaseGoogleLogin === 'function') {
+                        firebaseGoogleLogin();
+                    }
+                    return false;
+                }
+            });
+        });
+    }
+
+    guardLink('a[href="image-generator.html"]');
+    guardLink('a[href="text-generator.html"]');
+    guardLink('a[href="upload.html"]');
+    guardLink('a[href^="quiz.html"]');
+    guardLink('a[href^="lesson.html"]');
+    guardLink('a[href="profile.html"]');
 }
 
 // Load user data
@@ -332,7 +465,12 @@ function showAlert(message, type = 'info') {
 
 // Update student progress
 function updateStudentProgress(activity, data = {}) {
-    if (!currentUser) return;
+    console.log('updateStudentProgress called:', activity, data);
+
+    if (!currentUser) {
+        console.error('updateStudentProgress: No currentUser');
+        return;
+    }
 
     const userEmail = currentUser.email;
     if (!studentProgress[userEmail]) {
@@ -382,6 +520,65 @@ function updateStudentProgress(activity, data = {}) {
 
     studentProgress[userEmail].lastActivity = new Date().toISOString();
     saveStudentProgress();
+    console.log('Local progress updated:', studentProgress[userEmail]);
+
+    // Persist to Firestore userProgress when available
+    try {
+        console.log('Checking Firebase availability:', {
+            firebaseDb: !!window.firebaseDb,
+            currentUser: !!currentUser,
+            firebase: typeof firebase !== 'undefined'
+        });
+
+        if (window.firebaseDb && currentUser && typeof firebase !== 'undefined') {
+            const userRef = window.firebaseDb.collection('userProgress').doc(currentUser.uid);
+            const updatePayload = { lastUpdated: new Date().toISOString() };
+
+            if (activity === 'lesson_completed' && data.lessonId) {
+                updatePayload[`lessons.${data.lessonId}.status`] = 'completed';
+                updatePayload[`lessons.${data.lessonId}.completedAt`] = new Date().toISOString();
+            }
+
+            if (activity === 'quiz_completed' && data.quizId) {
+                updatePayload[`quizzes.${data.quizId}`] = {
+                    score: data.score,
+                    total: data.total,
+                    percentage: data.percentage !== undefined ? data.percentage : Math.round((data.score / Math.max(1, data.total)) * 100),
+                    timestamp: new Date().toISOString()
+                };
+                // Optionally mark lesson in-progress/completed when quiz passes threshold
+                if (data.lessonId) {
+                    updatePayload[`lessons.${data.lessonId}.status`] = (data.percentage || 0) >= 70 ? 'completed' : (data.status || 'in-progress');
+                    updatePayload[`lessons.${data.lessonId}.lastQuizAt`] = new Date().toISOString();
+                }
+            }
+
+            console.log('Writing to Firestore:', updatePayload);
+
+            window.firebaseDb.runTransaction(async (tx) => {
+                const doc = await tx.get(userRef);
+                if (doc.exists) {
+                    tx.set(userRef, updatePayload, { merge: true });
+                } else {
+                    tx.set(userRef, { userId: currentUser.uid, email: currentUser.email, ...updatePayload }, { merge: true });
+                }
+            }).then(() => {
+                console.log('Firestore update successful');
+            }).catch((error) => {
+                console.error('Firestore transaction failed, trying fallback:', error);
+                // Fallback to non-transaction merge
+                userRef.set(updatePayload, { merge: true }).then(() => {
+                    console.log('Firestore fallback update successful');
+                }).catch((fallbackError) => {
+                    console.error('Firestore fallback also failed:', fallbackError);
+                });
+            });
+        } else {
+            console.warn('Firebase not available for persistence');
+        }
+    } catch (e) {
+        console.error('Error in Firestore persistence:', e);
+    }
 }
 
 // Export student progress to CSV
@@ -484,9 +681,7 @@ async function makeAPICall(url, options = {}) {
 function requireAuth(callback) {
     if (!currentUser) {
         showAlert('Please log in to access this feature.', 'warning');
-        if (window.netlifyIdentity) {
-            window.netlifyIdentity.open();
-        }
+        firebaseGoogleLogin && firebaseGoogleLogin();
         return;
     }
     callback();
@@ -595,7 +790,7 @@ function showDemoLoginOptions() {
                             <strong>Demo Accounts:</strong><br>
                             • Gmail: student@gmail.com<br>
                             • Outlook: student@outlook.com<br>
-                            • Admin: admin@educationalhub.com
+                            • Admin: admin@futureleadersunion.com
                         </small>
                     </div>
                 </div>
@@ -639,7 +834,7 @@ function demoLogin(provider) {
             break;
         case 'admin':
             user = {
-                email: 'admin@educationalhub.com',
+                email: 'admin@futureleadersunion.com',
                 user_metadata: {
                     full_name: 'Admin User'
                 },

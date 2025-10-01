@@ -222,17 +222,14 @@ class QuizPopup {
         modal.id = 'quizModal';
         modal.setAttribute('data-bs-backdrop', 'static');
         modal.setAttribute('data-bs-keyboard', 'false');
-        modal.setAttribute('role', 'dialog');
-        modal.setAttribute('aria-labelledby', 'quizModalTitle');
-        modal.setAttribute('aria-hidden', 'false');
         modal.innerHTML = `
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="quizModalTitle">
+                        <h5 class="modal-title">
                             <i class="fas fa-question-circle me-2"></i>${this.quizData.title}
                         </h5>
-                        <button type="button" class="btn-close" onclick="quizPopup.closeQuiz()" aria-label="Close quiz"></button>
+                        <button type="button" class="btn-close" onclick="quizPopup.closeQuiz()"></button>
                     </div>
                     <div class="modal-body" id="quizContent">
                         ${this.renderQuestion()}
@@ -327,6 +324,12 @@ class QuizPopup {
     // Finish quiz and show results
     finishQuiz() {
         this.calculateScore();
+        // Persist quiz result (pass lessonId that started the quiz)
+        try {
+            if (typeof window.recordQuizResult === 'function' && this.currentLessonId) {
+                window.recordQuizResult(this.currentLessonId, this.score, this.questions.length);
+            }
+        } catch (e) { console.warn('recordQuizResult not available', e); }
         this.showResults();
     }
 
@@ -480,7 +483,6 @@ class QuizPopup {
         const backdrop = document.getElementById('quizBackdrop');
 
         if (modal) {
-            modal.setAttribute('aria-hidden', 'true');
             modal.remove();
         }
         if (backdrop) {
@@ -500,6 +502,7 @@ function startQuiz(lessonId) {
     console.log('startQuiz called with lessonId:', lessonId);
     if (typeof quizPopup !== 'undefined') {
         quizPopup.initQuiz(lessonId);
+        try { quizPopup.currentLessonId = lessonId; } catch (e) { }
     } else {
         console.error('quizPopup not defined');
     }

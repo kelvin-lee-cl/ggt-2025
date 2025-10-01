@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Girl Go Tech AI Application</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="assets/fa/css/all.min.css" rel="stylesheet">
     <link href="styles.css" rel="stylesheet">
 </head>
 
@@ -15,7 +15,7 @@
     <div id="navbar-root"></div>
 
     <!-- Main Content -->
-    <div class="container mt-5 pt-5">
+    <div class="container mt-5 pt-5" id="adminContainer" style="display:none">
         <div class="row">
             <div class="col-12">
                 <!-- Admin Header -->
@@ -28,7 +28,7 @@
 
                 <!-- Stats Cards -->
                 <div class="row mb-5">
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-6 mb-3">
                         <div class="card bg-primary text-white">
                             <div class="card-body text-center">
                                 <i class="fas fa-users fa-2x mb-2"></i>
@@ -37,30 +37,12 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-6 mb-3">
                         <div class="card bg-success text-white">
                             <div class="card-body text-center">
                                 <i class="fas fa-check-circle fa-2x mb-2"></i>
                                 <h4 id="completedLessons">-</h4>
                                 <p class="mb-0">Completed Lessons</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="card bg-warning text-white">
-                            <div class="card-body text-center">
-                                <i class="fas fa-clock fa-2x mb-2"></i>
-                                <h4 id="inProgressLessons">-</h4>
-                                <p class="mb-0">In Progress</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="card bg-info text-white">
-                            <div class="card-body text-center">
-                                <i class="fas fa-percentage fa-2x mb-2"></i>
-                                <h4 id="completionRate">-</h4>
-                                <p class="mb-0">Completion Rate</p>
                             </div>
                         </div>
                     </div>
@@ -104,17 +86,16 @@
                             <table class="table table-striped table-hover" id="progressTable">
                                 <thead>
                                     <tr>
-                                        <th>Student ID</th>
                                         <th>Email</th>
                                         <th>Lessons Completed</th>
-                                        <th>Progress</th>
+                                        <th>Total Submissions</th>
                                         <th>Last Activity</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody id="progressTableBody">
                                     <tr>
-                                        <td colspan="6" class="text-center">
+                                        <td colspan="5" class="text-center">
                                             <div class="spinner-border text-primary" role="status">
                                                 <span class="visually-hidden">Loading...</span>
                                             </div>
@@ -129,11 +110,25 @@
         </div>
     </div>
 
-    <!-- Netlify Identity Widget -->
-    <div id="netlify-identity-widget"></div>
+    <!-- Student Details Modal -->
+    <div class="modal fade" id="studentDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="studentDetailsTitle">Student Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="studentDetailsBody">
+                    <div class="text-center text-muted">Loading...</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
@@ -141,44 +136,72 @@
     <script src="script.js"></script>
     <script src="firebase-config.js"></script>
     <script>
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyDd77LjKa3wuaumWHtYhN_3tsVpD99juK0",
-            authDomain: "ggt-2025.firebaseapp.com",
-            projectId: "ggt-2025",
-            storageBucket: "ggt-2025.firebasestorage.app",
-            messagingSenderId: "822726025795",
-            appId: "1:822726025795:web:4e059a32a26e5bc336eaf6",
-            measurementId: "G-72DQBYXSVN"
-        };
+        // Debug utilities
+        const __params = new URLSearchParams(window.location.search);
+        const __DEBUG = __params.get('debug') === '1' || __params.get('debug') === 'true';
+        function dlog(...args) { if (__DEBUG) { console.log('[ADMIN DEBUG]', ...args); } }
+        function showDebugPanel() {
+            if (!__DEBUG) return;
+            if (document.getElementById('adminDebugPanel')) return;
+            const panel = document.createElement('div');
+            panel.id = 'adminDebugPanel';
+            panel.style.cssText = 'position:fixed;bottom:12px;right:12px;z-index:99999;background:#111;color:#0f0;font:12px/1.4 monospace;padding:10px 12px;border-radius:8px;max-width:360px;opacity:0.9;white-space:pre-wrap;'
+            panel.innerHTML = '<div><strong>ADMIN DEBUG</strong></div><div id="dbgBody">init...</div>';
+            document.body.appendChild(panel);
+        }
+        function updateDebugPanel(lines) {
+            if (!__DEBUG) return;
+            const body = document.getElementById('dbgBody');
+            if (body) { body.textContent = Array.isArray(lines) ? lines.join('\n') : String(lines); }
+        }
+        // Firebase configuration is loaded from firebase-config.js
 
         // Initialize Firebase
         let db = null;
         let auth = null;
         let allStudentData = [];
 
-        // Initialize Firebase
+        // Initialize Firebase (reuse existing if available). Use demo only if ?demo=1
         function initializeFirebase() {
-            const isLocalhost = window.location.hostname === 'localhost' ||
-                window.location.hostname === '127.0.0.1' ||
-                window.location.hostname === '0.0.0.0' ||
-                window.location.hostname.includes('localhost');
-
-            if (isLocalhost) {
-                console.log("Running locally - using demo Firebase mode");
+            const useDemo = __params.get('demo') === '1' || __params.get('demo') === 'true';
+            if (useDemo) {
+                dlog('initializeFirebase: demo=1 detected -> demo mode');
                 setupDemoFirebase();
-            } else {
-                // In production, initialize real Firebase
-                if (typeof firebase !== 'undefined') {
-                    firebase.initializeApp(firebaseConfig);
-                    db = firebase.firestore();
-                    auth = firebase.auth();
+                return;
+            }
+
+            if (typeof firebase !== 'undefined') {
+                try {
+                    // Reuse Firebase if already initialized by script.js
+                    if (window.firebaseDb && window.firebaseAuth) {
+                        dlog('initializeFirebase: reusing Firebase from script.js');
+                        db = window.firebaseDb;
+                        auth = window.firebaseAuth;
+                    } else if (!firebase.apps || !firebase.apps.length) {
+                        dlog('initializeFirebase: initializing Firebase app');
+                        firebase.initializeApp(firebaseConfig);
+                        db = firebase.firestore();
+                        auth = firebase.auth();
+                    } else {
+                        dlog('initializeFirebase: Firebase already initialized, getting services');
+                        db = firebase.firestore();
+                        auth = firebase.auth();
+                    }
+                    dlog('initializeFirebase: firestore ready');
+                    dlog('initializeFirebase: auth ready');
+                } catch (e) {
+                    console.warn('Firebase init skipped or failed:', e); dlog('initializeFirebase error', e);
+                    try {
+                        db = firebase.firestore(); dlog('initializeFirebase: firestore fallback ready');
+                        auth = firebase.auth(); dlog('initializeFirebase: auth fallback ready');
+                    } catch (_) { /* noop */ }
                 }
             }
         }
 
         // Setup demo Firebase for localhost
         function setupDemoFirebase() {
+            dlog('setupDemoFirebase: creating mock db');
             db = {
                 collection: (name) => ({
                     get: () => Promise.resolve({
@@ -234,7 +257,7 @@
                 updateStats();
                 renderProgressTable();
             } catch (error) {
-                console.error('Error loading student data:', error);
+                console.error('Error loading student data:', error); dlog('loadStudentData error', error);
                 showAlert('Error loading student data', 'danger');
             }
         }
@@ -243,28 +266,19 @@
         function updateStats() {
             const totalStudents = allStudentData.length;
             let completedLessons = 0;
-            let inProgressLessons = 0;
-            let totalLessons = 0;
 
             allStudentData.forEach(student => {
                 if (student.lessons) {
                     Object.values(student.lessons).forEach(lesson => {
-                        totalLessons++;
                         if (lesson.status === 'completed') {
                             completedLessons++;
-                        } else if (lesson.status === 'in-progress') {
-                            inProgressLessons++;
                         }
                     });
                 }
             });
 
-            const completionRate = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
-
             document.getElementById('totalStudents').textContent = totalStudents;
             document.getElementById('completedLessons').textContent = completedLessons;
-            document.getElementById('inProgressLessons').textContent = inProgressLessons;
-            document.getElementById('completionRate').textContent = completionRate + '%';
         }
 
         // Render progress table
@@ -272,7 +286,7 @@
             const tbody = document.getElementById('progressTableBody');
 
             if (allStudentData.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No student data available</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No student data available</td></tr>';
                 return;
             }
 
@@ -280,23 +294,28 @@
             allStudentData.forEach(student => {
                 const completedCount = student.lessons ?
                     Object.values(student.lessons).filter(lesson => lesson.status === 'completed').length : 0;
-                const totalLessons = student.lessons ? Object.keys(student.lessons).length : 0;
-                const progressPercentage = totalLessons > 0 ? Math.round((completedCount / totalLessons) * 100) : 0;
+
+                // Count total submissions across all lessons
+                let totalSubmissions = 0;
+                if (student.lessons) {
+                    Object.values(student.lessons).forEach(lesson => {
+                        if (lesson.exercise) {
+                            const submissions = getAllSubmissions(lesson.exercise);
+                            totalSubmissions += submissions.length;
+                        }
+                    });
+                }
+
                 const lastActivity = student.lastUpdated ? new Date(student.lastUpdated).toLocaleDateString() : 'Never';
 
                 tableHTML += `
                     <tr>
-                        <td>${student.userId}</td>
                         <td>${student.email || 'N/A'}</td>
                         <td>
                             <span class="badge bg-success">${completedCount}</span>
                         </td>
                         <td>
-                            <div class="progress" style="height: 20px;">
-                                <div class="progress-bar" role="progressbar" style="width: ${progressPercentage}%">
-                                    ${progressPercentage}%
-                                </div>
-                            </div>
+                            <span class="badge bg-info">${totalSubmissions}</span>
                         </td>
                         <td>${lastActivity}</td>
                         <td>
@@ -394,24 +413,549 @@
             }
         }
 
-        // View student details
-        function viewStudentDetails(userId) {
+        // View student details (modal with per-lesson submissions and feedback)
+        async function viewStudentDetails(userId) {
             const student = allStudentData.find(s => s.userId === userId);
-            if (student) {
-                let details = `Student: ${student.userId}\nEmail: ${student.email || 'N/A'}\n\nLesson Progress:\n`;
+            if (!student) return;
+            // Show modal immediately with loading state
+            const modalEl = document.getElementById('studentDetailsModal');
+            const body = document.getElementById('studentDetailsBody');
+            if (body) body.innerHTML = '<div class="text-center text-muted py-3"><i class="fas fa-spinner fa-spin me-2"></i>Loading submissions...</div>';
+            const bsModal = new bootstrap.Modal(modalEl);
+            bsModal.show();
 
-                if (student.lessons) {
-                    Object.entries(student.lessons).forEach(([lessonId, lessonData]) => {
-                        details += `${lessonId}: ${lessonData.status}`;
-                        if (lessonData.startedAt) details += ` (Started: ${new Date(lessonData.startedAt).toLocaleDateString()})`;
-                        if (lessonData.completedAt) details += ` (Completed: ${new Date(lessonData.completedAt).toLocaleDateString()})`;
-                        details += '\n';
+            // Fetch real submissions from Firestore
+            let submissionsByLesson = {};
+            try {
+                submissionsByLesson = await fetchStudentSubmissions(userId);
+            } catch (e) {
+                console.warn('Failed to fetch exercise submissions', e);
+            }
+
+            populateStudentModal(student, submissionsByLesson);
+        }
+
+        async function fetchStudentSubmissions(userId) {
+            const resultsByLesson = {};
+            if (!db || !firebase || !firebase.firestore) {
+                return resultsByLesson;
+            }
+            try {
+                const ref = db.collection('exerciseSubmissions')
+                    .where('userId', '==', userId);
+                const snap = await ref.get();
+                snap.docs.forEach(doc => {
+                    const data = doc.data();
+                    data.id = doc.id; // Include the Firestore document ID
+                    const lessonId = data.lessonId || 'unknown';
+                    if (!resultsByLesson[lessonId]) resultsByLesson[lessonId] = [];
+                    resultsByLesson[lessonId].push(data);
+                });
+                // Sort submissions per lesson by timestamp desc (client-side)
+                Object.keys(resultsByLesson).forEach(lessonId => {
+                    resultsByLesson[lessonId].sort((a, b) => {
+                        const ta = normalizeTs(a.timestamp);
+                        const tb = normalizeTs(b.timestamp);
+                        return tb - ta;
                     });
-                } else {
-                    details += 'No lesson data available';
+                });
+            } catch (e) {
+                console.warn('fetchStudentSubmissions error', e);
+            }
+            return resultsByLesson;
+        }
+
+        function normalizeTs(ts) {
+            try {
+                if (!ts) return 0;
+                // Firestore Timestamp
+                if (ts.seconds) {
+                    return ts.seconds * 1000 + Math.floor((ts.nanoseconds || 0) / 1e6);
+                }
+                // ISO string or date string
+                const d = new Date(ts);
+                return isNaN(d.getTime()) ? 0 : d.getTime();
+            } catch (_) { return 0; }
+        }
+
+        function getAllSubmissions(exercise) {
+            if (!exercise) return [];
+
+            const submissions = [];
+
+            // Handle single submission (current format)
+            if (exercise.submitted && exercise.submittedAt) {
+                submissions.push({
+                    data: exercise,
+                    timestamp: new Date(exercise.submittedAt).toLocaleString()
+                });
+            }
+
+            // Handle multiple submissions (if stored as array)
+            if (exercise.submissions && Array.isArray(exercise.submissions)) {
+                exercise.submissions.forEach((submission, index) => {
+                    submissions.push({
+                        data: submission,
+                        timestamp: submission.submittedAt ? new Date(submission.submittedAt).toLocaleString() : `Submission ${index + 1}`
+                    });
+                });
+            }
+
+            // Handle submission history (if stored as history array)
+            if (exercise.history && Array.isArray(exercise.history)) {
+                exercise.history.forEach((submission, index) => {
+                    submissions.push({
+                        data: submission,
+                        timestamp: submission.timestamp ? new Date(submission.timestamp).toLocaleString() : `History ${index + 1}`
+                    });
+                });
+            }
+
+            // Handle revision submissions
+            if (exercise.revisions && Array.isArray(exercise.revisions)) {
+                exercise.revisions.forEach((revision, index) => {
+                    submissions.push({
+                        data: revision,
+                        timestamp: revision.submittedAt ? new Date(revision.submittedAt).toLocaleString() : `Revision ${index + 1}`
+                    });
+                });
+            }
+
+            // Sort by timestamp (newest first)
+            return submissions.sort((a, b) => {
+                const dateA = new Date(a.timestamp);
+                const dateB = new Date(b.timestamp);
+                return dateB - dateA;
+            });
+        }
+
+        function getSubmissionContent(exercise) {
+            if (!exercise) return '<div class="text-muted">No submission data available.</div>';
+
+            let content = '';
+
+            // Handle the actual submission data structure
+            if (exercise.content) {
+                content += `
+                    <div class="mb-3">
+                        <strong>Content:</strong>
+                        <div class="mt-2 p-3 bg-light rounded">
+                            <pre style="white-space: pre-wrap; font-family: inherit;">${exercise.content}</pre>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Handle description
+            if (exercise.description) {
+                content += `
+                    <div class="mb-3">
+                        <strong>Description:</strong>
+                        <div class="mt-2 p-3 bg-light rounded">
+                            <pre style="white-space: pre-wrap; font-family: inherit;">${exercise.description}</pre>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Handle title
+            if (exercise.title) {
+                content += `
+                    <div class="mb-3">
+                        <strong>Title:</strong>
+                        <div class="mt-2">
+                            <span class="fw-semibold">${exercise.title}</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Handle type
+            if (exercise.type) {
+                content += `
+                    <div class="mb-3">
+                        <strong>Type:</strong>
+                        <div class="mt-2">
+                            <span class="badge bg-primary">${exercise.type}</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Handle tags
+            if (exercise.tags && Array.isArray(exercise.tags) && exercise.tags.length > 0) {
+                content += `
+                    <div class="mb-3">
+                        <strong>Tags:</strong>
+                        <div class="mt-2">
+                            ${exercise.tags.map(tag => `<span class="badge bg-secondary me-1">${tag}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Handle user info
+            if (exercise.userEmail) {
+                content += `
+                    <div class="mb-3">
+                        <strong>Submitted by:</strong>
+                        <div class="mt-2">
+                            <span class="text-muted">${exercise.userEmail}</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Handle timestamp
+            if (exercise.timestamp) {
+                content += `
+                    <div class="mb-3">
+                        <strong>Submitted at:</strong>
+                        <div class="mt-2">
+                            <span class="text-muted">${new Date(exercise.timestamp).toLocaleString()}</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Handle lesson ID
+            if (exercise.lessonId) {
+                content += `
+                    <div class="mb-3">
+                        <strong>Lesson:</strong>
+                        <div class="mt-2">
+                            <span class="badge bg-info">${exercise.lessonId}</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Legacy support for old format
+            if (exercise.textContent) {
+                content += `
+                    <div class="mb-3">
+                        <strong>Text Response:</strong>
+                        <div class="mt-2 p-3 bg-light rounded">
+                            <pre style="white-space: pre-wrap; font-family: inherit;">${exercise.textContent}</pre>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Handle file submissions
+            if (exercise.fileName) {
+                content += `
+                    <div class="mb-3">
+                        <strong>File Submission:</strong>
+                        <div class="mt-2">
+                            <i class="fas fa-file me-2"></i>
+                            <span>${exercise.fileName}</span>
+                            ${exercise.fileSize ? `<small class="text-muted ms-2">(${exercise.fileSize})</small>` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Handle image submissions
+            if (exercise.imageUrl) {
+                content += `
+                    <div class="mb-3">
+                        <strong>Image Submission:</strong>
+                        <div class="mt-2">
+                            <img src="${exercise.imageUrl}" alt="Student submission" class="img-fluid rounded" style="max-width: 300px; max-height: 200px; object-fit: contain;">
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Handle code submissions
+            if (exercise.code) {
+                content += `
+                    <div class="mb-3">
+                        <strong>Code Submission:</strong>
+                        <div class="mt-2">
+                            <pre class="bg-dark text-light p-3 rounded" style="max-height: 200px; overflow-y: auto;"><code>${exercise.code}</code></pre>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Handle URL submissions
+            if (exercise.url) {
+                content += `
+                    <div class="mb-3">
+                        <strong>URL Submission:</strong>
+                        <div class="mt-2">
+                            <a href="${exercise.url}" target="_blank" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-external-link-alt me-1"></i>View Submission
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Handle JSON/object submissions
+            if (exercise.data && typeof exercise.data === 'object') {
+                content += `
+                    <div class="mb-3">
+                        <strong>Submission Data:</strong>
+                        <div class="mt-2">
+                            <pre class="bg-light p-3 rounded" style="max-height: 200px; overflow-y: auto;">${JSON.stringify(exercise.data, null, 2)}</pre>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // If no content found, show submission metadata
+            if (!content) {
+                content = `
+                    <div class="text-muted">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Submission received but no content details available.
+                        ${exercise.submittedAt ? `Submitted at: ${new Date(exercise.submittedAt).toLocaleString()}` : ''}
+                    </div>
+                `;
+            }
+
+            return content;
+        }
+
+        function populateStudentModal(student, submissionsByLesson = null) {
+            const header = document.getElementById('studentDetailsTitle');
+            const body = document.getElementById('studentDetailsBody');
+            header.textContent = (student.email || student.userId) + ' - Exercise Submissions & Feedback';
+
+            // Prefer explicit submissions loaded from Firestore; fallback to userProgress lessons
+            const lessons = student.lessons || {};
+            const lessonIdSet = new Set();
+            if (submissionsByLesson && Object.keys(submissionsByLesson).length) {
+                Object.keys(submissionsByLesson).forEach(id => lessonIdSet.add(id));
+            }
+            Object.keys(lessons).forEach(id => lessonIdSet.add(id));
+            const lessonIds = Array.from(lessonIdSet).sort();
+
+            if (lessonIds.length === 0) {
+                body.innerHTML = '<div class="text-muted">No lesson data available.</div>';
+                return;
+            }
+
+            let html = '';
+            lessonIds.forEach(lessonId => {
+                const l = lessons[lessonId] || {};
+                const status = l.status || 'not-started';
+                const feedback = l.exercise && l.exercise.feedback ? l.exercise.feedback : '';
+                const feedbackAt = l.exercise && l.exercise.feedbackAt ? new Date(l.exercise.feedbackAt).toLocaleString() : null;
+
+                // Choose submissions: from Firestore map if available, else derive from legacy l.exercise
+                let submissions = [];
+                if (submissionsByLesson && submissionsByLesson[lessonId] && submissionsByLesson[lessonId].length) {
+                    submissions = submissionsByLesson[lessonId].map(s => ({ data: s, timestamp: s.timestamp ? new Date(s.timestamp).toLocaleString() : '' }));
+                } else if (l.exercise) {
+                    submissions = getAllSubmissions(l.exercise);
                 }
 
-                alert(details);
+                // Only show lessons with any submissions
+                if (submissions.length === 0) return;
+
+                html += `
+                    <div class="border rounded p-3 mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="fw-semibold">${lessonId}</div>
+                            <span class="badge ${status === 'completed' ? 'bg-success' : (status === 'in-progress' ? 'bg-warning text-dark' : 'bg-secondary')}">${status}</span>
+                        </div>
+                        
+                        <div class="alert alert-info">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-check-circle me-2"></i>
+                                <div>
+                                    <strong>Total Submissions:</strong> ${submissions.length}
+                                </div>
+                            </div>
+                        </div>
+
+                        ${submissions.map((submission, index) => {
+                    const submissionId = submission.data.id;
+                    const submissionFeedback = submission.data.feedback || '';
+                    const submissionFeedbackAt = submission.data.feedbackAt ? new Date(submission.data.feedbackAt).toLocaleString() : null;
+
+                    return `
+                                <div class="card mb-3">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-file-alt me-2"></i>Submission #${index + 1}
+                                        </h6>
+                                        <small class="text-muted">
+                                            <i class="fas fa-clock me-1"></i>${submission.timestamp}
+                                        </small>
+                                    </div>
+                                    <div class="card-body">
+                                        ${getSubmissionContent(submission.data)}
+                                        
+                                        <div class="mt-3 border-top pt-3">
+                                            <label class="form-label">Admin Feedback for this Submission</label>
+                                            <textarea id="fb-${student.userId}-${submissionId}" class="form-control" rows="3" placeholder="Write feedback for this specific submission...">${submissionFeedback ? String(submissionFeedback).replace(/</g, '&lt;') : ''}</textarea>
+                                            
+                                            ${submissionFeedback ? `
+                                                <div class="mt-2">
+                                                    <small class="text-muted">
+                                                        <i class="fas fa-clock me-1"></i>Feedback given: ${submissionFeedbackAt}
+                                                    </small>
+                                                </div>
+                                            ` : ''}
+                                            
+                                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                                <div>
+                                                    <button class="btn btn-sm btn-outline-secondary" onclick="clearSubmissionFeedback('${student.userId}','${submissionId}')">
+                                                        <i class="fas fa-trash me-1"></i>Clear Feedback
+                                                    </button>
+                                                </div>
+                                                <div>
+                                                    <button class="btn btn-sm btn-primary" onclick="saveSubmissionFeedback('${student.userId}','${submissionId}')">
+                                                        <i class="fas fa-save me-1"></i>Save Feedback
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                }).join('')}
+                    </div>
+                `;
+            });
+
+            if (html === '') {
+                html = '<div class="text-muted">No exercise submissions found for this student.</div>';
+            }
+
+            body.innerHTML = html;
+        }
+
+        async function saveSubmissionFeedback(userId, submissionId) {
+            try {
+                const textarea = document.getElementById(`fb-${userId}-${submissionId}`);
+                if (!textarea) return;
+                const feedback = textarea.value.trim();
+
+                if (!db || !firebase || !firebase.firestore) {
+                    showAlert('Database not ready. Please try again.', 'danger');
+                    return;
+                }
+
+                // Save feedback to the exerciseSubmissions collection
+                const submissionRef = db.collection('exerciseSubmissions').doc(submissionId);
+                await submissionRef.update({
+                    feedback: feedback,
+                    feedbackAt: new Date().toISOString()
+                });
+
+                showAlert('Feedback saved for this submission.', 'success');
+            } catch (e) {
+                console.error('saveSubmissionFeedback failed', e);
+                showAlert('Failed to save feedback. Check console for details.', 'danger');
+            }
+        }
+
+        async function clearSubmissionFeedback(userId, submissionId) {
+            try {
+                if (!db || !firebase || !firebase.firestore) {
+                    showAlert('Database not ready. Please try again.', 'danger');
+                    return;
+                }
+
+                // Clear feedback from the exerciseSubmissions collection
+                const submissionRef = db.collection('exerciseSubmissions').doc(submissionId);
+                await submissionRef.update({
+                    feedback: '',
+                    feedbackAt: null
+                });
+
+                // Clear the textarea
+                const textarea = document.getElementById(`fb-${userId}-${submissionId}`);
+                if (textarea) textarea.value = '';
+
+                showAlert('Feedback cleared for this submission.', 'success');
+            } catch (e) {
+                console.error('clearSubmissionFeedback failed', e);
+                showAlert('Failed to clear feedback. Check console for details.', 'danger');
+            }
+        }
+
+        async function saveExerciseFeedback(userId, lessonId) {
+            try {
+                const textarea = document.getElementById(`fb-${userId}-${lessonId}`);
+                if (!textarea) return;
+                const feedback = textarea.value.trim();
+
+                if (!db || !firebase || !firebase.firestore) {
+                    showAlert('Database not ready. Please try again.', 'danger');
+                    return;
+                }
+
+                const userRef = db.collection('userProgress').doc(userId);
+                await userRef.set({
+                    lessons: {
+                        [lessonId]: {
+                            exercise: { feedback, feedbackAt: new Date().toISOString() }
+                        }
+                    },
+                    lastUpdated: new Date().toISOString()
+                }, { merge: true });
+
+                // Update local cache
+                const student = allStudentData.find(s => s.userId === userId);
+                if (student) {
+                    student.lessons = student.lessons || {};
+                    student.lessons[lessonId] = student.lessons[lessonId] || {};
+                    student.lessons[lessonId].exercise = student.lessons[lessonId].exercise || {};
+                    student.lessons[lessonId].exercise.feedback = feedback;
+                    student.lessons[lessonId].exercise.feedbackAt = new Date().toISOString();
+                    student.lastUpdated = new Date().toISOString();
+                }
+
+                showAlert('Feedback saved.', 'success');
+            } catch (e) {
+                console.error('saveExerciseFeedback failed', e);
+                showAlert('Failed to save feedback. Check console for details.', 'danger');
+            }
+        }
+
+        async function clearFeedback(userId, lessonId) {
+            try {
+                if (!db || !firebase || !firebase.firestore) {
+                    showAlert('Database not ready. Please try again.', 'danger');
+                    return;
+                }
+
+                const userRef = db.collection('userProgress').doc(userId);
+                await userRef.set({
+                    lessons: {
+                        [lessonId]: {
+                            exercise: { feedback: '', feedbackAt: null }
+                        }
+                    },
+                    lastUpdated: new Date().toISOString()
+                }, { merge: true });
+
+                // Update local cache
+                const student = allStudentData.find(s => s.userId === userId);
+                if (student) {
+                    student.lessons = student.lessons || {};
+                    student.lessons[lessonId] = student.lessons[lessonId] || {};
+                    student.lessons[lessonId].exercise = student.lessons[lessonId].exercise || {};
+                    student.lessons[lessonId].exercise.feedback = '';
+                    student.lessons[lessonId].exercise.feedbackAt = null;
+                    student.lastUpdated = new Date().toISOString();
+                }
+
+                // Clear the textarea
+                const textarea = document.getElementById(`fb-${userId}-${lessonId}`);
+                if (textarea) textarea.value = '';
+
+                showAlert('Feedback cleared.', 'success');
+            } catch (e) {
+                console.error('clearFeedback failed', e);
+                showAlert('Failed to clear feedback. Check console for details.', 'danger');
             }
         }
 
@@ -420,10 +964,94 @@
             loadStudentData();
         }
 
+        // Check if user is admin
+        function isAdminUser(email) {
+            const adminEmails = [
+                'admin@futureleadersunion.com',
+                'admin@educationalhub.com',
+                'teacher@educationalhub.com'
+            ];
+            const result = !!(email && adminEmails.includes(String(email).toLowerCase()));
+            dlog('isAdminUser:', email, '->', result);
+            return result;
+        }
+
+        // Check admin authentication
+        function checkAdminAuth() {
+            if (!currentUser) {
+                dlog('checkAdminAuth: no currentUser');
+                if (__DEBUG) { updateDebugPanel(['No currentUser', 'Not redirecting due to debug=1']); return false; }
+                window.location.replace('index.html');
+                return false;
+            }
+            if (!isAdminUser(currentUser.email)) {
+                dlog('checkAdminAuth: not admin for', currentUser.email);
+                if (__DEBUG) { updateDebugPanel(['Not admin: ' + currentUser.email, 'Not redirecting due to debug=1']); return false; }
+                window.location.replace('index.html');
+                return false;
+            }
+            dlog('checkAdminAuth: authorized admin', currentUser.email);
+            return true;
+        }
+
         // Initialize when page loads
         document.addEventListener('DOMContentLoaded', function () {
+            showDebugPanel(); updateDebugPanel('DOMContentLoaded'); dlog('DOMContentLoaded');
             initializeFirebase();
-            loadStudentData();
+
+            function showAdminAndLoad() {
+                const container = document.getElementById('adminContainer');
+                if (container) container.style.display = '';
+                dlog('showAdminAndLoad: revealing container and loading data');
+                loadStudentData();
+            }
+
+            // Prefer Firebase Auth listener when available
+            try {
+                if (typeof firebase !== 'undefined' && firebase.auth) {
+                    const authRef = firebase.auth();
+                    dlog('auth listener attached');
+                    authRef.onAuthStateChanged(user => {
+                        dlog('onAuthStateChanged:', !!user, user && user.email);
+                        if (!user) {
+                            if (__DEBUG) { updateDebugPanel(['Auth: no user', 'Not redirecting due to debug=1']); return; }
+                            window.location.replace('index.html');
+                            return;
+                        }
+                        if (!isAdminUser(user.email)) {
+                            if (__DEBUG) { updateDebugPanel(['Auth: not admin -> ' + user.email, 'Not redirecting due to debug=1']); return; }
+                            window.location.replace('index.html');
+                            return;
+                        }
+                        // Keep global currentUser aligned if needed
+                        if (!currentUser) {
+                            currentUser = { email: user.email, uid: user.uid, user_metadata: { full_name: user.displayName || user.email } };
+                        }
+                        showAdminAndLoad();
+                    });
+                    return; // handled by listener
+                }
+            } catch (e) { /* fall through to demo/local fallback */ }
+
+            // Fallback: demo/local auth via script.js currentUser
+            let tries = 0;
+            const maxTries = 40; // ~12s
+            const interval = setInterval(() => {
+                tries++;
+                dlog('poll currentUser try', tries, !!currentUser, currentUser && currentUser.email);
+                if (currentUser) {
+                    if (!checkAdminAuth()) {
+                        clearInterval(interval);
+                        return;
+                    }
+                    clearInterval(interval);
+                    showAdminAndLoad();
+                } else if (tries >= maxTries) {
+                    clearInterval(interval);
+                    if (__DEBUG) { updateDebugPanel(['Timeout waiting for currentUser', 'Not redirecting due to debug=1']); return; }
+                    window.location.replace('index.html');
+                }
+            }, 300);
         });
     </script>
 </body>

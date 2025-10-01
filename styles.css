@@ -171,17 +171,14 @@ body {
     transition: all 0.3s ease;
 }
 
-/* Light mode button styling - black text for better contrast */
 .btn-primary {
     background-color: var(--text-color);
     border-color: var(--text-color);
-    color: white;
 }
 
 .btn-primary:hover {
     background-color: var(--accent-color);
     border-color: var(--accent-color);
-    color: white;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(246, 81, 112, 0.3);
 }
@@ -197,85 +194,9 @@ body {
     color: white;
 }
 
-/* Success buttons */
-.btn-success {
-    background-color: var(--success-color);
-    border-color: var(--success-color);
-    color: white;
-}
-
-.btn-success:hover {
-    background-color: #157347;
-    border-color: #157347;
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(25, 135, 84, 0.3);
-}
-
-/* Info buttons */
-.btn-info {
-    background-color: var(--info-color);
-    border-color: var(--info-color);
-    color: white;
-}
-
-.btn-info:hover {
-    background-color: #0aa2c0;
-    border-color: #0aa2c0;
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(13, 202, 240, 0.3);
-}
-
-/* Warning buttons */
-.btn-warning {
-    background-color: var(--warning-color);
-    border-color: var(--warning-color);
-    color: #000;
-}
-
-.btn-warning:hover {
-    background-color: #ffca2c;
-    border-color: #ffca2c;
-    color: #000;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
-}
-
-/* Secondary buttons */
-.btn-secondary {
-    background-color: var(--secondary-color);
-    border-color: var(--secondary-color);
-    color: white;
-}
-
-.btn-secondary:hover {
-    background-color: #5c636a;
-    border-color: #5c636a;
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
-}
-
 .btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(100, 210, 226, 0.3);
-}
-
-/* Disabled button styling */
-.btn.disabled,
-.btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    pointer-events: none;
-    transform: none !important;
-    box-shadow: none !important;
-}
-
-.btn.disabled:hover,
-.btn:disabled:hover {
-    transform: none !important;
-    box-shadow: none !important;
 }
 
 /* Sections */

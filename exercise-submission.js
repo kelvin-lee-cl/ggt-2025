@@ -1,14 +1,6 @@
 // Exercise Submission System with Firebase Integration
 class ExerciseSubmission {
     constructor() {
-        this.firebaseConfig = {
-            apiKey: "demo-api-key",
-            authDomain: "educational-hub-demo.firebaseapp.com",
-            projectId: "educational-hub-demo",
-            storageBucket: "educational-hub-demo.appspot.com",
-            messagingSenderId: "123456789",
-            appId: "demo-app-id"
-        };
         this.db = null;
         this.storage = null;
         this.auth = null;
@@ -17,17 +9,32 @@ class ExerciseSubmission {
 
     // Initialize Firebase (demo mode for localhost)
     initializeFirebase() {
-        // Check if running locally
+        try {
+            // Prefer the shared Firebase instances if already initialized by script.js
+            if (window.firebaseDb && window.firebaseAuth && typeof firebase !== 'undefined') {
+                this.db = window.firebaseDb;
+                this.auth = window.firebaseAuth;
+                // storage may not be pre-initialized
+                if (firebase.storage) {
+                    this.storage = firebase.storage();
+                }
+                return;
+            }
+        } catch (e) { /* fall through */ }
+
+        // Fallbacks
         const isLocalhost = window.location.hostname === 'localhost' ||
             window.location.hostname === '127.0.0.1' ||
             window.location.hostname === '0.0.0.0' ||
             window.location.hostname.includes('localhost');
 
-        if (isLocalhost) {
-            console.log("Running locally - using demo Firebase mode");
-            this.setupDemoFirebase();
-        } else {
-            // In production, initialize real Firebase
+        if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length) {
+            // Use existing app
+            this.db = firebase.firestore();
+            this.auth = firebase.auth();
+            if (firebase.storage) this.storage = firebase.storage();
+        } else if (isLocalhost) {
+            // Use real Firebase on localhost as well
             this.setupRealFirebase();
         }
     }
@@ -73,9 +80,8 @@ class ExerciseSubmission {
 
     // Setup real Firebase for production
     setupRealFirebase() {
-        // Initialize Firebase
         if (typeof firebase !== 'undefined') {
-            firebase.initializeApp(this.firebaseConfig);
+            // Expect firebase to be already initialized by page scripts
             this.db = firebase.firestore();
             this.storage = firebase.storage();
             this.auth = firebase.auth();
@@ -304,6 +310,8 @@ class ExerciseSubmission {
             // Save to Firebase
             await this.saveSubmission(submissionData);
 
+            // Record exercise submission for completion logic
+            try { if (typeof window.recordExerciseSubmission === 'function') window.recordExerciseSubmission(lessonId); } catch (e) { }
             showAlert('Exercise submitted successfully!', 'success');
             this.closeModal();
 
@@ -347,16 +355,23 @@ class ExerciseSubmission {
     }
 }
 
-// Initialize exercise submission
-const exerciseSubmission = new ExerciseSubmission();
+// Initialize exercise submission (lazy singleton to avoid TDZ/load-order issues)
+var exerciseSubmission = null;
+function getExerciseSubmissionInstance() {
+    if (!window.exerciseSubmission) {
+        window.exerciseSubmission = new ExerciseSubmission();
+    }
+    return window.exerciseSubmission;
+}
 
 // Function to start exercise submission (called from lesson pages)
 function startExerciseSubmission(lessonId) {
     console.log('startExerciseSubmission called with lessonId:', lessonId);
-    if (typeof exerciseSubmission !== 'undefined') {
-        exerciseSubmission.showExerciseModal(lessonId);
-    } else {
-        console.error('exerciseSubmission not defined');
+    try {
+        const inst = getExerciseSubmissionInstance();
+        inst.showExerciseModal(lessonId);
+    } catch (e) {
+        console.error('exerciseSubmission not initialized', e);
     }
 }
 
