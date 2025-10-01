@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q&A Assessment - Educational Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Shared Navbar -->
+    <div id="navbar-root"></div>
+
+    <!-- Main Content -->
+    <div class="container mt-5 pt-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <h1 class="text-center mb-5">Q&A Assessment</h1>
+
+                <!-- Quiz Selection -->
+                <div class="card shadow-soft mb-4" id="quizSelection">
+                    <div class="card-body">
+                        <h5 class="card-title">Select a Quiz</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="card h-100 quiz-option" onclick="startQuiz('lesson1')">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-book fa-2x text-primary mb-3"></i>
+                                        <h6>Lesson 1 Quiz</h6>
+                                        <p class="text-muted small">Basic concepts and fundamentals</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="card h-100 quiz-option" onclick="startQuiz('lesson2')">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-lightbulb fa-2x text-warning mb-3"></i>
+                                        <h6>Lesson 2 Quiz</h6>
+                                        <p class="text-muted small">Advanced topics and concepts</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quiz Container -->
+                <div id="quizContainer" style="display: none;">
+                    <div class="card shadow-soft">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0" id="quizTitle">Quiz</h5>
+                            <div>
+                                <span class="badge bg-primary" id="questionCounter">Question 1 of 5</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="progress mb-4">
+                                <div class="progress-bar" id="quizProgress" role="progressbar" style="width: 0%"></div>
+                            </div>
+
+                            <div id="questionContainer">
+                                <!-- Questions will be loaded here -->
+                            </div>
+
+                            <div class="d-flex justify-content-between mt-4">
+                                <button class="btn btn-outline-secondary" id="prevBtn" onclick="previousQuestion()"
+                                    disabled>
+                                    <i class="fas fa-arrow-left me-2"></i>Previous
+                                </button>
+                                <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">
+                                    Next<i class="fas fa-arrow-right ms-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Container -->
+                <div id="resultsContainer" style="display: none;">
+                    <div class="card shadow-soft">
+                        <div class="card-body text-center">
+                            <i class="fas fa-trophy fa-4x text-warning mb-4"></i>
+                            <h3 id="finalScore">Your Score: 0/0</h3>
+                            <p id="scoreMessage" class="lead"></p>
+                            <div class="mt-4">
+                                <button class="btn btn-primary me-2" onclick="retakeQuiz()">Retake Quiz</button>
+                                <button class="btn btn-outline-primary" onclick="backToSelection()">Back to
+                                    Selection</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Netlify Identity Widget -->
+    <div id="netlify-identity-widget"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <script src="navbar.js"></script>
+    <script src="script.js"></script>
+    <script src="quiz.js"></script>
+    <script>
+        // Auto-start quiz based on URL parameter
+        document.addEventListener('DOMContentLoaded', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const lesson = urlParams.get('lesson');
+
+            if (lesson === 'lesson1') {
+                // Hide quiz selection and start lesson 1 quiz
+                document.getElementById('quizSelection').style.display = 'none';
+                startQuiz('lesson1');
+            }
+        });
+    </script>
+</body>
+
+</html>

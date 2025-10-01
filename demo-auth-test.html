@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Authentication Test - Girls Go Tech AI Application</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Shared Navbar -->
+    <div id="navbar-root"></div>
+
+    <!-- Main Content -->
+    <div class="container mt-5 pt-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h2 class="card-title mb-4">Demo Authentication Test</h2>
+                        <p class="card-text mb-4">
+                            This page demonstrates the local demo authentication system.
+                            You can test login features without deploying to Netlify.
+                        </p>
+
+                        <div class="alert alert-info">
+                            <h5><i class="fas fa-info-circle me-2"></i>Demo Login Options</h5>
+                            <p class="mb-2">Click the "Login" button in the navbar to see demo login options:</p>
+                            <ul class="text-start">
+                                <li><strong>Gmail Demo:</strong> student@gmail.com</li>
+                                <li><strong>Outlook Demo:</strong> student@outlook.com</li>
+                                <li><strong>Admin Demo:</strong> admin@educationalhub.com</li>
+                            </ul>
+                        </div>
+
+                        <div class="alert alert-success">
+                            <h5><i class="fas fa-check-circle me-2"></i>Features Available</h5>
+                            <ul class="text-start">
+                                <li>✅ Demo Gmail/Outlook login</li>
+                                <li>✅ Admin access control</li>
+                                <li>✅ User session persistence</li>
+                                <li>✅ Progress tracking</li>
+                                <li>✅ Theme switching</li>
+                                <li>✅ Language switching</li>
+                            </ul>
+                        </div>
+
+                        <div class="d-flex justify-content-center gap-3">
+                            <a href="index.html" class="btn btn-primary">
+                                <i class="fas fa-home me-2"></i>Go to Home
+                            </a>
+                            <a href="lesson1.html" class="btn btn-outline-primary">
+                                <i class="fas fa-book me-2"></i>Test Lesson
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Netlify Identity Widget -->
+    <div id="netlify-identity-widget"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <script src="navbar.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

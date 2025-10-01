@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Girl Go Tech AI Application</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Shared Navbar -->
+    <div id="navbar-root"></div>
+
+    <!-- Main Content -->
+    <div class="container mt-5 pt-5">
+        <div class="row">
+            <div class="col-12">
+                <!-- Admin Header -->
+                <div class="text-center mb-5">
+                    <h1 class="display-4 fw-bold text-primary">
+                        <i class="fas fa-chart-line me-3"></i>Admin Dashboard
+                    </h1>
+                    <p class="lead text-muted">Monitor student progress and export data</p>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="row mb-5">
+                    <div class="col-md-3 mb-3">
+                        <div class="card bg-primary text-white">
+                            <div class="card-body text-center">
+                                <i class="fas fa-users fa-2x mb-2"></i>
+                                <h4 id="totalStudents">-</h4>
+                                <p class="mb-0">Total Students</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card bg-success text-white">
+                            <div class="card-body text-center">
+                                <i class="fas fa-check-circle fa-2x mb-2"></i>
+                                <h4 id="completedLessons">-</h4>
+                                <p class="mb-0">Completed Lessons</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card bg-warning text-white">
+                            <div class="card-body text-center">
+                                <i class="fas fa-clock fa-2x mb-2"></i>
+                                <h4 id="inProgressLessons">-</h4>
+                                <p class="mb-0">In Progress</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card bg-info text-white">
+                            <div class="card-body text-center">
+                                <i class="fas fa-percentage fa-2x mb-2"></i>
+                                <h4 id="completionRate">-</h4>
+                                <p class="mb-0">Completion Rate</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Export Controls -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-download me-2"></i>Export Data
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button class="btn btn-success w-100" onclick="exportStudentProgress()">
+                                    <i class="fas fa-file-csv me-2"></i>Export Student Progress (CSV)
+                                </button>
+                            </div>
+                            <div class="col-md-6">
+                                <button class="btn btn-info w-100" onclick="exportLessonStats()">
+                                    <i class="fas fa-chart-bar me-2"></i>Export Lesson Statistics (CSV)
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Student Progress Table -->
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-table me-2"></i>Student Progress Overview
+                        </h5>
+                        <button class="btn btn-outline-primary btn-sm" onclick="refreshData()">
+                            <i class="fas fa-sync-alt me-1"></i>Refresh
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover" id="progressTable">
+                                <thead>
+                                    <tr>
+                                        <th>Student ID</th>
+                                        <th>Email</th>
+                                        <th>Lessons Completed</th>
+                                        <th>Progress</th>
+                                        <th>Last Activity</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="progressTableBody">
+                                    <tr>
+                                        <td colspan="6" class="text-center">
+                                            <div class="spinner-border text-primary" role="status">
+                                                <span class="visually-hidden">Loading...</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Netlify Identity Widget -->
+    <div id="netlify-identity-widget"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="navbar.js"></script>
+    <script src="script.js"></script>
+    <script src="firebase-config.js"></script>
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDd77LjKa3wuaumWHtYhN_3tsVpD99juK0",
+            authDomain: "ggt-2025.firebaseapp.com",
+            projectId: "ggt-2025",
+            storageBucket: "ggt-2025.firebasestorage.app",
+            messagingSenderId: "822726025795",
+            appId: "1:822726025795:web:4e059a32a26e5bc336eaf6",
+            measurementId: "G-72DQBYXSVN"
+        };
+
+        // Initialize Firebase
+        let db = null;
+        let auth = null;
+        let allStudentData = [];
+
+        // Initialize Firebase
+        function initializeFirebase() {
+            const isLocalhost = window.location.hostname === 'localhost' ||
+                window.location.hostname === '127.0.0.1' ||
+                window.location.hostname === '0.0.0.0' ||
+                window.location.hostname.includes('localhost');
+
+            if (isLocalhost) {
+                console.log("Running locally - using demo Firebase mode");
+                setupDemoFirebase();
+            } else {
+                // In production, initialize real Firebase
+                if (typeof firebase !== 'undefined') {
+                    firebase.initializeApp(firebaseConfig);
+                    db = firebase.firestore();
+                    auth = firebase.auth();
+                }
+            }
+        }
+
+        // Setup demo Firebase for localhost
+        function setupDemoFirebase() {
+            db = {
+                collection: (name) => ({
+                    get: () => Promise.resolve({
+                        docs: [
+                            {
+                                id: 'demo-user-1',
+                                data: () => ({
+                                    userId: 'demo-user-1',
+                                    email: 'student1@gmail.com',
+                                    lessons: {
+                                        lesson1: { status: 'completed', completedAt: '2024-01-15T10:30:00.000Z' },
+                                        lesson2: { status: 'in-progress', startedAt: '2024-01-16T09:15:00.000Z' },
+                                        lesson3: { status: 'not-started' }
+                                    },
+                                    createdAt: '2024-01-10T08:00:00.000Z',
+                                    lastUpdated: '2024-01-16T09:15:00.000Z'
+                                })
+                            },
+                            {
+                                id: 'demo-user-2',
+                                data: () => ({
+                                    userId: 'demo-user-2',
+                                    email: 'student2@gmail.com',
+                                    lessons: {
+                                        lesson1: { status: 'completed', completedAt: '2024-01-14T14:20:00.000Z' },
+                                        lesson2: { status: 'completed', completedAt: '2024-01-15T16:45:00.000Z' },
+                                        lesson3: { status: 'completed', completedAt: '2024-01-16T11:30:00.000Z' }
+                                    },
+                                    createdAt: '2024-01-12T10:00:00.000Z',
+                                    lastUpdated: '2024-01-16T11:30:00.000Z'
+                                })
+                            }
+                        ]
+                    })
+                })
+            };
+        }
+
+        // Load all student data
+        async function loadStudentData() {
+            try {
+                const snapshot = await db.collection('userProgress').get();
+                allStudentData = [];
+
+                snapshot.docs.forEach(doc => {
+                    const data = doc.data();
+                    allStudentData.push({
+                        id: doc.id,
+                        ...data
+                    });
+                });
+
+                updateStats();
+                renderProgressTable();
+            } catch (error) {
+                console.error('Error loading student data:', error);
+                showAlert('Error loading student data', 'danger');
+            }
+        }
+
+        // Update statistics
+        function updateStats() {
+            const totalStudents = allStudentData.length;
+            let completedLessons = 0;
+            let inProgressLessons = 0;
+            let totalLessons = 0;
+
+            allStudentData.forEach(student => {
+                if (student.lessons) {
+                    Object.values(student.lessons).forEach(lesson => {
+                        totalLessons++;
+                        if (lesson.status === 'completed') {
+                            completedLessons++;
+                        } else if (lesson.status === 'in-progress') {
+                            inProgressLessons++;
+                        }
+                    });
+                }
+            });
+
+            const completionRate = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+
+            document.getElementById('totalStudents').textContent = totalStudents;
+            document.getElementById('completedLessons').textContent = completedLessons;
+            document.getElementById('inProgressLessons').textContent = inProgressLessons;
+            document.getElementById('completionRate').textContent = completionRate + '%';
+        }
+
+        // Render progress table
+        function renderProgressTable() {
+            const tbody = document.getElementById('progressTableBody');
+
+            if (allStudentData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No student data available</td></tr>';
+                return;
+            }
+
+            let tableHTML = '';
+            allStudentData.forEach(student => {
+                const completedCount = student.lessons ?
+                    Object.values(student.lessons).filter(lesson => lesson.status === 'completed').length : 0;
+                const totalLessons = student.lessons ? Object.keys(student.lessons).length : 0;
+                const progressPercentage = totalLessons > 0 ? Math.round((completedCount / totalLessons) * 100) : 0;
+                const lastActivity = student.lastUpdated ? new Date(student.lastUpdated).toLocaleDateString() : 'Never';
+
+                tableHTML += `
+                    <tr>
+                        <td>${student.userId}</td>
+                        <td>${student.email || 'N/A'}</td>
+                        <td>
+                            <span class="badge bg-success">${completedCount}</span>
+                        </td>
+                        <td>
+                            <div class="progress" style="height: 20px;">
+                                <div class="progress-bar" role="progressbar" style="width: ${progressPercentage}%">
+                                    ${progressPercentage}%
+                                </div>
+                            </div>
+                        </td>
+                        <td>${lastActivity}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary" onclick="viewStudentDetails('${student.userId}')">
+                                <i class="fas fa-eye"></i> View Details
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            tbody.innerHTML = tableHTML;
+        }
+
+        // Export student progress to CSV
+        function exportStudentProgress() {
+            const csvData = [];
+            csvData.push(['Student ID', 'Email', 'Lesson ID', 'Status', 'Started At', 'Completed At', 'Last Updated']);
+
+            allStudentData.forEach(student => {
+                if (student.lessons) {
+                    Object.entries(student.lessons).forEach(([lessonId, lessonData]) => {
+                        csvData.push([
+                            student.userId,
+                            student.email || 'N/A',
+                            lessonId,
+                            lessonData.status,
+                            lessonData.startedAt || 'N/A',
+                            lessonData.completedAt || 'N/A',
+                            student.lastUpdated || 'N/A'
+                        ]);
+                    });
+                } else {
+                    csvData.push([student.userId, student.email || 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A']);
+                }
+            });
+
+            downloadCSV(csvData, 'student_progress.csv');
+        }
+
+        // Export lesson statistics to CSV
+        function exportLessonStats() {
+            const lessonStats = {};
+
+            allStudentData.forEach(student => {
+                if (student.lessons) {
+                    Object.entries(student.lessons).forEach(([lessonId, lessonData]) => {
+                        if (!lessonStats[lessonId]) {
+                            lessonStats[lessonId] = {
+                                total: 0,
+                                completed: 0,
+                                inProgress: 0,
+                                notStarted: 0
+                            };
+                        }
+
+                        lessonStats[lessonId].total++;
+                        lessonStats[lessonId][lessonData.status]++;
+                    });
+                }
+            });
+
+            const csvData = [];
+            csvData.push(['Lesson ID', 'Total Students', 'Completed', 'In Progress', 'Not Started', 'Completion Rate']);
+
+            Object.entries(lessonStats).forEach(([lessonId, stats]) => {
+                const completionRate = stats.total > 0 ? Math.round((stats.completed / stats.total) * 100) : 0;
+                csvData.push([
+                    lessonId,
+                    stats.total,
+                    stats.completed,
+                    stats.inProgress,
+                    stats.notStarted,
+                    completionRate + '%'
+                ]);
+            });
+
+            downloadCSV(csvData, 'lesson_statistics.csv');
+        }
+
+        // Download CSV file
+        function downloadCSV(data, filename) {
+            const csvContent = data.map(row => row.join(',')).join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+
+            if (link.download !== undefined) {
+                const url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', filename);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
+
+        // View student details
+        function viewStudentDetails(userId) {
+            const student = allStudentData.find(s => s.userId === userId);
+            if (student) {
+                let details = `Student: ${student.userId}\nEmail: ${student.email || 'N/A'}\n\nLesson Progress:\n`;
+
+                if (student.lessons) {
+                    Object.entries(student.lessons).forEach(([lessonId, lessonData]) => {
+                        details += `${lessonId}: ${lessonData.status}`;
+                        if (lessonData.startedAt) details += ` (Started: ${new Date(lessonData.startedAt).toLocaleDateString()})`;
+                        if (lessonData.completedAt) details += ` (Completed: ${new Date(lessonData.completedAt).toLocaleDateString()})`;
+                        details += '\n';
+                    });
+                } else {
+                    details += 'No lesson data available';
+                }
+
+                alert(details);
+            }
+        }
+
+        // Refresh data
+        function refreshData() {
+            loadStudentData();
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            initializeFirebase();
+            loadStudentData();
+        });
+    </script>
+</body>
+
+</html>

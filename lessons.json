@@ -1,0 +1,625 @@
+{
+    "lessons": [
+        {
+            "id": "lesson1",
+            "title": "Introduction to Web Development",
+            "subtitle": "Basic concepts and fundamentals",
+            "progress": 0,
+            "status": "not-started",
+            "statusText": "Not started",
+            "objectives": [
+                "Understand basic web development concepts",
+                "Learn HTML structure and syntax",
+                "Introduction to CSS styling",
+                "Basic JavaScript functionality"
+            ],
+            "sections": [
+                {
+                    "title": "What is Web Development?",
+                    "content": "Web development is the process of creating websites and web applications. It involves several key technologies:",
+                    "type": "text"
+                },
+                {
+                    "title": "Key Technologies",
+                    "content": [
+                        {
+                            "name": "HTML",
+                            "icon": "fas fa-code",
+                            "color": "text-primary",
+                            "description": "Structure and content"
+                        },
+                        {
+                            "name": "CSS",
+                            "icon": "fas fa-paint-brush",
+                            "color": "text-success",
+                            "description": "Styling and design"
+                        },
+                        {
+                            "name": "JavaScript",
+                            "icon": "fas fa-cogs",
+                            "color": "text-warning",
+                            "description": "Interactivity and behavior"
+                        }
+                    ],
+                    "type": "technologies"
+                },
+                {
+                    "title": "Key Concepts",
+                    "content": [
+                        {
+                            "title": "HTML Basics",
+                            "description": "HTML (HyperText Markup Language) is the foundation of web pages. It uses tags to structure content:",
+                            "code": "<h1>Welcome to Web Development</h1>\n<p>This is a paragraph of text.</p>\n<a href=\"https://example.com\">Visit our website</a>"
+                        },
+                        {
+                            "title": "CSS Styling",
+                            "description": "CSS (Cascading Style Sheets) controls the appearance of HTML elements:",
+                            "code": "h1 {\n    color: blue;\n    font-size: 24px;\n    text-align: center;\n}"
+                        },
+                        {
+                            "title": "JavaScript Basics",
+                            "description": "JavaScript adds interactivity to web pages:",
+                            "code": "function greetUser() {\n    alert('Welcome to our website!');\n}\n\ndocument.getElementById('button').onclick = greetUser;"
+                        }
+                    ],
+                    "type": "accordion"
+                }
+            ],
+            "actions": {
+                "primary": {
+                    "text": "Mark as Complete",
+                    "onclick": "markLessonComplete('lesson1')"
+                },
+                "quiz": {
+                    "text": "Take Quiz",
+                    "href": "quiz.html?lesson=lesson1"
+                },
+                "exercise": {
+                    "text": "Submit Exercise",
+                    "onclick": "startExerciseSubmission('lesson1')"
+                },
+                "next": {
+                    "text": "Next Lesson",
+                    "href": "lesson.html?lesson=lesson2"
+                }
+            }
+        },
+        {
+            "id": "lesson2",
+            "title": "Advanced JavaScript Concepts",
+            "subtitle": "Deeper dive into complex subjects",
+            "progress": 0,
+            "status": "not-started",
+            "statusText": "Not started",
+            "objectives": [
+                "Advanced JavaScript concepts",
+                "DOM manipulation techniques",
+                "Event handling and callbacks",
+                "Asynchronous programming"
+            ],
+            "sections": [
+                {
+                    "title": "Advanced JavaScript Concepts",
+                    "content": "This lesson covers more complex JavaScript topics that are essential for modern web development.",
+                    "type": "text"
+                },
+                {
+                    "title": "Advanced Topics",
+                    "content": [
+                        {
+                            "name": "Functions & Closures",
+                            "icon": "fas fa-code",
+                            "color": "text-primary",
+                            "description": "Understanding function scope and closure behavior"
+                        },
+                        {
+                            "name": "Async/Await",
+                            "icon": "fas fa-sync",
+                            "color": "text-success",
+                            "description": "Modern asynchronous programming patterns"
+                        },
+                        {
+                            "name": "Modules",
+                            "icon": "fas fa-puzzle-piece",
+                            "color": "text-warning",
+                            "description": "Organizing code with ES6 modules"
+                        },
+                        {
+                            "name": "APIs",
+                            "icon": "fas fa-cogs",
+                            "color": "text-info",
+                            "description": "Working with external data sources"
+                        }
+                    ],
+                    "type": "technologies"
+                },
+                {
+                    "title": "Code Examples",
+                    "content": [
+                        {
+                            "title": "Closures in JavaScript",
+                            "description": "Closures allow functions to access variables from their outer scope:",
+                            "code": "function createCounter() {\n    let count = 0;\n    return function() {\n        count++;\n        return count;\n    };\n}\n\nconst counter = createCounter();\nconsole.log(counter()); // 1\nconsole.log(counter()); // 2"
+                        },
+                        {
+                            "title": "Async/Await Pattern",
+                            "description": "Modern way to handle asynchronous operations:",
+                            "code": "async function fetchData() {\n    try {\n        const response = await fetch('/api/data');\n        const data = await response.json();\n        return data;\n    } catch (error) {\n        console.error('Error:', error);\n    }\n}"
+                        }
+                    ],
+                    "type": "accordion"
+                }
+            ],
+            "actions": {
+                "primary": {
+                    "text": "Mark as Complete",
+                    "onclick": "markLessonComplete('lesson2')"
+                },
+                "quiz": {
+                    "text": "Take Quiz",
+                    "href": "quiz.html?lesson=lesson2"
+                },
+                "exercise": {
+                    "text": "Submit Exercise",
+                    "onclick": "startExerciseSubmission('lesson2')"
+                },
+                "next": {
+                    "text": "Next Lesson",
+                    "href": "lesson.html?lesson=lesson3"
+                }
+            }
+        },
+        {
+            "id": "lesson3",
+            "title": "Practical Applications",
+            "subtitle": "Real-world examples and case studies",
+            "progress": 0,
+            "status": "not-started",
+            "statusText": "Not started",
+            "objectives": [
+                "Build real-world projects",
+                "Apply best practices",
+                "Debug and troubleshoot",
+                "Deploy applications"
+            ],
+            "sections": [
+                {
+                    "title": "Project Examples",
+                    "content": "This lesson focuses on applying your knowledge to real-world scenarios.",
+                    "type": "text"
+                },
+                {
+                    "title": "Project Ideas",
+                    "content": [
+                        {
+                            "name": "Todo Application",
+                            "icon": "fas fa-todo-list",
+                            "color": "text-primary",
+                            "description": "Build a task management app with local storage",
+                            "progress": 0
+                        },
+                        {
+                            "name": "Weather Dashboard",
+                            "icon": "fas fa-weather-sun",
+                            "color": "text-warning",
+                            "description": "Create a weather app using external APIs",
+                            "progress": 0
+                        },
+                        {
+                            "name": "Blog Platform",
+                            "icon": "fas fa-blog",
+                            "color": "text-info",
+                            "description": "Develop a content management system",
+                            "progress": 0
+                        },
+                        {
+                            "name": "E-commerce Site",
+                            "icon": "fas fa-shopping-cart",
+                            "color": "text-success",
+                            "description": "Build an online shopping platform",
+                            "progress": 0
+                        }
+                    ],
+                    "type": "projects"
+                },
+                {
+                    "title": "Development Best Practices",
+                    "content": [
+                        {
+                            "title": "Code Quality",
+                            "items": [
+                                "Write clean, readable code",
+                                "Use meaningful variable names",
+                                "Comment your code appropriately",
+                                "Follow consistent formatting"
+                            ]
+                        },
+                        {
+                            "title": "Security",
+                            "items": [
+                                "Validate user input",
+                                "Use HTTPS in production",
+                                "Implement proper authentication",
+                                "Keep dependencies updated"
+                            ]
+                        }
+                    ],
+                    "type": "best-practices"
+                }
+            ],
+            "actions": {
+                "primary": {
+                    "text": "Start Lesson",
+                    "onclick": "markLessonComplete('lesson3')"
+                },
+                "quiz": {
+                    "text": "Take Quiz",
+                    "href": "quiz.html?lesson=lesson3"
+                },
+                "exercise": {
+                    "text": "Submit Exercise",
+                    "onclick": "startExerciseSubmission('lesson3')"
+                },
+                "project": {
+                    "text": "Submit Project",
+                    "href": "upload.html"
+                },
+                "home": {
+                    "text": "Back to Home",
+                    "href": "index.html"
+                }
+            }
+        },
+        {
+            "id": "lesson4",
+            "title": "Responsive Web Design",
+            "subtitle": "Creating mobile-friendly websites",
+            "progress": 0,
+            "status": "not-started",
+            "statusText": "Not started",
+            "objectives": [
+                "Learn CSS Grid and Flexbox",
+                "Understand responsive breakpoints",
+                "Create mobile-first designs",
+                "Optimize for different devices"
+            ],
+            "sections": [
+                {
+                    "title": "Responsive Design Principles",
+                    "content": "Learn how to create websites that work perfectly on all devices, from mobile phones to desktop computers.",
+                    "type": "text"
+                }
+            ],
+            "actions": {
+                "primary": {
+                    "text": "Start Lesson",
+                    "onclick": "markLessonComplete('lesson4')"
+                },
+                "quiz": {
+                    "text": "Take Quiz",
+                    "href": "quiz.html?lesson=lesson4"
+                },
+                "exercise": {
+                    "text": "Submit Exercise",
+                    "onclick": "startExerciseSubmission('lesson4')"
+                },
+                "next": {
+                    "text": "Next Lesson",
+                    "href": "lesson.html?lesson=lesson5"
+                }
+            }
+        },
+        {
+            "id": "lesson5",
+            "title": "CSS Frameworks",
+            "subtitle": "Bootstrap and modern CSS frameworks",
+            "progress": 0,
+            "status": "not-started",
+            "statusText": "Not started",
+            "objectives": [
+                "Master Bootstrap components",
+                "Learn CSS preprocessors",
+                "Understand utility classes",
+                "Create consistent designs"
+            ],
+            "sections": [
+                {
+                    "title": "CSS Framework Benefits",
+                    "content": "Learn how CSS frameworks can speed up your development process and create consistent designs.",
+                    "type": "text"
+                }
+            ],
+            "actions": {
+                "primary": {
+                    "text": "Start Lesson",
+                    "onclick": "markLessonComplete('lesson5')"
+                },
+                "quiz": {
+                    "text": "Take Quiz",
+                    "href": "quiz.html?lesson=lesson5"
+                },
+                "exercise": {
+                    "text": "Submit Exercise",
+                    "onclick": "startExerciseSubmission('lesson5')"
+                },
+                "next": {
+                    "text": "Next Lesson",
+                    "href": "lesson.html?lesson=lesson6"
+                }
+            }
+        },
+        {
+            "id": "lesson6",
+            "title": "JavaScript ES6+",
+            "subtitle": "Modern JavaScript features",
+            "progress": 0,
+            "status": "not-started",
+            "statusText": "Not started",
+            "objectives": [
+                "Learn arrow functions",
+                "Understand destructuring",
+                "Master template literals",
+                "Use modern JavaScript syntax"
+            ],
+            "sections": [
+                {
+                    "title": "ES6+ Features",
+                    "content": "Explore the modern features that make JavaScript more powerful and easier to write.",
+                    "type": "text"
+                }
+            ],
+            "actions": {
+                "primary": {
+                    "text": "Start Lesson",
+                    "onclick": "markLessonComplete('lesson6')"
+                },
+                "quiz": {
+                    "text": "Take Quiz",
+                    "href": "quiz.html?lesson=lesson6"
+                },
+                "exercise": {
+                    "text": "Submit Exercise",
+                    "onclick": "startExerciseSubmission('lesson6')"
+                },
+                "next": {
+                    "text": "Next Lesson",
+                    "href": "lesson.html?lesson=lesson7"
+                }
+            }
+        },
+        {
+            "id": "lesson7",
+            "title": "DOM Manipulation",
+            "subtitle": "Working with the Document Object Model",
+            "progress": 0,
+            "status": "not-started",
+            "statusText": "Not started",
+            "objectives": [
+                "Select and modify elements",
+                "Handle events effectively",
+                "Create dynamic content",
+                "Optimize DOM performance"
+            ],
+            "sections": [
+                {
+                    "title": "DOM Fundamentals",
+                    "content": "Learn how to interact with and manipulate the Document Object Model to create dynamic web pages.",
+                    "type": "text"
+                }
+            ],
+            "actions": {
+                "primary": {
+                    "text": "Start Lesson",
+                    "onclick": "markLessonComplete('lesson7')"
+                },
+                "quiz": {
+                    "text": "Take Quiz",
+                    "href": "quiz.html?lesson=lesson7"
+                },
+                "exercise": {
+                    "text": "Submit Exercise",
+                    "onclick": "startExerciseSubmission('lesson7')"
+                },
+                "next": {
+                    "text": "Next Lesson",
+                    "href": "lesson.html?lesson=lesson8"
+                }
+            }
+        },
+        {
+            "id": "lesson8",
+            "title": "API Integration",
+            "subtitle": "Working with external data",
+            "progress": 0,
+            "status": "not-started",
+            "statusText": "Not started",
+            "objectives": [
+                "Make HTTP requests",
+                "Handle API responses",
+                "Work with JSON data",
+                "Implement error handling"
+            ],
+            "sections": [
+                {
+                    "title": "API Basics",
+                    "content": "Learn how to fetch data from external APIs and integrate it into your web applications.",
+                    "type": "text"
+                }
+            ],
+            "actions": {
+                "primary": {
+                    "text": "Start Lesson",
+                    "onclick": "markLessonComplete('lesson8')"
+                },
+                "quiz": {
+                    "text": "Take Quiz",
+                    "href": "quiz.html?lesson=lesson8"
+                },
+                "exercise": {
+                    "text": "Submit Exercise",
+                    "onclick": "startExerciseSubmission('lesson8')"
+                },
+                "next": {
+                    "text": "Next Lesson",
+                    "href": "lesson.html?lesson=lesson9"
+                }
+            }
+        },
+        {
+            "id": "lesson9",
+            "title": "State Management",
+            "subtitle": "Managing application state",
+            "progress": 0,
+            "status": "not-started",
+            "statusText": "Not started",
+            "objectives": [
+                "Understand state concepts",
+                "Implement local storage",
+                "Use session storage",
+                "Manage complex state"
+            ],
+            "sections": [
+                {
+                    "title": "State Management Patterns",
+                    "content": "Learn different approaches to managing state in web applications for better user experience.",
+                    "type": "text"
+                }
+            ],
+            "actions": {
+                "primary": {
+                    "text": "Start Lesson",
+                    "onclick": "markLessonComplete('lesson9')"
+                },
+                "quiz": {
+                    "text": "Take Quiz",
+                    "href": "quiz.html?lesson=lesson9"
+                },
+                "exercise": {
+                    "text": "Submit Exercise",
+                    "onclick": "startExerciseSubmission('lesson9')"
+                },
+                "next": {
+                    "text": "Next Lesson",
+                    "href": "lesson.html?lesson=lesson10"
+                }
+            }
+        },
+        {
+            "id": "lesson10",
+            "title": "Performance Optimization",
+            "subtitle": "Making websites fast and efficient",
+            "progress": 0,
+            "status": "not-started",
+            "statusText": "Not started",
+            "objectives": [
+                "Optimize loading times",
+                "Minimize bundle sizes",
+                "Implement lazy loading",
+                "Use performance tools"
+            ],
+            "sections": [
+                {
+                    "title": "Performance Best Practices",
+                    "content": "Learn techniques to make your websites load faster and provide better user experience.",
+                    "type": "text"
+                }
+            ],
+            "actions": {
+                "primary": {
+                    "text": "Start Lesson",
+                    "onclick": "markLessonComplete('lesson10')"
+                },
+                "quiz": {
+                    "text": "Take Quiz",
+                    "href": "quiz.html?lesson=lesson10"
+                },
+                "exercise": {
+                    "text": "Submit Exercise",
+                    "onclick": "startExerciseSubmission('lesson10')"
+                },
+                "next": {
+                    "text": "Next Lesson",
+                    "href": "lesson.html?lesson=lesson11"
+                }
+            }
+        },
+        {
+            "id": "lesson11",
+            "title": "Testing and Debugging",
+            "subtitle": "Quality assurance and troubleshooting",
+            "progress": 0,
+            "status": "not-started",
+            "statusText": "Not started",
+            "objectives": [
+                "Write unit tests",
+                "Debug JavaScript code",
+                "Use browser dev tools",
+                "Implement error handling"
+            ],
+            "sections": [
+                {
+                    "title": "Testing Strategies",
+                    "content": "Learn how to test your code and debug issues effectively to create reliable web applications.",
+                    "type": "text"
+                }
+            ],
+            "actions": {
+                "primary": {
+                    "text": "Start Lesson",
+                    "onclick": "markLessonComplete('lesson11')"
+                },
+                "quiz": {
+                    "text": "Take Quiz",
+                    "href": "quiz.html?lesson=lesson11"
+                },
+                "exercise": {
+                    "text": "Submit Exercise",
+                    "onclick": "startExerciseSubmission('lesson11')"
+                },
+                "next": {
+                    "text": "Next Lesson",
+                    "href": "lesson.html?lesson=lesson12"
+                }
+            }
+        },
+        {
+            "id": "lesson12",
+            "title": "Deployment and Hosting",
+            "subtitle": "Publishing your web applications",
+            "progress": 0,
+            "status": "not-started",
+            "statusText": "Not started",
+            "objectives": [
+                "Deploy to web servers",
+                "Configure domain names",
+                "Set up SSL certificates",
+                "Monitor application performance"
+            ],
+            "sections": [
+                {
+                    "title": "Deployment Options",
+                    "content": "Learn different ways to deploy your web applications and make them accessible to users worldwide.",
+                    "type": "text"
+                }
+            ],
+            "actions": {
+                "primary": {
+                    "text": "Start Lesson",
+                    "onclick": "markLessonComplete('lesson12')"
+                },
+                "quiz": {
+                    "text": "Take Quiz",
+                    "href": "quiz.html?lesson=lesson12"
+                },
+                "exercise": {
+                    "text": "Submit Exercise",
+                    "onclick": "startExerciseSubmission('lesson12')"
+                },
+                "home": {
+                    "text": "Back to Home",
+                    "href": "index.html"
+                }
+            }
+        }
+    ]
+}

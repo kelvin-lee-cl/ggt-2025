@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Generator - Educational Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Shared Navbar -->
+    <div id="navbar-root"></div>
+
+    <!-- Main Content -->
+    <div class="container mt-5 pt-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <h1 class="text-center mb-5">
+                    <i class="fas fa-image text-primary me-3"></i>AI Image Generator
+                </h1>
+
+                <!-- Image Generator Form -->
+                <div class="card shadow-soft">
+                    <div class="card-body">
+                        <div class="ai-tool-container">
+                            <h5 class="mb-4">Create Custom Images with AI</h5>
+
+                            <form id="imageGeneratorForm">
+                                <div class="mb-4">
+                                    <label for="imagePrompt" class="form-label">Describe the image you want to
+                                        create</label>
+                                    <textarea class="form-control prompt-textarea" id="imagePrompt"
+                                        placeholder="Example: A futuristic cityscape with flying cars and neon lights, digital art style"
+                                        required></textarea>
+                                    <div class="form-text">Be as descriptive as possible for better results.</div>
+                                </div>
+
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <label for="imageStyle" class="form-label">Style</label>
+                                        <select class="form-select" id="imageStyle">
+                                            <option value="realistic">Realistic</option>
+                                            <option value="artistic">Artistic</option>
+                                            <option value="cartoon">Cartoon</option>
+                                            <option value="sketch">Sketch</option>
+                                            <option value="digital">Digital Art</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="imageSize" class="form-label">Size</label>
+                                        <select class="form-select" id="imageSize">
+                                            <option value="512x512">512x512 (Square)</option>
+                                            <option value="1024x1024">1024x1024 (HD Square)</option>
+                                            <option value="1024x768">1024x768 (Landscape)</option>
+                                            <option value="768x1024">768x1024 (Portrait)</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary btn-lg">
+                                        <i class="fas fa-magic me-2"></i>Generate Image
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- API Configuration -->
+                        <div class="mt-4">
+                            <div class="alert alert-info">
+                                <h6><i class="fas fa-info-circle me-2"></i>API Configuration</h6>
+                                <p class="mb-2">To use this feature, you need to configure your Recraft API key:</p>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="recraftApiKey"
+                                        placeholder="Enter your Recraft API key">
+                                    <button class="btn btn-outline-secondary" type="button"
+                                        onclick="saveApiKey('recraft')">
+                                        Save Key
+                                    </button>
+                                </div>
+                                <small class="text-muted">Your API key is stored locally and never shared.</small>
+                            </div>
+                        </div>
+
+                        <!-- Generated Images -->
+                        <div id="generatedImages" class="mt-4">
+                            <h6 class="mb-3">Generated Images</h6>
+                            <div id="imageGallery" class="row">
+                                <div class="col-12 text-center text-muted">
+                                    <i class="fas fa-images fa-3x mb-3"></i>
+                                    <p>No images generated yet. Create your first image above!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Netlify Identity Widget -->
+    <div id="netlify-identity-widget"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <script src="navbar.js"></script>
+    <script src="script.js"></script>
+    <script src="image-generator.js"></script>
+</body>
+
+</html>

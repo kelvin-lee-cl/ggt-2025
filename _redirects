@@ -1,0 +1,8 @@
+# Redirect rules for SPA behavior
+/*    /index.html   200
+
+# API redirects (if needed)
+/api/*    /api/:splat    200
+
+# Admin access
+/admin    /admin.html    200

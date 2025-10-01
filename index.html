@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Girls Go Tech AI Application - Learning Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+    <style>
+        /* Disabled button styling */
+        .btn.disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .btn.disabled:hover {
+            opacity: 0.6;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Shared Navbar -->
+    <div id="navbar-root"></div>
+
+
+
+    <!-- Lessons Section -->
+    <section id="lessons" class="py-5">
+        <div class="container">
+            <h2 class="text-center mt-5 mb-5" data-en="Available Lessons" data-zh-tw="可用課程" data-zh-cn="可用课程">Available
+                Lessons</h2>
+            <div class="row" id="lessonsContainer">
+                <!-- Lessons will be loaded dynamically here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Tools Section -->
+    <section id="tools" class="py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-5 mt-5" data-en="AI-Powered Learning Tools" data-zh-tw="AI驅動的學習工具"
+                data-zh-cn="AI驱动的学习工具">AI-Powered
+                Learning
+                Tools</h2>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 tool-card">
+                        <div class="card-body text-center">
+                            <i class="fas fa-image fa-3x text-primary mb-3"></i>
+                            <h5 class="card-title" data-en="Image Generator" data-zh-tw="圖像生成器" data-zh-cn="图像生成器">Image
+                                Generator</h5>
+                            <p class="card-text"
+                                data-en="Create custom images using AI to visualize your ideas and concepts."
+                                data-zh-tw="使用AI創建自定義圖像來可視化您的想法和概念。" data-zh-cn="使用AI创建自定义图像来可视化您的想法和概念。">Create custom
+                                images using AI to visualize your ideas
+                                and concepts.</p>
+                            <a href="#" class="btn btn-primary disabled" data-en="Generate Images" data-zh-tw="生成圖像"
+                                data-zh-cn="生成图像">Generate Images</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 tool-card">
+                        <div class="card-body text-center">
+                            <i class="fas fa-edit fa-3x text-primary mb-3"></i>
+                            <h5 class="card-title" data-en="Text Generator" data-zh-tw="文本生成器" data-zh-cn="文本生成器">Text
+                                Generator</h5>
+                            <p class="card-text"
+                                data-en="Generate essays, summaries, and creative content with AI assistance."
+                                data-zh-tw="使用AI輔助生成文章、摘要和創意內容。" data-zh-cn="使用AI辅助生成文章、摘要和创意内容。">
+                            </p>
+                            <a href="#" class="btn btn-primary disabled" data-en="Generate Text" data-zh-tw="生成文本"
+                                data-zh-cn="生成文本">Generate Text</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Classwork Section -->
+    <section id="classwork" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5" data-en="Submit Your Milestone Projects" data-zh-tw="提交您的里程碑項目"
+                data-zh-cn="提交您的里程碑项目">Submit Your
+                Milestone Projects</h2>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-upload fa-3x text-success mb-3"></i>
+                            <h5 class="card-title" data-en="Upload Assignments" data-zh-tw="上傳作業" data-zh-cn="上传作业">
+                                Upload Assignments</h5>
+                            <p class="card-text" data-en="Submit your completed assignments and projects."
+                                data-zh-tw="提交您完成的作業和項目。" data-zh-cn="提交您完成的作业和项目。">Submit your completed assignments
+                                and projects.</p>
+                            <a href="#" class="btn btn-success disabled" data-en="Upload Work" data-zh-tw="上傳作業"
+                                data-zh-cn="上传作业">Upload
+                                Work</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-question-circle fa-3x text-info mb-3"></i>
+                            <h5 class="card-title" data-en="Q&A Assessment" data-zh-tw="問答評估" data-zh-cn="问答评估">Q&A
+                                Assessment</h5>
+                            <p class="card-text" data-en="Test your understanding with interactive quizzes."
+                                data-zh-tw="通過互動測驗測試您的理解。" data-zh-cn="通过互动测验测试您的理解。">Test your understanding with
+                                interactive quizzes.</p>
+                            <a href="#" class="btn btn-info disabled" data-en="Take Quiz" data-zh-tw="參加測驗"
+                                data-zh-cn="参加测验">Take Quiz</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5 data-en="Girls Go Tech AI Application" data-zh-tw="Girls Go Tech AI Application"
+                        data-zh-cn="Girls Go Tech AI Application">Girls Go
+                        Tech AI Application</h5>
+                    <p data-en="Empowering students with interactive learning tools and AI assistance."
+                        data-zh-tw="通過互動學習工具和AI輔助賦能學生。" data-zh-cn="通过互动学习工具和AI辅助赋能学生。">Empowering students with
+                        interactive learning tools and AI
+                        assistance.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p data-en="&copy; 2024 Girls Go Tech AI Application. All rights reserved."
+                        data-zh-tw="&copy; 2024 Girls Go Tech AI Application. All rights reserved."
+                        data-zh-cn="&copy; 2024 Girls Go Tech AI Application. All rights reserved.">
+                        &copy; 2024 Girls Go Tech AI Application. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Netlify Identity Widget -->
+    <div id="netlify-identity-widget"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Only load Netlify Identity in production
+        const isLocalhost = window.location.hostname === 'localhost' ||
+            window.location.hostname === '127.0.0.1' ||
+            window.location.hostname === '0.0.0.0' ||
+            window.location.hostname.includes('localhost');
+
+        if (!isLocalhost) {
+            const script = document.createElement('script');
+            script.src = 'https://identity.netlify.com/v1/netlify-identity-widget.js';
+            document.head.appendChild(script);
+        }
+    </script>
+    <script src="navbar.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Check if user is logged in
+        function isUserLoggedIn() {
+            // Check Netlify Identity
+            if (window.netlifyIdentity && window.netlifyIdentity.currentUser()) {
+                return true;
+            }
+
+            // Check demo authentication
+            if (window.currentUser) {
+                return true;
+            }
+
+            return false;
+        }
+
+        // Load and display all lessons dynamically
+        async function loadLessons() {
+            try {
+                const response = await fetch('lessons.json');
+                const data = await response.json();
+                const lessonsContainer = document.getElementById('lessonsContainer');
+                const isLoggedIn = isUserLoggedIn();
+
+                let lessonsHTML = '';
+
+                data.lessons.forEach(lesson => {
+                    const lessonNumber = lesson.id.replace('lesson', '');
+                    const statusClass = getStatusClass(lesson.status);
+                    const statusIcon = getStatusIcon(lesson.status);
+                    const buttonText = lesson.status === 'completed' ? 'Restart Lesson' : 'Start Lesson';
+                    const buttonIcon = lesson.status === 'completed' ? 'redo' : 'play';
+                    const buttonDisabled = isLoggedIn ? '' : 'disabled';
+                    const buttonClass = isLoggedIn ? 'btn btn-primary' : 'btn btn-primary disabled';
+                    const buttonHref = isLoggedIn ? `lesson.html?lesson=${lesson.id}` : '#';
+
+                    lessonsHTML += `
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100 lesson-card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h5 class="card-title">${lesson.title}</h5>
+                                        <span class="badge ${statusClass}">${statusIcon}</span>
+                                    </div>
+                                    <p class="card-text">${lesson.subtitle}</p>
+                                    <small class="text-muted">${lesson.statusText}</small>
+                                    <div class="mt-3">
+                                        <a href="${buttonHref}" class="${buttonClass}" ${buttonDisabled}>
+                                            <i class="fas fa-${buttonIcon} me-2"></i>
+                                            ${buttonText}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                lessonsContainer.innerHTML = lessonsHTML;
+            } catch (error) {
+                console.error('Error loading lessons:', error);
+                document.getElementById('lessonsContainer').innerHTML =
+                    '<div class="col-12"><div class="alert alert-danger">Error loading lessons. Please try again later.</div></div>';
+            }
+        }
+
+        // Get status class for badge
+        function getStatusClass(status) {
+            switch (status) {
+                case 'completed': return 'bg-success';
+                case 'in-progress': return 'bg-warning';
+                default: return 'bg-secondary';
+            }
+        }
+
+        // Get status icon
+        function getStatusIcon(status) {
+            switch (status) {
+                case 'completed': return '✓';
+                case 'in-progress': return '⏳';
+                default: return '○';
+            }
+        }
+
+        // Get status badge class
+        function getStatusBadgeClass(status) {
+            switch (status) {
+                case 'completed': return 'bg-success';
+                case 'in-progress': return 'bg-warning';
+                default: return 'bg-secondary';
+            }
+        }
+
+        // Show login modal
+        function showLoginModal() {
+            // Check if we're in demo mode
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                // Demo login
+                if (window.setupDemoAuth) {
+                    window.setupDemoAuth();
+                } else {
+                    alert('Demo login not available. Please use the navbar login button.');
+                }
+            } else {
+                // Netlify Identity login
+                if (window.netlifyIdentity) {
+                    window.netlifyIdentity.open();
+                }
+            }
+        }
+
+        // Update button states based on login status
+        function updateButtonStates() {
+            const isLoggedIn = isUserLoggedIn();
+
+            // Update lesson buttons
+            const lessonButtons = document.querySelectorAll('#lessonsContainer .btn');
+            lessonButtons.forEach(button => {
+                if (isLoggedIn) {
+                    button.classList.remove('disabled');
+                    button.removeAttribute('disabled');
+                    // Restore original href
+                    const lessonId = button.getAttribute('href').split('lesson=')[1];
+                    if (lessonId) {
+                        button.setAttribute('href', `lesson.html?lesson=${lessonId}`);
+                    }
+                } else {
+                    button.classList.add('disabled');
+                    button.setAttribute('disabled', 'disabled');
+                    button.setAttribute('href', '#');
+                }
+            });
+
+            // Update AI Tools buttons
+            const aiButtons = document.querySelectorAll('#tools .btn');
+            aiButtons.forEach(button => {
+                if (isLoggedIn) {
+                    button.classList.remove('disabled');
+                    button.removeAttribute('disabled');
+                    // Restore original hrefs
+                    if (button.textContent.includes('Generate Images')) {
+                        button.setAttribute('href', 'image-generator.html');
+                    } else if (button.textContent.includes('Generate Text')) {
+                        button.setAttribute('href', 'text-generator.html');
+                    }
+                } else {
+                    button.classList.add('disabled');
+                    button.setAttribute('disabled', 'disabled');
+                    button.setAttribute('href', '#');
+                }
+            });
+
+            // Update Classwork buttons
+            const classworkButtons = document.querySelectorAll('#classwork .btn');
+            classworkButtons.forEach(button => {
+                if (isLoggedIn) {
+                    button.classList.remove('disabled');
+                    button.removeAttribute('disabled');
+                    // Restore original hrefs
+                    if (button.textContent.includes('Upload Work')) {
+                        button.setAttribute('href', 'upload.html');
+                    } else if (button.textContent.includes('Take Quiz')) {
+                        button.setAttribute('href', 'quiz.html');
+                    }
+                } else {
+                    button.classList.add('disabled');
+                    button.setAttribute('disabled', 'disabled');
+                    button.setAttribute('href', '#');
+                }
+            });
+        }
+
+        // Load lessons when page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            loadLessons();
+            // Update button states after a short delay to ensure DOM is ready
+            setTimeout(updateButtonStates, 100);
+        });
+
+        // Listen for authentication changes
+        document.addEventListener('DOMContentLoaded', function () {
+            // Check for authentication changes every 2 seconds
+            setInterval(updateButtonStates, 2000);
+        });
+    </script>
+</body>
+
+</html>
