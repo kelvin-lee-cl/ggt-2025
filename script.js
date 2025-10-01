@@ -21,14 +21,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // Initialize Netlify Identity
 function initializeNetlifyIdentity() {
-    // Check if we're running locally
+    // Check if we're running locally but NOT with netlify dev (which provides real Identity)
     const isLocalhost = window.location.hostname === 'localhost' ||
         window.location.hostname === '127.0.0.1' ||
         window.location.hostname === '0.0.0.0' ||
         window.location.hostname.includes('localhost');
 
-    if (isLocalhost) {
-        console.log("Running locally - using demo authentication");
+    // Check if Netlify Identity is available (either from netlify dev or production)
+    const hasNetlifyIdentity = window.netlifyIdentity || 
+        document.querySelector('script[src*="netlify-identity-widget"]') ||
+        window.location.search.includes('netlify_identity');
+
+    if (isLocalhost && !hasNetlifyIdentity) {
+        console.log("Running locally without Netlify Identity - using demo authentication");
         setupDemoAuth();
         return;
     }
@@ -128,16 +133,27 @@ function setupEventListeners() {
         window.location.hostname === '0.0.0.0' ||
         window.location.hostname.includes('localhost');
 
+    // Check if Netlify Identity is available
+    const hasNetlifyIdentity = window.netlifyIdentity || 
+        document.querySelector('script[src*="netlify-identity-widget"]') ||
+        window.location.search.includes('netlify_identity');
+
     // Login button
     const loginBtn = document.getElementById('loginBtn');
     if (loginBtn) {
         loginBtn.addEventListener('click', function (e) {
             e.preventDefault();
-            if (isLocalhost || !window.netlifyIdentity) {
+            if (isLocalhost && !hasNetlifyIdentity) {
                 // Demo mode - show login options
                 showDemoLoginOptions();
             } else {
-                window.netlifyIdentity.open();
+                // Use real Netlify Identity
+                if (window.netlifyIdentity) {
+                    window.netlifyIdentity.open();
+                } else {
+                    console.log("Netlify Identity not available, falling back to demo");
+                    showDemoLoginOptions();
+                }
             }
         });
     }
@@ -147,11 +163,17 @@ function setupEventListeners() {
     if (logoutBtn) {
         logoutBtn.addEventListener('click', function (e) {
             e.preventDefault();
-            if (isLocalhost || !window.netlifyIdentity) {
+            if (isLocalhost && !hasNetlifyIdentity) {
                 // Demo mode logout
                 demoLogout();
             } else {
-                window.netlifyIdentity.logout();
+                // Use real Netlify Identity
+                if (window.netlifyIdentity) {
+                    window.netlifyIdentity.logout();
+                } else {
+                    console.log("Netlify Identity not available, falling back to demo");
+                    demoLogout();
+                }
             }
         });
     }

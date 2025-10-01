@@ -156,8 +156,12 @@
             window.location.hostname === '0.0.0.0' ||
             window.location.hostname.includes('localhost');
 
-        // Always load Netlify Identity for production
-        if (!isLocalhost) {
+        // Check if Netlify Identity is already available (injected by netlify dev)
+        if (window.netlifyIdentity) {
+            console.log("Netlify Identity already available - initializing");
+            window.netlifyIdentity.init();
+        } else if (!isLocalhost) {
+            // Load Netlify Identity for production
             const script = document.createElement('script');
             script.src = 'https://identity.netlify.com/v1/netlify-identity-widget.js';
             script.onload = function () {
@@ -173,7 +177,7 @@
             };
             document.head.appendChild(script);
         } else {
-            console.log("Running on localhost - using demo mode");
+            console.log("Running on localhost - netlify dev should inject Netlify Identity automatically");
         }
     </script>
     <script src="navbar.js"></script>
