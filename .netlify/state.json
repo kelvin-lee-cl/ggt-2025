@@ -3,14 +3,19 @@
 	"siteId": "ac73931e-4b5e-4424-985f-81005d6f2466",
 	"geolocation": {
 		"data": {
+			"city": "Tai Po",
 			"country": {
 				"code": "HK",
 				"name": "Hong Kong"
 			},
+			"subdivision": {
+				"code": "NTP",
+				"name": "Tai Po District"
+			},
 			"timezone": "Asia/Hong_Kong",
-			"latitude": 22.2578,
+			"latitude": 22.4504,
 			"longitude": 114.1657
 		},
-		"timestamp": 1759321662629
+		"timestamp": 1759850265382
 	}
 }

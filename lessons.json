@@ -5,8 +5,8 @@
             "title": "Introduction to Generative AI: Understanding How AI Creates",
             "subtitle": "Discover how AI learns, creates, and improves content.",
             "progress": 100,
-            "status": "completed",
-            "statusText": "Lesson completed",
+            "status": "not-started",
+            "statusText": "Not started",
             "objectives": [
                 "Define Artificial Intelligence and Generative AI in simple terms",
                 "Explain the four core steps of Generative AI: learning from data, creating content, receiving feedback, and improving output, using the chef analogy",
@@ -85,8 +85,8 @@
             "title": "Mastering AI Text Prompts: Shot Techniques and Frameworks",
             "subtitle": "Learn to craft effective AI prompts using shot techniques, frameworks, and chaining methods.",
             "progress": 75,
-            "status": "in-progress",
-            "statusText": "In progress",
+            "status": "not-started",
+            "statusText": "Not started",
             "objectives": [
                 "Understand zero-shot, single-shot, and few-shot prompting",
                 "Learn various AI prompt frameworks to improve prompt writing",
@@ -186,80 +186,65 @@
         },
         {
             "id": "lesson3",
-            "title": "Practical Applications",
-            "subtitle": "Real-world examples and case studies",
+            "title": "Ethics and Good Practices in AI: Navigating Risks and Opportunities",
+            "subtitle": "Explore the dual nature of AI, and the evolving future of AI in society and work.",
             "progress": 25,
             "status": "not-started",
             "statusText": "Not started",
             "objectives": [
-                "Build real-world projects",
-                "Apply best practices",
-                "Debug and troubleshoot",
-                "Deploy applications"
+                "Understand AI as a double-edged sword, recognizing its benefits and cognitive risks such as brain rot.",
+                "Discuss the future of AI work, emphasizing hands-on tasks and creativity.",
+                "Explore different AI tools to boost learning and achieve academic success efficiently."
             ],
             "sections": [
                 {
-                    "title": "Project Examples",
-                    "content": "This lesson focuses on applying your knowledge to real-world scenarios.",
-                    "type": "text"
+                    "title": "The Only Trait for Success in the AI Era—How to Build It <i class='fab fa-youtube text-danger'></i>",
+                    "content": "<blockquote class='blockquote text-center my-4'><p class='mb-0'>\"The fun part of life is having your own contribution to the life that you live. Actually, I think that's why people actually like creativity.\"</p><footer class='blockquote-footer mt-2'><cite title='Source Title'>Po-Shen Loh</cite></footer></blockquote>",
+                    "type": "html"
                 },
                 {
-                    "title": "Project Ideas",
+                    "title": "Hands-on Practice on AI Tools",
                     "content": [
                         {
-                            "name": "Todo Application",
-                            "icon": "fas fa-todo-list",
+                            "name": "NoteGPT",
+                            "icon": "fas fa-sticky-note",
                             "color": "text-primary",
-                            "description": "Build a task management app with local storage",
-                            "progress": 0
+                            "description": "AI note taking tool for clever learning. Summarize YouTube videos, PDFs, articles, lectures, audios, PPTs, and images.",
+                            "link": "https://notegpt.io/"
                         },
                         {
-                            "name": "Weather Dashboard",
-                            "icon": "fas fa-weather-sun",
+                            "name": "Sesame AI",
+                            "icon": "fas fa-search",
                             "color": "text-warning",
-                            "description": "Create a weather app using external APIs",
-                            "progress": 0
-                        },
-                        {
-                            "name": "Blog Platform",
-                            "icon": "fas fa-blog",
-                            "color": "text-info",
-                            "description": "Develop a content management system",
-                            "progress": 0
-                        },
-                        {
-                            "name": "E-commerce Site",
-                            "icon": "fas fa-shopping-cart",
-                            "color": "text-success",
-                            "description": "Build an online shopping platform",
-                            "progress": 0
+                            "description": "AI-powered search and knowledge management platform",
+                            "link": "https://sesame.ai/"
                         }
                     ],
                     "type": "projects"
                 },
                 {
-                    "title": "Development Best Practices",
+                    "title": "Supplement Content",
                     "content": [
                         {
-                            "title": "Code Quality",
-                            "items": [
-                                "Write clean, readable code",
-                                "Use meaningful variable names",
-                                "Comment your code appropriately",
-                                "Follow consistent formatting"
-                            ]
+                            "title": "Advanced AI Tools Demonstration",
+                            "description": "Comprehensive walkthrough of cutting-edge AI tools and their practical applications",
+                            "link": "https://www.youtube.com/watch?v=xWYb7tImErI&t=782s",
+                            "type": "video"
                         },
                         {
-                            "title": "Security",
-                            "items": [
-                                "Validate user input",
-                                "Use HTTPS in production",
-                                "Implement proper authentication",
-                                "Keep dependencies updated"
-                            ]
+                            "title": "AI Integration Strategies",
+                            "description": "Learn effective methods for integrating AI tools into your workflow and projects",
+                            "link": "https://www.youtube.com/watch?v=sl6bq1iC56Y&t=2208s",
+                            "type": "video"
+                        },
+                        {
+                            "title": "AI Tools Best Practices",
+                            "description": "Discover professional techniques and best practices for maximizing AI tool effectiveness",
+                            "link": "https://youtu.be/7ARBJQn6QkM?t=3351",
+                            "type": "video"
                         }
                     ],
-                    "type": "best-practices"
+                    "type": "accordion"
                 }
             ],
             "actions": {
@@ -287,8 +272,8 @@
         },
         {
             "id": "lesson4",
-            "title": "Responsive Web Design",
-            "subtitle": "Creating mobile-friendly websites",
+            "title": "AI Research Practice (Part I)",
+            "subtitle": "Hands-on practice of AI to study the effects of extended screen time",
             "progress": 0,
             "status": "not-started",
             "statusText": "Not started",
@@ -326,8 +311,8 @@
         },
         {
             "id": "lesson5",
-            "title": "CSS Frameworks",
-            "subtitle": "Bootstrap and modern CSS frameworks",
+            "title": "AI Research Practice (Part II)",
+            "subtitle": "Hands-on practice of AI to fact-check and verify information on the effects of extended screen time",
             "progress": 0,
             "status": "not-started",
             "statusText": "Not started",
@@ -365,8 +350,8 @@
         },
         {
             "id": "lesson6",
-            "title": "JavaScript ES6+",
-            "subtitle": "Modern JavaScript features",
+            "title": "AI Text Processing Tools",
+            "subtitle": "Learn to use AI tools for efficient information extraction and summarization",
             "progress": 0,
             "status": "not-started",
             "statusText": "Not started",
@@ -404,8 +389,8 @@
         },
         {
             "id": "lesson7",
-            "title": "DOM Manipulation",
-            "subtitle": "Working with the Document Object Model",
+            "title": "How to Train Your Own Chatbot (Part I)",
+            "subtitle": "Learn the basics of chatbot training, including data collection and initial NLP model setup to build a responsive AI assistant.",
             "progress": 0,
             "status": "not-started",
             "statusText": "Not started",
@@ -443,8 +428,8 @@
         },
         {
             "id": "lesson8",
-            "title": "API Integration",
-            "subtitle": "Working with external data",
+            "title": "How to Train Your Own Chatbot (Part II)",
+            "subtitle": "Advance your chatbot by refining responses, adding context, testing performance, and continuously updating training data for better accuracy",
             "progress": 0,
             "status": "not-started",
             "statusText": "Not started",
@@ -482,8 +467,8 @@
         },
         {
             "id": "lesson9",
-            "title": "State Management",
-            "subtitle": "Managing application state",
+            "title": "How to Build Your Own Review Exercise (Part I)",
+            "subtitle": "Plan your exercise by defining clear goals, selecting key topics, and choosing question types to engage learners effectively.",
             "progress": 0,
             "status": "not-started",
             "statusText": "Not started",
@@ -521,8 +506,8 @@
         },
         {
             "id": "lesson10",
-            "title": "Performance Optimization",
-            "subtitle": "Making websites fast and efficient",
+            "title": "How to Build Your Own Review Exercise (Part II)",
+            "subtitle": "Develop and deploy the exercise using interactive tools, gather feedback, and assess its effectiveness for continuous improvement.",
             "progress": 0,
             "status": "not-started",
             "statusText": "Not started",
@@ -560,8 +545,8 @@
         },
         {
             "id": "lesson11",
-            "title": "Testing and Debugging",
-            "subtitle": "Quality assurance and troubleshooting",
+            "title": "How to improve your writing (English)?",
+            "subtitle": "Use AI to correct grammar and enhance your writing with varied sentence options.",
             "progress": 0,
             "status": "not-started",
             "statusText": "Not started",
@@ -599,8 +584,8 @@
         },
         {
             "id": "lesson12",
-            "title": "Deployment and Hosting",
-            "subtitle": "Publishing your web applications",
+            "title": "How to improve speaking and listening skills with AI (English)?",
+            "subtitle": "Practice speaking and listening with AI that talks and listens with you.",
             "progress": 0,
             "status": "not-started",
             "statusText": "Not started",

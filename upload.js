@@ -138,7 +138,7 @@ function submitAssignment(title, type, description, files) {
             type: type
         });
 
-        // Save to localStorage for demo purposes
+        // Save to localStorage for local storage
         const submissions = JSON.parse(localStorage.getItem('submissions')) || [];
         const submission = {
             id: Date.now(),

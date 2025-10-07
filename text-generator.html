@@ -81,11 +81,11 @@
                             </form>
                         </div>
 
-                        <!-- API Configuration -->
-                        <div class="mt-4">
+                        <!-- API Configuration (Admin Only) -->
+                        <div id="apiConfigSection" class="mt-4" style="display: none;">
                             <div class="alert alert-info">
-                                <h6><i class="fas fa-info-circle me-2"></i>API Configuration</h6>
-                                <p class="mb-2">To use this feature, you need to configure your Deepseek API key:</p>
+                                <h6><i class="fas fa-info-circle me-2"></i>API Configuration (Admin Only)</h6>
+                                <p class="mb-2">Configure the Deepseek API key for all users:</p>
                                 <div class="input-group">
                                     <input type="password" class="form-control" id="deepseekApiKey"
                                         placeholder="Enter your Deepseek API key">
@@ -94,7 +94,8 @@
                                         Save Key
                                     </button>
                                 </div>
-                                <small class="text-muted">Your API key is stored locally and never shared.</small>
+                                <small class="text-muted">This API key will be available for all users. Only admins can
+                                    edit it.</small>
                             </div>
                         </div>
 

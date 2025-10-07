@@ -321,9 +321,16 @@
                                                 <div class="card-body">
                                                     <h6><i class="${project.icon} ${project.color} me-2"></i>${project.name}</h6>
                                                     <p class="small text-muted">${project.description}</p>
-                                                    <div class="progress" style="height: 4px;">
-                                                        <div class="progress-bar ${project.color.replace('text-', 'bg-')}" style="width: ${project.progress}%"></div>
-                                                    </div>
+                                                    ${project.link ? `
+                                                        <a href="${project.link}" target="_blank" class="btn btn-outline-primary btn-sm mt-2">
+                                                            <i class="fas fa-external-link-alt me-1"></i>Visit Tool
+                                                        </a>
+                                                    ` : ''}
+                                                    ${project.progress !== undefined ? `
+                                                        <div class="progress mt-2" style="height: 4px;">
+                                                            <div class="progress-bar ${project.color.replace('text-', 'bg-')}" style="width: ${project.progress}%"></div>
+                                                        </div>
+                                                    ` : ''}
                                                 </div>
                                             </div>
                                         </div>
@@ -485,8 +492,8 @@
                 return auth.currentUser.uid;
             }
 
-            // Demo mode fallback
-            return 'demo-user-id';
+            // Fallback for unauthenticated users
+            return 'anonymous-user';
         }
 
         // Get current user email
@@ -501,7 +508,7 @@
                 return auth.currentUser.email;
             }
 
-            // Demo mode fallback
+            // Fallback for unauthenticated users
             return 'student@gmail.com';
         }
 
@@ -626,7 +633,7 @@
                     return false;
                 }
                 if (db && typeof db.collection === 'function') {
-                    // In demo mode, our mock does not support limit().get(), so just call collection
+                    // Fallback for local development
                     if (typeof db.collection('diagnostics').limit === 'function') {
                         await db.collection('diagnostics').limit(1).get();
                     } else {

@@ -6,6 +6,7 @@ let studentProgress = JSON.parse(localStorage.getItem('studentProgress')) || {};
 let currentLanguage = localStorage.getItem('language') || 'en';
 let currentTheme = localStorage.getItem('theme') || 'light';
 const languages = ['en', 'zh-tw', 'zh-cn'];
+let __isFirebaseSigningIn = false; // guard to prevent concurrent popup sign-ins
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function () {
@@ -13,25 +14,21 @@ document.addEventListener('DOMContentLoaded', function () {
     loadUserData();
     setupEventListeners();
     animateOnScroll();
+    initializeScrollHighlighting();
     initializeLanguage();
     initializeTheme();
+    if (typeof loadHomepageSlider === 'function') {
+        setTimeout(loadHomepageSlider, 300);
+        setTimeout(loadHomepageSlider, 1500);
+    }
 
-    // Login gate button wires to existing login flow
+    // Login gate button wires to Firebase Google Sign-In
     const gateBtn = document.getElementById('loginGateLoginBtn');
     if (gateBtn) {
         gateBtn.addEventListener('click', function (e) {
             e.preventDefault();
-            const isLocalhost = window.location.hostname === 'localhost' ||
-                window.location.hostname === '127.0.0.1' ||
-                window.location.hostname === '0.0.0.0' ||
-                window.location.hostname.includes('localhost');
-
-            if (isLocalhost || !window.netlifyIdentity) {
-                if (typeof showDemoLoginOptions === 'function') {
-                    showDemoLoginOptions();
-                }
-            } else {
-                window.netlifyIdentity.open();
+            if (typeof firebaseGoogleLogin === 'function') {
+                firebaseGoogleLogin();
             }
         });
     }
@@ -71,6 +68,13 @@ function initializeFirebaseAuth() {
         } catch (e) { /* ignore for compat */ }
         window.firebaseAuth = auth;
         window.firebaseDb = db;
+
+        // Complete redirect-based sign-in if we came back from provider
+        if (typeof auth.getRedirectResult === 'function') {
+            auth.getRedirectResult().catch(err => {
+                console.warn('getRedirectResult error', err);
+            });
+        }
         auth.onAuthStateChanged(async user => {
             if (user) {
                 currentUser = {
@@ -98,11 +102,43 @@ function initializeFirebaseAuth() {
 
 async function firebaseGoogleLogin() {
     try {
+        if (__isFirebaseSigningIn) {
+            return; // prevent concurrent popups
+        }
+        __isFirebaseSigningIn = true;
+        const loginBtn = document.getElementById('loginBtn');
+        const originalText = loginBtn ? loginBtn.innerHTML : '';
+        if (loginBtn) {
+            showLoading(loginBtn);
+        }
         const provider = new firebase.auth.GoogleAuthProvider();
-        await firebase.auth().signInWithPopup(provider);
+        try { provider.setCustomParameters({ prompt: 'select_account' }); } catch (e) { /* ignore */ }
+        try {
+            await firebase.auth().signInWithPopup(provider);
+        } catch (popupError) {
+            // Common popup issues: cancelled request, popup blocked. Fallback to redirect.
+            const code = popupError && (popupError.code || popupError.message || '').toString();
+            const isPopupIssue = code.includes('auth/popup-blocked') || code.includes('auth/cancelled-popup-request');
+            if (isPopupIssue) {
+                try {
+                    await firebase.auth().signInWithRedirect(provider);
+                    return;
+                } catch (redirectError) {
+                    throw redirectError;
+                }
+            }
+            throw popupError;
+        }
     } catch (e) {
         console.error('Google sign-in failed:', e);
         showAlert('Google sign-in failed. Please try again.', 'danger');
+    } finally {
+        __isFirebaseSigningIn = false;
+        const loginBtn = document.getElementById('loginBtn');
+        if (loginBtn) {
+            hideLoading(loginBtn, 'Login');
+            if (originalText) loginBtn.innerHTML = originalText;
+        }
     }
 }
 
@@ -205,15 +241,272 @@ async function evaluateAndMarkCompleted(lessonId) {
 window.recordQuizResult = recordQuizResult;
 window.recordExerciseSubmission = recordExerciseSubmission;
 
-// Demo authentication for local development
-function setupDemoAuth() {
-    // Check if user is already logged in (demo mode)
-    const demoUser = localStorage.getItem('demoUser');
-    if (demoUser) {
-        currentUser = JSON.parse(demoUser);
-        updateAuthUI();
+// ----- Homepage Slider (Firebase-backed) -----
+async function loadHomepageSlider() {
+    try {
+        const sliderSection = document.getElementById('hero-slider');
+        const carouselInner = document.getElementById('carouselInner');
+        const indicators = document.getElementById('carouselIndicators');
+        const manageBtn = document.getElementById('manageSliderBtn');
+        if (!carouselInner || !indicators) return;
+
+        // Show manage button only to admins
+        const isAdmin = !!(currentUser && isAdminUser(currentUser.email));
+        if (isAdmin && manageBtn) {
+            manageBtn.style.display = '';
+            manageBtn.onclick = openSliderManager;
+        } else if (manageBtn) {
+            manageBtn.style.display = 'none';
+        }
+
+        // Always show the slider section for both public and authenticated users
+        if (sliderSection) sliderSection.style.display = '';
+
+        // Fetch slides from Firestore collection 'homepageSlides'
+        let slides = [];
+        try {
+            if (window.firebaseDb) {
+                const snap = await window.firebaseDb.collection('homepageSlides').orderBy('order', 'asc').get();
+                slides = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            }
+        } catch (e) {
+            console.warn('Failed to load slides from Firestore, falling back to defaults', e);
+        }
+
+        if (!slides || slides.length === 0) {
+            // No slides: keep section visible for admins (to access Manage button), show for public users too
+            if (manageBtn) manageBtn.style.display = isAdmin ? '' : 'none';
+            if (sliderSection) sliderSection.style.display = '';
+            indicators.innerHTML = '';
+            carouselInner.innerHTML = '';
+            return;
+        }
+
+        if (sliderSection) sliderSection.style.display = '';
+
+        // Render indicators and slides
+        indicators.innerHTML = '';
+        carouselInner.innerHTML = '';
+        slides.forEach((slide, idx) => {
+            const indicator = document.createElement('button');
+            indicator.type = 'button';
+            indicator.setAttribute('data-bs-target', '#homepageCarousel');
+            indicator.setAttribute('data-bs-slide-to', String(idx));
+            if (idx === 0) indicator.className = 'active';
+            indicator.setAttribute('aria-current', idx === 0 ? 'true' : 'false');
+            indicator.setAttribute('aria-label', 'Slide ' + (idx + 1));
+            indicators.appendChild(indicator);
+
+            const item = document.createElement('div');
+            item.className = 'carousel-item' + (idx === 0 ? ' active' : '');
+            const a = document.createElement('a');
+            a.href = slide.linkUrl || '#';
+            a.target = (slide.linkUrl || '').startsWith('http') ? '_blank' : '';
+            const img = document.createElement('img');
+            img.src = slide.imageUrl;
+            img.alt = 'Slide image';
+            img.className = 'd-block w-100 homepage-slide-img';
+            a.appendChild(img);
+            item.appendChild(a);
+            carouselInner.appendChild(item);
+        });
+    } catch (e) {
+        console.error('loadHomepageSlider failed', e);
     }
 }
+
+function openSliderManager() {
+    if (!(currentUser && isAdminUser(currentUser.email))) {
+        showAlert('Admins only', 'warning');
+        return;
+    }
+    const modalEl = document.getElementById('sliderManagerModal');
+    if (!modalEl) return;
+    const modal = new bootstrap.Modal(modalEl);
+    // Bind form handlers once
+    bindSliderManagerHandlers();
+    // Load existing slides into table
+    refreshSlidesTable();
+    modal.show();
+}
+
+async function saveSlide(slide) {
+    try {
+        if (!window.firebaseDb) throw new Error('Firestore unavailable');
+        const col = window.firebaseDb.collection('homepageSlides');
+        // Build payload without undefined values and never persist 'id' as a field
+        const payload = {};
+        if (typeof slide.imageUrl === 'string') payload.imageUrl = slide.imageUrl;
+        if (typeof slide.linkUrl === 'string') payload.linkUrl = slide.linkUrl;
+        if (typeof slide.order === 'number' && !Number.isNaN(slide.order)) payload.order = slide.order;
+
+        if (slide.id) {
+            await col.doc(slide.id).set(payload, { merge: true });
+        } else {
+            await col.add(payload);
+        }
+        showAlert('Slide saved', 'success');
+        setTimeout(loadHomepageSlider, 300);
+    } catch (e) {
+        console.error('saveSlide failed', e);
+        showAlert('Failed to save slide', 'danger');
+    }
+}
+
+async function deleteSlide(id) {
+    try {
+        if (!id) return;
+        if (!window.firebaseDb) throw new Error('Firestore unavailable');
+        await window.firebaseDb.collection('homepageSlides').doc(id).delete();
+        showAlert('Slide removed', 'info');
+        setTimeout(loadHomepageSlider, 300);
+    } catch (e) {
+        console.error('deleteSlide failed', e);
+        showAlert('Failed to remove slide', 'danger');
+    }
+}
+
+function bindSliderManagerHandlers() {
+    if (bindSliderManagerHandlers._bound) return;
+    bindSliderManagerHandlers._bound = true;
+    const form = document.getElementById('sliderForm');
+    const resetBtn = document.getElementById('resetSlideBtn');
+    const uploadBtn = document.getElementById('uploadImageBtn');
+    const fileInput = document.getElementById('imageFile');
+    const imageUrlInput = document.getElementById('imageUrl');
+
+    function clearForm() {
+        (document.getElementById('slideId') || {}).value = '';
+        (document.getElementById('imageUrl') || {}).value = '';
+        (document.getElementById('linkUrl') || {}).value = '';
+        (document.getElementById('order') || {}).value = '1';
+        if (fileInput) fileInput.value = '';
+    }
+
+    if (form) {
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const id = (document.getElementById('slideId') || {}).value || undefined;
+            const imageUrl = (document.getElementById('imageUrl') || {}).value || '';
+            const linkUrl = (document.getElementById('linkUrl') || {}).value || '';
+            const order = parseInt((document.getElementById('order') || {}).value || '1', 10);
+            await saveSlide({ id, imageUrl, linkUrl, order });
+            clearForm();
+            refreshSlidesTable();
+        });
+    }
+
+    if (resetBtn) {
+        resetBtn.addEventListener('click', function () {
+            clearForm();
+        });
+    }
+
+    if (uploadBtn && fileInput) {
+        uploadBtn.addEventListener('click', async function () {
+            try {
+                const file = fileInput.files && fileInput.files[0];
+                if (!file) return showAlert('Please choose an image file first', 'warning');
+                if (!window.firebase || !window.firebase.storage) return showAlert('Firebase Storage not available', 'danger');
+                if (!window.firebaseAuth || !window.firebaseAuth.currentUser) {
+                    return showAlert('Please log in before uploading images.', 'warning');
+                }
+                const storage = firebase.storage();
+                const safeName = file.name.replace(/[^a-zA-Z0-9_.-]/g, '_');
+                const path = 'homepageSlides/' + window.firebaseAuth.currentUser.uid + '/' + Date.now() + '-' + safeName;
+                const ref = storage.ref().child(path);
+                const metadata = { contentType: file.type || 'image/jpeg', cacheControl: 'public, max-age=31536000' };
+
+                // Disable controls during upload
+                uploadBtn.disabled = true;
+                const saveBtn = document.getElementById('saveSlideBtn');
+                if (saveBtn) saveBtn.disabled = true;
+
+                const task = ref.put(file, metadata);
+                task.on('state_changed', function () { /* could show progress if desired */ }, function (error) {
+                    console.error('Upload error', error);
+                    uploadBtn.disabled = false;
+                    if (saveBtn) saveBtn.disabled = false;
+                    showAlert('Image upload failed', 'danger');
+                }, async function () {
+                    try {
+                        const url = await ref.getDownloadURL();
+                        if (imageUrlInput) imageUrlInput.value = url;
+                        showAlert('Image uploaded', 'success');
+                    } finally {
+                        uploadBtn.disabled = false;
+                        if (saveBtn) saveBtn.disabled = false;
+                    }
+                });
+            } catch (e) {
+                console.error('Upload failed', e);
+                uploadBtn.disabled = false;
+                const saveBtn = document.getElementById('saveSlideBtn');
+                if (saveBtn) saveBtn.disabled = false;
+                showAlert('Image upload failed', 'danger');
+            }
+        });
+    }
+}
+
+async function refreshSlidesTable() {
+    try {
+        const tbody = document.getElementById('slidesTableBody');
+        if (!tbody) return;
+        tbody.innerHTML = '<tr><td colspan="5" class="text-muted">Loading...</td></tr>';
+        let slides = [];
+        if (window.firebaseDb) {
+            const snap = await window.firebaseDb.collection('homepageSlides').orderBy('order', 'asc').get();
+            slides = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        }
+        if (!slides.length) {
+            tbody.innerHTML = '<tr><td colspan="4" class="text-muted">No slides yet</td></tr>';
+            return;
+        }
+        tbody.innerHTML = slides.map(function (s) {
+            const safeLink = (s.linkUrl || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return '<tr>' +
+                '<td><img src="' + s.imageUrl + '" alt="" style="width:120px;height:40px;object-fit:cover"></td>' +
+                '<td><a href="' + safeLink + '" target="_blank">' + safeLink + '</a></td>' +
+                '<td>' + (s.order || 0) + '</td>' +
+                '<td>' +
+                '<button class="btn btn-sm btn-outline-secondary me-1" data-action="edit" data-id="' + s.id + '"><i class="fas fa-edit"></i></button>' +
+                '<button class="btn btn-sm btn-outline-danger" data-action="remove" data-id="' + s.id + '"><i class="fas fa-trash"></i></button>' +
+                '</td>' +
+                '</tr>';
+        }).join('');
+
+        // Wire actions
+        tbody.querySelectorAll('button[data-action]').forEach(function (btn) {
+            btn.addEventListener('click', async function () {
+                const id = this.getAttribute('data-id');
+                const action = this.getAttribute('data-action');
+                if (action === 'remove') {
+                    await deleteSlide(id);
+                    refreshSlidesTable();
+                    return;
+                }
+                if (action === 'edit') {
+                    // Load doc and fill form
+                    try {
+                        const doc = await window.firebaseDb.collection('homepageSlides').doc(id).get();
+                        if (doc.exists) {
+                            const data = doc.data();
+                            (document.getElementById('slideId') || {}).value = id;
+                            (document.getElementById('imageUrl') || {}).value = data.imageUrl || '';
+                            (document.getElementById('linkUrl') || {}).value = data.linkUrl || '';
+                            (document.getElementById('order') || {}).value = (data.order != null ? data.order : 1);
+                        }
+                    } catch (e) { /* ignore */ }
+                }
+            });
+        });
+    } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error('refreshSlidesTable failed', e);
+    }
+}
+
 
 // Update authentication UI
 function updateAuthUI() {
@@ -223,6 +516,8 @@ function updateAuthUI() {
     const profileLink = document.getElementById('profileLink');
     const loginGate = document.getElementById('loginGate');
     const appContent = document.getElementById('appContent');
+    const welcomeSection = document.getElementById('welcome-section');
+    const heroSlider = document.getElementById('hero-slider');
 
     if (currentUser) {
         if (loginBtn) loginBtn.style.display = 'none';
@@ -232,20 +527,45 @@ function updateAuthUI() {
         if (currentUser.email && isAdminUser(currentUser.email) && adminLink) {
             adminLink.style.display = 'block';
         }
+        // Show live diagnostics only to admins
+        try {
+            const diag = document.getElementById('live-diag');
+            if (diag) {
+                diag.style.display = isAdminUser(currentUser.email) ? '' : 'none';
+            }
+        } catch (_) { }
         if (profileLink) profileLink.style.display = 'block';
 
-        // Show app, hide login gate
+        // Show app content, hide login gate and welcome section for authenticated users
         if (loginGate) loginGate.style.display = 'none';
         if (appContent) appContent.style.display = '';
+        if (welcomeSection) welcomeSection.style.display = 'none';
+        if (heroSlider) heroSlider.style.display = '';
     } else {
         if (loginBtn) loginBtn.style.display = 'block';
         if (logoutBtn) logoutBtn.style.display = 'none';
         if (adminLink) adminLink.style.display = 'none';
         if (profileLink) profileLink.style.display = 'none';
+        try {
+            const diag = document.getElementById('live-diag');
+            if (diag) diag.style.display = 'none';
+        } catch (_) { }
 
-        // Hide app, show login gate
+        // Show welcome section and slider for public view, hide app content, show login gate
+        if (welcomeSection) welcomeSection.style.display = '';
+        if (heroSlider) heroSlider.style.display = '';
         if (loginGate) loginGate.style.display = '';
         if (appContent) appContent.style.display = 'none';
+
+        // Clear all nav highlights when logged out
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.classList.remove('active');
+        });
+    }
+
+    // Update API config visibility for text generator
+    if (typeof updateApiConfigVisibility === 'function') {
+        updateApiConfigVisibility();
     }
 }
 
@@ -284,6 +604,7 @@ function setupEventListeners() {
             firebaseLogout();
         });
     }
+
 
     // Smooth scrolling for navigation links (ignore bare '#')
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -377,6 +698,133 @@ function animateOnScroll() {
     document.querySelectorAll('.card, .hero-section').forEach(el => {
         observer.observe(el);
     });
+}
+
+// Navigation highlighting based on scroll position using Intersection Observer
+function initializeScrollHighlighting() {
+    const sections = [
+        { id: 'lessons', navSelector: '[data-section="lessons"]', order: 1 },
+        { id: 'tools', navSelector: '[data-section="tools"]', order: 2 },
+        { id: 'classwork', navSelector: '[data-section="classwork"]', order: 3 }
+    ];
+
+    const navLinks = document.querySelectorAll('.nav-link[data-section]');
+    let activeSection = null;
+    let lastActiveNav = null;
+    let isUpdating = false;
+    let lastScrollY = 0;
+    let scrollDirection = 'down';
+
+    function updateActiveNav(sectionId) {
+        if (isUpdating) return;
+        isUpdating = true;
+
+        // Don't highlight nav links if user is not logged in
+        if (!currentUser) {
+            isUpdating = false;
+            return;
+        }
+
+        // Find the corresponding nav link
+        const targetSection = sections.find(s => s.id === sectionId);
+        if (!targetSection) {
+            isUpdating = false;
+            return;
+        }
+
+        const activeNav = document.querySelector(targetSection.navSelector);
+        if (!activeNav || activeNav === lastActiveNav) {
+            isUpdating = false;
+            return;
+        }
+
+        // Remove active class from all nav links
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.classList.remove('active');
+        });
+
+        // Add active class to the new nav item with smooth transition
+        activeNav.classList.add('active');
+        lastActiveNav = activeNav;
+
+        // Reset updating flag after a short delay
+        setTimeout(() => {
+            isUpdating = false;
+        }, 100);
+    }
+
+    // Track scroll direction
+    function updateScrollDirection() {
+        const currentScrollY = window.scrollY;
+        scrollDirection = currentScrollY > lastScrollY ? 'down' : 'up';
+        lastScrollY = currentScrollY;
+    }
+
+    // Create intersection observer with stable settings
+    const observer = new IntersectionObserver((entries) => {
+        updateScrollDirection();
+
+        // Find the most visible section with stable logic
+        let mostVisibleSection = null;
+        let maxVisibility = 0;
+
+        entries.forEach(entry => {
+            if (entry.isIntersecting && entry.intersectionRatio > 0.3) {
+                const section = sections.find(s => s.id === entry.target.id);
+                if (section && entry.intersectionRatio > maxVisibility) {
+                    maxVisibility = entry.intersectionRatio;
+                    mostVisibleSection = entry.target.id;
+                }
+            }
+        });
+
+        // Only update if we have a significantly different section
+        if (mostVisibleSection && mostVisibleSection !== activeSection) {
+            // Add hysteresis to prevent back and forth
+            const currentSection = sections.find(s => s.id === activeSection);
+            const newSection = sections.find(s => s.id === mostVisibleSection);
+
+            if (!currentSection || !newSection) {
+                activeSection = mostVisibleSection;
+                updateActiveNav(mostVisibleSection);
+            } else {
+                // Only change if the new section is significantly more visible
+                // or if we're scrolling in the expected direction
+                const shouldChange =
+                    (scrollDirection === 'down' && newSection.order > currentSection.order) ||
+                    (scrollDirection === 'up' && newSection.order < currentSection.order) ||
+                    maxVisibility > 0.7; // Very visible section
+
+                if (shouldChange) {
+                    activeSection = mostVisibleSection;
+                    updateActiveNav(mostVisibleSection);
+                }
+            }
+        }
+    }, {
+        root: null,
+        rootMargin: '-10% 0px -10% 0px', // Larger margin for more stable detection
+        threshold: [0, 0.3, 0.6, 1.0] // Fewer, more stable thresholds
+    });
+
+    // Observe all sections
+    sections.forEach(section => {
+        const element = document.getElementById(section.id);
+        if (element) {
+            observer.observe(element);
+        }
+    });
+
+    // Initial setup: only highlight if user is logged in
+    setTimeout(() => {
+        if (!activeSection && currentUser) {
+            const firstNav = document.querySelector('[data-section="lessons"]');
+            if (firstNav) {
+                firstNav.classList.add('active');
+                lastActiveNav = firstNav;
+            }
+        }
+    }, 100);
 }
 
 // Utility function to show loading state
@@ -735,7 +1183,13 @@ function translatePage() {
                 break;
         }
         if (text) {
-            element.textContent = text;
+            // Support explicit \n in data-* attributes for line breaks
+            const hasBreaks = /\\n/.test(text);
+            if (hasBreaks) {
+                element.innerHTML = text.replace(/\\n/g, '<br>');
+            } else {
+                element.textContent = text;
+            }
         }
     });
 
@@ -753,112 +1207,6 @@ function translatePage() {
     }
 }
 
-// Demo authentication functions for local development
-function showDemoLoginOptions() {
-    const modal = document.createElement('div');
-    modal.className = 'modal fade show';
-    modal.style.display = 'block';
-    modal.innerHTML = `
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        <i class="fas fa-user-circle me-2"></i>Demo Login Options
-                    </h5>
-                    <button type="button" class="btn-close" onclick="closeDemoModal()"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle me-2"></i>
-                        <strong>Local Development Mode</strong><br>
-                        You're running on localhost, so we're using demo authentication instead of Netlify Identity.
-                    </div>
-                    <p>Choose a demo account to login:</p>
-                    <div class="d-grid gap-2">
-                        <button class="btn btn-primary" onclick="demoLogin('gmail')">
-                            <i class="fab fa-google me-2"></i>Login with Gmail Demo
-                        </button>
-                        <button class="btn btn-info" onclick="demoLogin('outlook')">
-                            <i class="fab fa-microsoft me-2"></i>Login with Outlook Demo
-                        </button>
-                        <button class="btn btn-success" onclick="demoLogin('admin')">
-                            <i class="fas fa-user-shield me-2"></i>Login as Admin Demo
-                        </button>
-                    </div>
-                    <div class="mt-3">
-                        <small class="text-muted">
-                            <strong>Demo Accounts:</strong><br>
-                            • Gmail: student@gmail.com<br>
-                            • Outlook: student@outlook.com<br>
-                            • Admin: admin@futureleadersunion.com
-                        </small>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-    document.body.appendChild(modal);
-}
-
-function closeDemoModal() {
-    const modal = document.querySelector('.modal.show');
-    if (modal) {
-        modal.remove();
-    }
-}
-
-function demoLogin(provider) {
-    let user;
-    switch (provider) {
-        case 'gmail':
-            user = {
-                email: 'student@gmail.com',
-                user_metadata: {
-                    full_name: 'John Student'
-                },
-                app_metadata: {
-                    provider: 'google'
-                }
-            };
-            break;
-        case 'outlook':
-            user = {
-                email: 'student@outlook.com',
-                user_metadata: {
-                    full_name: 'Jane Student'
-                },
-                app_metadata: {
-                    provider: 'microsoft'
-                }
-            };
-            break;
-        case 'admin':
-            user = {
-                email: 'admin@futureleadersunion.com',
-                user_metadata: {
-                    full_name: 'Admin User'
-                },
-                app_metadata: {
-                    provider: 'email'
-                }
-            };
-            break;
-    }
-
-    // Store demo user
-    localStorage.setItem('demoUser', JSON.stringify(user));
-    currentUser = user;
-    updateAuthUI();
-    closeDemoModal();
-    showAlert(`Welcome, ${user.user_metadata.full_name}!`, 'success');
-}
-
-function demoLogout() {
-    localStorage.removeItem('demoUser');
-    currentUser = null;
-    updateAuthUI();
-    showAlert("You have been logged out successfully.", 'info');
-}
 
 // Theme Management Functions
 function initializeTheme() {

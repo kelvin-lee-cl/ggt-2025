@@ -13,6 +13,9 @@ function initializeTextGenerator() {
 
     loadGeneratedTexts();
     loadApiKey('deepseek');
+
+    // Show/hide API config section based on admin status
+    updateApiConfigVisibility();
 }
 
 function handleTextGeneration(event) {
@@ -35,14 +38,15 @@ async function generateText(prompt, type, length, tone) {
     showLoading(submitBtn);
 
     try {
-        const apiKey = localStorage.getItem('deepseek_api_key');
+        // Get API key from server
+        const apiKey = await getServerApiKey();
+
         if (!apiKey) {
-            throw new Error('Please configure your Deepseek API key first.');
+            throw new Error('API key not configured. Please contact an administrator to set up the Deepseek API key.');
         }
 
-        // Simulate API call to Deepseek
-        // In a real implementation, you would make an actual API call
-        const response = await simulateDeepseekAPICall(prompt, type, length, tone, apiKey);
+        // Call real Deepseek API
+        const response = await callDeepseekAPI(prompt, type, length, tone, apiKey);
 
         // Store the generated text
         currentGeneratedText = response.text;
@@ -201,26 +205,109 @@ function loadGeneratedTexts() {
     }
 }
 
-function saveApiKey(service) {
+async function saveApiKey(service) {
     const apiKey = document.getElementById('deepseekApiKey').value;
     if (apiKey.trim()) {
-        localStorage.setItem(`${service}_api_key`, apiKey.trim());
-        showAlert('API key saved successfully!', 'success');
-        document.getElementById('deepseekApiKey').value = '';
+        try {
+            // Try to save to server first
+            const serverSuccess = await setServerApiKey(apiKey.trim());
+
+            if (serverSuccess) {
+                showAlert('API key saved successfully on server for all users!', 'success');
+            } else {
+                // Fallback to local storage
+                localStorage.setItem(`shared_${service}_api_key`, apiKey.trim());
+                showAlert('API key saved locally (server unavailable).', 'warning');
+            }
+
+            document.getElementById('deepseekApiKey').value = '';
+        } catch (error) {
+            // Fallback to local storage
+            localStorage.setItem(`shared_${service}_api_key`, apiKey.trim());
+            showAlert('API key saved locally (server error).', 'warning');
+            document.getElementById('deepseekApiKey').value = '';
+        }
     } else {
         showAlert('Please enter a valid API key.', 'warning');
     }
 }
 
 function loadApiKey(service) {
-    const savedKey = localStorage.getItem(`${service}_api_key`);
+    const savedKey = localStorage.getItem(`shared_${service}_api_key`);
     if (savedKey) {
         document.getElementById('deepseekApiKey').value = savedKey;
     }
 }
 
-// Real Deepseek API integration (uncomment and modify as needed)
-/*
+function updateApiConfigVisibility() {
+    const apiConfigSection = document.getElementById('apiConfigSection');
+    if (apiConfigSection) {
+        // Check if current user is admin
+        const isAdmin = currentUser && currentUser.email &&
+            (currentUser.email === 'admin@example.com' ||
+                currentUser.email.includes('admin') ||
+                localStorage.getItem('isAdmin') === 'true');
+
+        if (isAdmin) {
+            apiConfigSection.style.display = 'block';
+        } else {
+            apiConfigSection.style.display = 'none';
+        }
+    }
+}
+
+// Get API key from server
+async function getServerApiKey() {
+    try {
+        const response = await fetch('/.netlify/functions/get-api-key', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Server error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data.apiKey;
+    } catch (error) {
+        console.error('Error fetching API key from server:', error);
+        // Fallback to local storage
+        const sharedApiKey = localStorage.getItem('shared_deepseek_api_key');
+        const userApiKey = localStorage.getItem('deepseek_api_key');
+        return sharedApiKey || userApiKey;
+    }
+}
+
+// Set API key on server (admin only)
+async function setServerApiKey(apiKey) {
+    try {
+        const response = await fetch('/.netlify/functions/set-api-key', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                apiKey: apiKey,
+                adminToken: 'admin-token-2024' // In production, use proper authentication
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`Server error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data.success;
+    } catch (error) {
+        console.error('Error setting API key on server:', error);
+        return false;
+    }
+}
+
+// Real Deepseek API integration
 async function callDeepseekAPI(prompt, type, length, tone, apiKey) {
     const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
         method: 'POST',
@@ -244,15 +331,14 @@ async function callDeepseekAPI(prompt, type, length, tone, apiKey) {
             temperature: 0.7
         })
     });
-    
+
     if (!response.ok) {
         throw new Error(`API request failed: ${response.status}`);
     }
-    
+
     const data = await response.json();
     return {
         text: data.choices[0].message.content,
         success: true
     };
 }
-*/
