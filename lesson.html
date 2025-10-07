@@ -449,6 +449,15 @@
             if (data) {
                 const lesson = findLessonById(lessonId);
                 currentLesson = lesson;
+
+                // Get user's actual lesson status and submissions
+                const userStatus = await getUserLessonStatus(lessonId);
+                const hasSubmissions = await checkUserSubmissions(lessonId);
+
+                // Update lesson status based on actual user progress
+                lesson.status = (userStatus === 'completed' && hasSubmissions) ? 'completed' : 'not-started';
+                lesson.statusText = lesson.status === 'completed' ? 'Completed' : 'Not Started';
+
                 renderLesson(lesson);
             } else {
                 document.getElementById('lessonContent').innerHTML = '<div class="alert alert-danger">Error loading lesson data!</div>';
@@ -599,6 +608,22 @@
             } catch (error) {
                 console.error('Error getting lesson status:', error);
                 return 'not-started';
+            }
+        }
+
+        // Check if user has submissions for a lesson
+        async function checkUserSubmissions(lessonId) {
+            try {
+                const userId = getCurrentUserId();
+                const submissionsRef = db.collection('exerciseSubmissions')
+                    .where('userId', '==', userId)
+                    .where('lessonId', '==', lessonId);
+
+                const snapshot = await submissionsRef.get();
+                return !snapshot.empty;
+            } catch (error) {
+                console.error('Error checking submissions:', error);
+                return false;
             }
         }
 

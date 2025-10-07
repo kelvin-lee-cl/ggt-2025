@@ -274,9 +274,8 @@ async function loadHomepageSlider() {
         }
 
         if (!slides || slides.length === 0) {
-            // No slides: keep section visible for admins (to access Manage button), show for public users too
-            if (manageBtn) manageBtn.style.display = isAdmin ? '' : 'none';
-            if (sliderSection) sliderSection.style.display = '';
+            // No slides: hide the entire slider section
+            if (sliderSection) sliderSection.style.display = 'none';
             indicators.innerHTML = '';
             carouselInner.innerHTML = '';
             return;

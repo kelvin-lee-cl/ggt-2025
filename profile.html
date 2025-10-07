@@ -250,8 +250,10 @@
 
             let html = '<div class="list-group">';
             entries.forEach(([lessonId, info]) => {
-                // Rule: exercise submission counts as completed
-                const status = (info.status === 'completed' || (info.exercise && info.exercise.submitted)) ? 'completed' : 'not-started';
+                // Rule: exercise submission counts as completed, but if no submissions exist, mark as not-started
+                const hasSubmissions = subsByLesson[lessonId] && subsByLesson[lessonId].length > 0;
+                const exerciseSubmitted = info.exercise && info.exercise.submitted;
+                const status = (info.status === 'completed' && exerciseSubmitted && hasSubmissions) ? 'completed' : 'not-started';
                 const feedback = (info.feedback === true || info.feedback === 'yes') ? 'Yes' : 'No';
                 const listId = `subs-${lessonId}`;
                 const subs = subsByLesson[lessonId] || [];
@@ -260,7 +262,7 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <strong>${lessonId}</strong>
-                                <div class="small text-muted">Exercise: ${info.exercise?.submitted ? 'Submitted' : '—'}</div>
+                                <div class="small text-muted">Exercise: ${hasSubmissions ? 'Submitted' : '—'}</div>
                                 ${subs.length > 0 ? `
                                     <div class="mt-2">
                                         <button class="btn btn-sm btn-outline-info" onclick="showExerciseFeedback('${lessonId}')">
@@ -385,10 +387,52 @@
             if (!confirm('Delete this submission?')) return;
             try {
                 const db = window.firebaseDb;
+
+                // Get the submission to find the lessonId
+                const submissionDoc = await db.collection('exerciseSubmissions').doc(id).get();
+                if (!submissionDoc.exists) {
+                    showAlert('Submission not found', 'danger');
+                    return;
+                }
+
+                const submissionData = submissionDoc.data();
+                const lessonId = submissionData.lessonId;
+
+                // Delete the submission
                 await db.collection('exerciseSubmissions').doc(id).delete();
+
+                // Check if there are any remaining submissions for this lesson
+                const remainingSubmissions = await db.collection('exerciseSubmissions')
+                    .where('userId', '==', currentUser.uid)
+                    .where('lessonId', '==', lessonId)
+                    .get();
+
+                // If no remaining submissions, clean up user progress data
+                if (remainingSubmissions.empty) {
+                    const userProgressRef = db.collection('userProgress').doc(currentUser.uid);
+                    const userProgressDoc = await userProgressRef.get();
+
+                    if (userProgressDoc.exists) {
+                        const userData = userProgressDoc.data();
+                        const lessons = userData.lessons || {};
+
+                        // Remove the lesson from user progress entirely
+                        delete lessons[lessonId];
+
+                        // Update the document with the cleaned lessons data
+                        await userProgressRef.update({
+                            lessons: lessons,
+                            lastUpdated: new Date().toISOString()
+                        });
+                    }
+                }
+
                 showAlert('Submission deleted', 'info');
                 location.reload();
-            } catch (e) { console.error(e); showAlert('Delete failed', 'danger'); }
+            } catch (e) {
+                console.error(e);
+                showAlert('Delete failed', 'danger');
+            }
         }
 
         function showSubmissionModal(title, data, editable, id) {
