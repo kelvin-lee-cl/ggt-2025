@@ -25,25 +25,28 @@
                             "name": "Elmo Chat",
                             "icon": "fas fa-comments",
                             "color": "text-primary",
-                            "description": "AI-powered chat assistant"
+                            "description": "AI-powered chat assistant",
+                            "downloadLink": "https://chromewebstore.google.com/detail/elmo-chat-your-ai-web-cop/ipnlcfhfdicbfbchfoihipknbaeenenm"
                         },
                         {
                             "name": "Immersive Translate",
                             "icon": "fas fa-language",
                             "color": "text-success",
-                            "description": "Real-time translation tool"
+                            "description": "Real-time translation tool",
+                            "downloadLink": "https://chrome.google.com/webstore/detail/immersive-translate/bpoadfkcbjbfhfodiogcnhhhpibjhbnh"
                         },
                         {
                             "name": "Google Translate",
                             "icon": "fas fa-globe",
                             "color": "text-warning",
-                            "description": "Multi-language translation"
+                            "description": "Multi-language translation",
+                            "downloadLink": "https://chromewebstore.google.com/detail/google-%E7%BF%BB%E8%AD%AF/aapbdbdomjkkjkaonfhkkikfgjllcleb"
                         }
                     ],
                     "type": "technologies"
                 },
                 {
-                    "title": "Supplement Content",
+                    "title": "Supplementary Content",
                     "content": [
                         {
                             "title": "How Students Are Using AI For Homework: But How Good Is ChatGPT At School? | Talking Point",
@@ -59,6 +62,24 @@
                         }
                     ],
                     "type": "accordion"
+                },
+                {
+                    "title": "Exercise Instructions",
+                    "content": [
+                        {
+                            "field": "Exercise Title",
+                            "value": "\"1st encounter with AI tools\""
+                        },
+                        {
+                            "field": "Reflective Writing",
+                            "value": "Describe your thoughts on using AI for learning"
+                        },
+                        {
+                            "field": "Image Submission",
+                            "value": "Use \"AI Image Generator\" in AI Tools to create a \"fluffy ginger cat taking a stroll in the streets of Hong Kong, looking for food and a home\"(Refer to 40:33 @ Talking Point) Make it FUN "
+                        }
+                    ],
+                    "type": "exercise-instructions"
                 }
             ],
             "actions": {
@@ -141,7 +162,7 @@
                     "type": "technologies"
                 },
                 {
-                    "title": "Supplement Content",
+                    "title": "Supplementary Content",
                     "content": [
                         {
                             "title": "How Stanford Teaches AI-Powered Creativity in Just 13 MinutesㅣJeremy Utley",
@@ -151,7 +172,7 @@
                         },
                         {
                             "title": "The Best AI Prompt Framework For Work (2025)",
-                            "description": "Learn the 3 essential prompting techniques (zero-shot, one-shot, few-shot) and discover the CLEAR, SMART, and QUEST frameworks for business tasks",
+                            "description": "Learn the 3 essential prompting techniques (zero-shot, one-shot, few-shot) and their applicability to different types of tasks.",
                             "link": "https://stealthesethoughts.com/2024/07/29/the-best-ai-prompt-frameworks-for-business-2024/",
                             "type": "article"
                         },
@@ -163,6 +184,24 @@
                         }
                     ],
                     "type": "accordion"
+                },
+                {
+                    "title": "Exercise Instructions",
+                    "content": [
+                        {
+                            "field": "Exercise Title",
+                            "value": "\"Practice prompting\""
+                        },
+                        {
+                            "field": "Reflective Writing",
+                            "value": "What is the difference between underperformers and outperformers in AI application.(Hint 7:09 @Jeremy Utley)"
+                        },
+                        {
+                            "field": "Text Content",
+                            "value": "Use \"AI Text Generator\" in AI Tools to write a 500-word essay about \"What is creativty and does the definition of creativity changes in AI Era\"(Hint 11:15 @Jeremy Utley)) "
+                        }
+                    ],
+                    "type": "exercise-instructions"
                 }
             ],
             "actions": {
@@ -217,34 +256,52 @@
                             "icon": "fas fa-search",
                             "color": "text-warning",
                             "description": "AI-powered search and knowledge management platform",
-                            "link": "https://sesame.ai/"
+                            "link": "https://www.sesame.com/"
                         }
                     ],
                     "type": "projects"
                 },
                 {
-                    "title": "Supplement Content",
+                    "title": "Supplementary Content",
                     "content": [
                         {
-                            "title": "Advanced AI Tools Demonstration",
-                            "description": "Comprehensive walkthrough of cutting-edge AI tools and their practical applications",
+                            "title": "The Only Trait for Success in the AI Era—How to Build It | Carnegie Mellon University Po-Shen Loh",
+                            "description": "Po-Shen Loh discusses the critical importance of cultivating thoughtfulness, empathy, and strong networks to ensure human success in the AI era, warning against over-reliance on AI that could undermine mental fitness.",
                             "link": "https://www.youtube.com/watch?v=xWYb7tImErI&t=782s",
                             "type": "video"
                         },
                         {
-                            "title": "AI Integration Strategies",
-                            "description": "Learn effective methods for integrating AI tools into your workflow and projects",
-                            "link": "https://www.youtube.com/watch?v=sl6bq1iC56Y&t=2208s",
+                            "title": "NVIDIA CEO Jensen Huang's Vision for the Future",
+                            "description": "There is a recognition of the need for society to adapt to the changes brought about by AI, with a focus on how these changes might affect jobs and the workforce.",
+                            "link": "https://youtu.be/7ARBJQn6QkM?t=3351",
                             "type": "video"
                         },
                         {
-                            "title": "AI Tools Best Practices",
-                            "description": "Discover professional techniques and best practices for maximizing AI tool effectiveness",
-                            "link": "https://youtu.be/7ARBJQn6QkM?t=3351",
-                            "type": "video"
+                            "title": "Meet dAIsy, the Scam-Fighting AI Bot",
+                            "description": "O2's state-of-the-art Conversational AI bot programmed to speak with scammers on the phoneline for as long as possible, wasting their time and keeping them away from customers. dAIsy has taken over 1,000 calls from scammers and discovered key insights about their tactics.",
+                            "link": "https://www.o2.co.uk/inspiration/the-drop/meet-daisy-the-scam-fighting-ai-bot",
+                            "type": "article"
                         }
                     ],
                     "type": "accordion"
+                },
+                {
+                    "title": "Exercise Instructions",
+                    "content": [
+                        {
+                            "field": "Exercise Title",
+                            "value": "\"Talk to lifelike AI\""
+                        },
+                        {
+                            "field": "Reflective Writing",
+                            "value": "How to become Irreplaceable? (Hint 4:27 @ Po-Shen Loh)"
+                        },
+                        {
+                            "field": "Text Content",
+                            "value": "Visit \"Sesame AI\" and interview the AI \"What is creativity? How to be irreplaceable in the AI era\". Write down your notes to Text Content."
+                        }
+                    ],
+                    "type": "exercise-instructions"
                 }
             ],
             "actions": {
@@ -273,21 +330,78 @@
         {
             "id": "lesson4",
             "title": "AI Research Practice (Part I)",
-            "subtitle": "Hands-on practice of AI to study the effects of extended screen time",
+            "subtitle": "Hands-on practice to use AI to research the impact of Generative AI on education.",
             "progress": 0,
             "status": "not-started",
             "statusText": "Not started",
             "objectives": [
-                "Learn CSS Grid and Flexbox",
-                "Understand responsive breakpoints",
-                "Create mobile-first designs",
-                "Optimize for different devices"
+                "Identify and select appropriate AI tools to support research",
+                "Understand the 5 steps of critical thinking—Ask questions, Gather information, Analyze evidence, Consider alternatives, and Draw conclusions—using AI tools throughout the research process",
+                "Use AI to enhance critical thinking by applying key research steps (first 3): formulating focused questions, gathering information through AI-driven methods, and logically analyzing the data"
             ],
             "sections": [
                 {
-                    "title": "Responsive Design Principles",
-                    "content": "Learn how to create websites that work perfectly on all devices, from mobile phones to desktop computers.",
+                    "title": "Key Insight",
+                    "content": "\"The key to success with AI is not just having the right data, but also asking the right questions.\" – Ginni Rometty",
                     "type": "text"
+                },
+                {
+                    "title": "AI Tools for research",
+                    "content": [
+                        {
+                            "name": "Perplexity AI",
+                            "icon": "fas fa-brain",
+                            "color": "text-info",
+                            "description": "AI-powered search engine that provides comprehensive answers with source citations",
+                            "link": "https://www.perplexity.ai/"
+                        },
+                        {
+                            "name": "Monica Chrome Extension",
+                            "icon": "fas fa-puzzle-piece",
+                            "color": "text-secondary",
+                            "description": "AI-powered Chrome extension for enhanced browsing and productivity",
+                            "link": "https://chrome.google.com/webstore"
+                        },
+                        {
+                            "name": "Elmo Chat Extension",
+                            "icon": "fas fa-comments",
+                            "color": "text-success",
+                            "description": "AI chat extension for enhanced research and conversation capabilities",
+                            "link": "https://www.elmo.chat/"
+                        },
+                        {
+                            "name": "Storm Genie",
+                            "icon": "fas fa-bolt",
+                            "color": "text-danger",
+                            "description": "Stanford's AI research tool for advanced data analysis and research assistance",
+                            "link": "https://storm.genie.stanford.edu/"
+                        }
+                    ],
+                    "type": "projects"
+                },
+                {
+                    "title": "Supplement Content",
+                    "content": [
+                        {
+                            "title": "AI and Critical Thinking Concerns",
+                            "description": "He raises concerns that AI, while helpful, may be exacerbating issues such as the erosion of critical thinking skills and the tendency for students to outsource decision-making to AI tools like ChatGPT.",
+                            "link": "https://youtu.be/m8WomdCLBqE?t=190",
+                            "type": "video"
+                        },
+                        {
+                            "title": "5 Tips to Improve Your Critical Thinking - Samantha Agoos",
+                            "description": "The lesson emphasizes the importance of critical thinking in everyday decision-making and introduces a structured 5-step process to enhance problem-solving skills.",
+                            "link": "https://ed.ted.com/lessons/5-tips-to-improve-your-critical-thinking-samantha-agoos",
+                            "type": "article"
+                        },
+                        {
+                            "title": "Jordan Peterson's Writing Process for Clear Thinking",
+                            "description": "Jordan Peterson emphasizes the importance of writing for clear thinking and effective communication, advocating for meticulous argument formulation, extensive research, and refined prose.",
+                            "link": "https://bigthink.com/neuropsych/jordan-petersons-ten-step-process-for-stronger-writing/",
+                            "type": "article"
+                        }
+                    ],
+                    "type": "accordion"
                 }
             ],
             "actions": {
@@ -312,21 +426,78 @@
         {
             "id": "lesson5",
             "title": "AI Research Practice (Part II)",
-            "subtitle": "Hands-on practice of AI to fact-check and verify information on the effects of extended screen time",
+            "subtitle": "Hands-on use of AI to fact-check and verify information. ",
             "progress": 0,
             "status": "not-started",
             "statusText": "Not started",
             "objectives": [
-                "Master Bootstrap components",
-                "Learn CSS preprocessors",
-                "Understand utility classes",
-                "Create consistent designs"
+                "Use AI to enhance critical thinking by applying key research steps (last two): considering alternatives and drawing conclusions—using AI tools throughout the research process",
+                "Learn how to think by writing. Writing extends memory, clarifies thinking, and helps organize sophisticated ideas, enabling one to formulate and communicate the best arguments more effectively",
+                "Emphasizes the importance of leveraging AI to enhance critical analysis in educational settings"
             ],
             "sections": [
                 {
-                    "title": "CSS Framework Benefits",
-                    "content": "Learn how CSS frameworks can speed up your development process and create consistent designs.",
+                    "title": "AI Is Still Rife With Limitations - Forbes by Ron Carucci",
+                    "content": "There's a big difference between machine learning and \"machine thinking.\" And quite frankly, the minute we start looking at AI as machine thinking, we're in trouble, because it means we've tried to outsource our own critical thinking and problem solving skills to a machine that is only replicating and regurgitating information it has gathered. Large language models are looking for existing patterns of information, perhaps even synthesizing them. But they can't exercise judgment, no matter how nuanced, or fast, their outputs are.",
                     "type": "text"
+                },
+                {
+                    "title": "Other AI Tools for research",
+                    "content": [
+                        {
+                            "name": "Elmo Chat Extension",
+                            "icon": "fas fa-comments",
+                            "color": "text-success",
+                            "description": "AI chat extension for enhanced research and conversation capabilities",
+                            "link": "https://www.elmo.chat/"
+                        },
+                        {
+                            "name": "Google Gemini",
+                            "icon": "fas fa-gem",
+                            "color": "text-primary",
+                            "description": "Google's advanced AI assistant for research, analysis, and creative tasks",
+                            "link": "https://gemini.google.com/"
+                        },
+                        {
+                            "name": "Kuse AI",
+                            "icon": "fas fa-brain",
+                            "color": "text-info",
+                            "description": "AI-powered platform for intelligent data analysis and insights generation",
+                            "link": "https://kuse.ai/"
+                        },
+                        {
+                            "name": "Napkin AI",
+                            "icon": "fas fa-lightbulb",
+                            "color": "text-warning",
+                            "description": "AI tool for creating visual diagrams and flowcharts from text descriptions",
+                            "link": "https://napkin.ai/"
+                        }
+                    ],
+                    "type": "projects"
+                },
+                {
+                    "title": "Supplement Content",
+                    "content": [
+                        {
+                            "title": "AI Chatbots in Education - Vox",
+                            "description": "Vox's video discusses the implications of AI chatbots in education, exploring how they challenge traditional learning methods and the ethical considerations schools face in integrating or banning them.",
+                            "link": "https://youtu.be/bEJ0_TVXh-I?t=458",
+                            "type": "video"
+                        },
+                        {
+                            "title": "Leveraging AI to Enhance Critical Analysis in Education",
+                            "description": "The context emphasizes the importance of leveraging AI to enhance critical analysis in educational settings.",
+                            "link": "https://wmich.edu/x/teaching-learning/teaching-resources/ai-critical-thinking",
+                            "type": "article"
+                        },
+                        {
+                            "title": "Critical Thinking in the Age of AI - Forbes",
+                            "description": "The Forbes article emphasizes the heightened importance of human critical thinking in the era of AI, as it is essential for improving AI technologies and maintaining their reliability and ethical use.",
+                            "link": "https://www.forbes.com/sites/roncarucci/2024/02/06/in-the-age-of-ai-critical-thinking-is-more-needed-than-ever/",
+                            "type": "article"
+                        }
+                    ],
+                    "type": "accordion"
                 }
             ],
             "actions": {
@@ -351,21 +522,112 @@
         {
             "id": "lesson6",
             "title": "AI Text Processing Tools",
-            "subtitle": "Learn to use AI tools for efficient information extraction and summarization",
+            "subtitle": "Learn to use AI tools for efficient information extraction, visualization, and summarization",
             "progress": 0,
             "status": "not-started",
             "statusText": "Not started",
             "objectives": [
-                "Learn arrow functions",
-                "Understand destructuring",
-                "Master template literals",
-                "Use modern JavaScript syntax"
+                "Learn to efficiently extract and summarize information using AI tools, while critically evaluating results to avoid misinformation and AI hallucination",
+                "Develop the habit of summarizing and rephrasing content in your own words to deepen understanding and create original insights",
+                "Use visualization techniques to effectively present your ideas and insights in presentations"
             ],
             "sections": [
                 {
-                    "title": "ES6+ Features",
-                    "content": "Explore the modern features that make JavaScript more powerful and easier to write.",
+                    "title": "Key insights",
+                    "content": "Harness AI tools to rapidly extract and summarize information, but always critically verify outputs to prevent misinformation. Reinforce your learning by rephrasing the summaries in your own words, which helps develop deeper understanding and unique insights.",
                     "type": "text"
+                },
+                {
+                    "title": "Other AI Tools for research",
+                    "content": [
+                        {
+                            "name": "Kuse AI",
+                            "icon": "fas fa-brain",
+                            "color": "text-info",
+                            "description": "AI-powered platform for intelligent data analysis and insights generation",
+                            "link": "https://kuse.ai/"
+                        },
+                        {
+                            "name": "Napkin AI",
+                            "icon": "fas fa-lightbulb",
+                            "color": "text-warning",
+                            "description": "AI tool for creating visual diagrams and flowcharts from text descriptions",
+                            "link": "https://napkin.ai/"
+                        },
+                        {
+                            "name": "Recall Chrome Extension",
+                            "icon": "fas fa-history",
+                            "color": "text-dark",
+                            "description": "AI-powered Chrome extension for intelligent web content recall and organization",
+                            "link": "https://chrome.google.com/webstore"
+                        },
+                        {
+                            "name": "Mapify Chrome Extension",
+                            "icon": "fas fa-map",
+                            "color": "text-success",
+                            "description": "AI-powered Chrome extension for creating visual mind maps and knowledge graphs",
+                            "link": "https://chrome.google.com/webstore"
+                        },
+                        {
+                            "name": "Atlas",
+                            "icon": "fas fa-globe",
+                            "color": "text-primary",
+                            "description": "AI-powered platform for knowledge management and research organization",
+                            "link": "https://www.atlas.org/home"
+                        },
+                        {
+                            "name": "RemNote",
+                            "icon": "fas fa-sticky-note",
+                            "color": "text-info",
+                            "description": "AI-powered note-taking and knowledge management platform for students and researchers",
+                            "link": "https://remnote.com"
+                        },
+                        {
+                            "name": "Albus Studio",
+                            "icon": "fas fa-palette",
+                            "color": "text-warning",
+                            "description": "AI-powered creative studio for visual content generation and design",
+                            "link": "https://studio.albus.org/"
+                        },
+                        {
+                            "name": "Revisely Library",
+                            "icon": "fas fa-book",
+                            "color": "text-danger",
+                            "description": "AI-powered educational resource library for comprehensive learning materials",
+                            "link": "https://www.revisely.com/library"
+                        }
+                    ],
+                    "type": "projects"
+                },
+                {
+                    "title": "Supplementary Content",
+                    "content": [
+                        {
+                            "title": "Learn how to select the right AI tools for summarization",
+                            "description": "YouTube video reviewing the top five AI tools for summarizing YouTube videos, claiming they surpass the capabilities of ChatGPT.",
+                            "link": "https://www.youtube.com/watch?v=OlI6i7rdB4g",
+                            "type": "video"
+                        },
+                        {
+                            "title": "Learn how to select the right AI tools for studying",
+                            "description": "Reviewing the 8 best AI-powered studying apps for 2024, which are designed to enhance productivity and learning for students and busy adults.",
+                            "link": "https://www.youtube.com/watch?v=OmiwV8kUz2E&t=12s",
+                            "type": "video"
+                        },
+                        {
+                            "title": "The 2025 AI Index Report",
+                            "description": "The AI Index Report is an annual publication by the Stanford Human-Centered AI Institute (HAI), which aims to provide a comprehensive overview of the current state and advancements in artificial intelligence.",
+                            "link": "https://hai.stanford.edu/ai-index/2025-ai-index-report",
+                            "type": "article"
+                        },
+                        {
+                            "title": "Who's Using AI? The Stats May Surprise You",
+                            "description": "Menlo Ventures provides an in-depth analysis of consumer AI adoption, market dynamics, and future predictions, highlighting the widespread use, market value, user demographics, and potential growth areas of AI in consumer applications by 2025.",
+                            "link": "https://menlovc.com/perspective/2025-the-state-of-consumer-ai/",
+                            "type": "article"
+                        }
+                    ],
+                    "type": "accordion"
                 }
             ],
             "actions": {

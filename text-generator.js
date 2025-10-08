@@ -11,6 +11,13 @@ function initializeTextGenerator() {
     const form = document.getElementById('textGeneratorForm');
     form.addEventListener('submit', handleTextGeneration);
 
+    // Add event listeners for prompt preview updates
+    document.getElementById('textPrompt').addEventListener('input', updatePromptPreview);
+    document.getElementById('textType').addEventListener('change', updatePromptPreview);
+    document.getElementById('textLength').addEventListener('change', updatePromptPreview);
+    document.getElementById('textTone').addEventListener('change', updatePromptPreview);
+    document.getElementById('textLanguage').addEventListener('change', updatePromptPreview);
+
     loadGeneratedTexts();
     loadApiKey('deepseek');
 
@@ -26,12 +33,14 @@ function handleTextGeneration(event) {
         const type = document.getElementById('textType').value;
         const length = document.getElementById('textLength').value;
         const tone = document.getElementById('textTone').value;
+        const language = document.getElementById('textLanguage').value;
+        const framework = document.getElementById('promptingFramework').value;
 
-        generateText(prompt, type, length, tone);
+        generateText(prompt, type, length, tone, language, framework);
     });
 }
 
-async function generateText(prompt, type, length, tone) {
+async function generateText(prompt, type, length, tone, language, framework) {
     const submitBtn = document.querySelector('#textGeneratorForm button[type="submit"]');
     const originalText = submitBtn.innerHTML;
 
@@ -45,8 +54,11 @@ async function generateText(prompt, type, length, tone) {
             throw new Error('API key not configured. Please contact an administrator to set up the Deepseek API key.');
         }
 
+        // Create structured prompt based on framework
+        const structuredPrompt = createStructuredPrompt(prompt, type, length, tone, language, framework);
+
         // Call real Deepseek API
-        const response = await callDeepseekAPI(prompt, type, length, tone, apiKey);
+        const response = await callDeepseekAPI(structuredPrompt, type, length, tone, apiKey);
 
         // Store the generated text
         currentGeneratedText = response.text;
@@ -55,9 +67,11 @@ async function generateText(prompt, type, length, tone) {
         const textData = {
             id: Date.now(),
             prompt: prompt,
+            structuredPrompt: structuredPrompt,
             type: type,
             length: length,
             tone: tone,
+            framework: framework,
             text: response.text,
             timestamp: new Date().toISOString()
         };
@@ -78,6 +92,223 @@ async function generateText(prompt, type, length, tone) {
     } finally {
         hideLoading(submitBtn, originalText);
     }
+}
+
+function showFrameworkGuide() {
+    const frameworkSelect = document.getElementById('promptingFramework');
+    const frameworkGuide = document.getElementById('frameworkGuide');
+    const customFrameworkInput = document.getElementById('customFrameworkInput');
+    const selectedFramework = frameworkSelect.value;
+
+    if (selectedFramework === 'none') {
+        frameworkGuide.style.display = 'none';
+        customFrameworkInput.style.display = 'none';
+        return;
+    }
+
+    // Show framework guide
+    frameworkGuide.style.display = 'block';
+    customFrameworkInput.style.display = 'block';
+
+    // Update guide content
+    const guide = getFrameworkGuide(selectedFramework);
+    document.getElementById('frameworkTitle').textContent = guide.title;
+    document.getElementById('frameworkDescription').textContent = guide.description;
+    document.getElementById('frameworkUsage').textContent = guide.whenToUse;
+
+    // Load custom framework text
+    const customText = document.getElementById('customFrameworkText');
+    customText.value = guide.template;
+
+    // Update prompt preview
+    updatePromptPreview();
+}
+
+function updatePromptPreview() {
+    const originalPrompt = document.getElementById('textPrompt').value;
+    const type = document.getElementById('textType').value;
+    const length = document.getElementById('textLength').value;
+    const tone = document.getElementById('textTone').value;
+    const language = document.getElementById('textLanguage').value;
+    const customFrameworkText = document.getElementById('customFrameworkText');
+    const promptPreview = document.getElementById('promptPreview');
+
+    if (!originalPrompt.trim()) {
+        promptPreview.textContent = 'Enter your prompt above to see the preview...';
+        return;
+    }
+
+    if (customFrameworkText && customFrameworkText.value.trim()) {
+        const preview = customFrameworkText.value
+            .replace('{originalPrompt}', originalPrompt)
+            .replace('{type}', type)
+            .replace('{length}', length)
+            .replace('{tone}', tone)
+            .replace('{language}', language);
+        promptPreview.textContent = preview;
+    } else {
+        // Show composed prompt when no framework is selected
+        const composed = `${originalPrompt}\n\nPlease generate a ${type} in a ${tone} tone, approximately ${length} words, written in ${language}.`;
+        promptPreview.textContent = composed;
+    }
+}
+
+function getFrameworkGuide(framework) {
+    const guides = {
+        'pps': {
+            title: 'Persona-Problem-Solution (PPS) Framework',
+            description: 'Structures prompts by defining the AI\'s role (Persona), the specific challenge (Problem), and the desired output (Solution).',
+            whenToUse: 'Best for role-specific tasks, expert consultations, and when you need the AI to adopt a particular perspective or expertise.',
+            template: 'Persona: You are a {type} expert with deep knowledge in this field.\nProblem: {originalPrompt}\nSolution: Please provide a comprehensive {type} that addresses this problem with a {tone} tone, approximately {length} words, written in {language}.'
+        },
+        'ctc': {
+            title: 'Context-Task-Constraints (CTC) Framework',
+            description: 'Provides background context, defines the specific task, and sets clear boundaries or constraints.',
+            whenToUse: 'Ideal for complex projects, when you need to set specific parameters, or when working with detailed requirements.',
+            template: 'Context: You are an expert in {type} writing with extensive experience in creating high-quality content.\nTask: Create a {type} based on the following request: {originalPrompt}\nConstraints: Use a {tone} tone, aim for approximately {length} words, write in {language}, and ensure the content is well-structured and engaging.'
+        },
+        'clear': {
+            title: 'CLEAR Framework',
+            description: 'Context-Logic-Expectations-Action-Restrictions approach for comprehensive prompt structuring.',
+            whenToUse: 'Perfect for research tasks, analysis projects, and when you need to explain the reasoning behind your request.',
+            template: 'Context: You are a professional {type} writer with expertise in creating compelling content.\nLogic: The request requires a well-crafted {type} that effectively communicates the intended message.\nExpectations: The output should be a comprehensive {type} that addresses the user\'s request.\nAction: Create a {type} based on: {originalPrompt}\nRestrictions: Use a {tone} tone, approximately {length} words, and maintain professional quality.'
+        },
+        'smart': {
+            title: 'SMART Framework',
+            description: 'Specific-Measurable-Achievable-Relevant-Time-bound approach for goal-oriented prompts.',
+            whenToUse: 'Excellent for project planning, goal setting, and when you need measurable outcomes.',
+            template: 'Specific: Create a {type} based on: {originalPrompt}\nMeasurable: The content should be approximately {length} words.\nAchievable: Use your expertise to create high-quality content.\nRelevant: Focus on the specific request and maintain relevance.\nTime-bound: Provide a complete, well-structured {type} with a {tone} tone.'
+        },
+        'quest': {
+            title: 'QUEST Framework',
+            description: 'Question-Understanding-Expectation-Scope-Time approach for research and inquiry-based tasks.',
+            whenToUse: 'Best for research projects, investigative tasks, and when you need to explore a topic thoroughly.',
+            template: 'Question: How can I create an effective {type} based on: {originalPrompt}?\nUnderstanding: You need a {type} with a {tone} tone, approximately {length} words.\nExpectation: A well-structured, engaging {type} that addresses the request.\nScope: Focus on the specific request while maintaining quality and relevance.\nTime: Provide a complete response that meets all requirements.'
+        },
+        'guide': {
+            title: 'GUIDE Framework',
+            description: 'Goal-Understanding-Information-Direction-Evaluation approach for comprehensive guidance.',
+            whenToUse: 'Ideal for mentoring tasks, educational content, and when you need step-by-step guidance.',
+            template: 'Goal: Create a high-quality {type} based on: {originalPrompt}\nUnderstanding: You are an expert {type} writer with extensive experience.\nInformation: The content should be approximately {length} words with a {tone} tone.\nDirection: Structure the {type} with clear organization and engaging content.\nEvaluation: Ensure the output meets professional standards and addresses the request effectively.'
+        },
+        'focus': {
+            title: 'FOCUS Framework',
+            description: 'Function-Outcome-Criteria-Underlying Assumptions-Strategy approach for strategic thinking.',
+            whenToUse: 'Perfect for strategic planning, decision-making tasks, and when you need to consider multiple perspectives.',
+            template: 'Function: Create a {type} that effectively communicates the intended message.\nOutcome: A well-structured {type} based on: {originalPrompt}\nCriteria: Use a {tone} tone, approximately {length} words, and maintain high quality.\nUnderlying Assumptions: The content should be relevant, engaging, and professionally written.\nStrategy: Create a comprehensive {type} that addresses all aspects of the request.'
+        },
+        'idea': {
+            title: 'IDEA Framework',
+            description: 'Intent-Details-Examples-Adjustments approach for iterative development.',
+            whenToUse: 'Great for creative projects, iterative development, and when you need flexibility in the process.',
+            template: 'Intent: Create an effective {type} based on: {originalPrompt}\nDetails: The content should be approximately {length} words with a {tone} tone.\nExamples: Use professional writing standards and engaging content structure.\nAdjustments: Ensure the {type} meets all requirements and maintains quality throughout.'
+        },
+        'risen': {
+            title: 'RISEN Framework',
+            description: 'Requirement-Information-Strategy-Evaluation-Negotiation approach for complex projects.',
+            whenToUse: 'Best for complex projects, negotiations, and when you need to balance multiple requirements.',
+            template: 'Requirement: Create a {type} based on: {originalPrompt}\nInformation: The content should be approximately {length} words with a {tone} tone.\nStrategy: Use professional writing techniques and engaging content structure.\nEvaluation: Ensure the output meets quality standards and addresses the request.\nNegotiation: Adapt the content to best serve the user\'s needs while maintaining professional standards.'
+        },
+        'rhodes': {
+            title: 'RHODES Framework',
+            description: 'Research-Hypothesis-Objectives-Development-Execution-Synthesis approach for scientific methodology.',
+            whenToUse: 'Perfect for research projects, scientific writing, and when you need a systematic approach.',
+            template: 'Research: Analyze the request: {originalPrompt}\nHypothesis: A well-crafted {type} will effectively address this request.\nObjectives: Create a {type} that is approximately {length} words with a {tone} tone.\nDevelopment: Structure the content with clear organization and engaging elements.\nExecution: Write a comprehensive {type} that meets all requirements.\nSynthesis: Ensure the final output effectively addresses the original request.'
+        },
+        'create': {
+            title: 'CREATE Framework',
+            description: 'Conceptualize-Research-Experiment-Analyze-Transform-Evaluate approach for innovation.',
+            whenToUse: 'Ideal for creative projects, innovation tasks, and when you need to explore new approaches.',
+            template: 'Conceptualize: Develop a {type} based on: {originalPrompt}\nResearch: Consider the best approach for a {tone} tone, approximately {length} words.\nExperiment: Use different writing techniques to create engaging content.\nAnalyze: Evaluate the effectiveness of the content structure and approach.\nTransform: Refine the {type} to meet all requirements and maintain quality.\nEvaluate: Ensure the final output effectively addresses the user\'s request.'
+        }
+    };
+
+    return guides[framework] || guides['pps'];
+}
+
+function createStructuredPrompt(originalPrompt, type, length, tone, language, framework) {
+    if (framework === 'none') {
+        // Compose a clear prompt that includes type, length, tone, and language
+        return `${originalPrompt}\n\nPlease generate a ${type} in a ${tone} tone, approximately ${length} words, written in ${language}.`;
+    }
+
+    // Check if user has customized the framework
+    const customFrameworkText = document.getElementById('customFrameworkText');
+    if (customFrameworkText && customFrameworkText.value.trim()) {
+        return customFrameworkText.value
+            .replace('{originalPrompt}', originalPrompt)
+            .replace('{type}', type)
+            .replace('{length}', length)
+            .replace('{tone}', tone)
+            .replace('{language}', language);
+    }
+
+    const frameworkTemplates = {
+        'pps': `Persona: You are a ${type} expert with deep knowledge in this field.
+Problem: ${originalPrompt}
+Solution: Please provide a comprehensive ${type} that addresses this problem with a ${tone} tone, approximately ${length} words, written in ${language}.`,
+
+        'ctc': `Context: You are an expert in ${type} writing with extensive experience in creating high-quality content.
+Task: Create a ${type} based on the following request: ${originalPrompt}
+Constraints: Use a ${tone} tone, aim for approximately ${length} words, write in ${language}, and ensure the content is well-structured and engaging.`,
+
+        'clear': `Context: You are a professional ${type} writer with expertise in creating compelling content.
+Logic: The request requires a well-crafted ${type} that effectively communicates the intended message.
+Expectations: The output should be a comprehensive ${type} that addresses the user's request.
+Action: Create a ${type} based on: ${originalPrompt}
+Restrictions: Use a ${tone} tone, approximately ${length} words, write in ${language}, and maintain professional quality.`,
+
+        'smart': `Specific: Create a ${type} based on: ${originalPrompt}
+Measurable: The content should be approximately ${length} words.
+Achievable: Use your expertise to create high-quality content.
+Relevant: Focus on the specific request and maintain relevance.
+Time-bound: Provide a complete, well-structured ${type} with a ${tone} tone, written in ${language}.`,
+
+        'quest': `Question: How can I create an effective ${type} based on: ${originalPrompt}?
+Understanding: You need a ${type} with a ${tone} tone, approximately ${length} words, written in ${language}.
+Expectation: A well-structured, engaging ${type} that addresses the request.
+Scope: Focus on the specific request while maintaining quality and relevance.
+Time: Provide a complete response that meets all requirements.`,
+
+        'guide': `Goal: Create a high-quality ${type} based on: ${originalPrompt}
+Understanding: You are an expert ${type} writer with extensive experience.
+Information: The content should be approximately ${length} words with a ${tone} tone, written in ${language}.
+Direction: Structure the ${type} with clear organization and engaging content.
+Evaluation: Ensure the output meets professional standards and addresses the request effectively.`,
+
+        'focus': `Function: Create a ${type} that effectively communicates the intended message.
+Outcome: A well-structured ${type} based on: ${originalPrompt}
+Criteria: Use a ${tone} tone, approximately ${length} words, write in ${language}, and maintain high quality.
+Underlying Assumptions: The content should be relevant, engaging, and professionally written.
+Strategy: Create a comprehensive ${type} that addresses all aspects of the request.`,
+
+        'idea': `Intent: Create an effective ${type} based on: ${originalPrompt}
+Details: The content should be approximately ${length} words with a ${tone} tone, written in ${language}.
+Examples: Use professional writing standards and engaging content structure.
+Adjustments: Ensure the ${type} meets all requirements and maintains quality throughout.`,
+
+        'risen': `Requirement: Create a ${type} based on: ${originalPrompt}
+Information: The content should be approximately ${length} words with a ${tone} tone, written in ${language}.
+Strategy: Use professional writing techniques and engaging content structure.
+Evaluation: Ensure the output meets quality standards and addresses the request.
+Negotiation: Adapt the content to best serve the user's needs while maintaining professional standards.`,
+
+        'rhodes': `Research: Analyze the request: ${originalPrompt}
+Hypothesis: A well-crafted ${type} will effectively address this request.
+Objectives: Create a ${type} that is approximately ${length} words with a ${tone} tone, written in ${language}.
+Development: Structure the content with clear organization and engaging elements.
+Execution: Write a comprehensive ${type} that meets all requirements.
+Synthesis: Ensure the final output effectively addresses the original request.`,
+
+        'create': `Conceptualize: Develop a ${type} based on: ${originalPrompt}
+Research: Consider the best approach for a ${tone} tone, approximately ${length} words, written in ${language}.
+Experiment: Use different writing techniques to create engaging content.
+Analyze: Evaluate the effectiveness of the content structure and approach.
+Transform: Refine the ${type} to meet all requirements and maintain quality.
+Evaluate: Ensure the final output effectively addresses the user's request.`
+    };
+
+    return frameworkTemplates[framework] || originalPrompt;
 }
 
 async function simulateDeepseekAPICall(prompt, type, length, tone, apiKey) {
@@ -108,6 +339,28 @@ async function simulateDeepseekAPICall(prompt, type, length, tone, apiKey) {
 function displayGeneratedText() {
     const resultsDiv = document.getElementById('generatedTextResults');
     const contentDiv = document.getElementById('generatedTextContent');
+    const originalPromptDiv = document.getElementById('originalPromptDisplay');
+    const structuredPromptDiv = document.getElementById('structuredPromptDisplay');
+    const structuredPromptContent = document.getElementById('structuredPromptContent');
+
+    // Display the original/composed prompt
+    if (generatedTexts.length > 0) {
+        const latestText = generatedTexts[0];
+        // When no framework, show the composed prompt (what was sent to AI)
+        if (latestText.framework === 'none' && latestText.structuredPrompt) {
+            originalPromptDiv.textContent = latestText.structuredPrompt;
+        } else {
+            originalPromptDiv.textContent = latestText.prompt;
+        }
+
+        // Show structured prompt if framework was used
+        if (latestText.framework && latestText.framework !== 'none' && latestText.structuredPrompt) {
+            structuredPromptContent.textContent = latestText.structuredPrompt;
+            structuredPromptDiv.style.display = 'block';
+        } else {
+            structuredPromptDiv.style.display = 'none';
+        }
+    }
 
     contentDiv.textContent = currentGeneratedText;
     resultsDiv.style.display = 'block';

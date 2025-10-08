@@ -945,14 +945,14 @@ p,
 
 /* Exercise Modal Specific Styles */
 #exerciseModal .modal-content {
-    border: 2px solid var(--accent-color);
+    border: none;
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
     background: var(--card-bg);
 }
 
 #exerciseModal .modal-header {
-    background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
-    color: white;
+    background: transparent;
+    color: var(--text-color);
     border-bottom: none;
 }
 

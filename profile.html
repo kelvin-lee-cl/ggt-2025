@@ -327,6 +327,12 @@
                         <div>
                             <strong>${item.title || '(Untitled)'} - ${item.lessonId}</strong>
                             <div class="small text-muted">${new Date(item.timestamp).toLocaleString()}</div>
+                            ${item.description ? `
+                                <div class="small">
+                                    <strong>Reflective Writing:</strong>
+                                    <span class="text-muted">${(item.description || '').slice(0, 140)}${(item.description && item.description.length > 140) ? '…' : ''}</span>
+                                </div>
+                            ` : ''}
                         </div>
                         <div class="d-flex align-items-center gap-2">
                             <span class="badge bg-primary">${item.type}</span>
@@ -351,6 +357,12 @@
                         <div>
                             <strong>${item.title || '(Untitled)'} (${item.type})</strong>
                             <div class="small text-muted">${new Date(item.timestamp).toLocaleString()}</div>
+                            ${item.description ? `
+                                <div class="small">
+                                    <strong>Reflective Writing:</strong>
+                                    <span class="text-muted">${(item.description || '').slice(0, 140)}${(item.description && item.description.length > 140) ? '…' : ''}</span>
+                                </div>
+                            ` : ''}
                         </div>
                         <div class="d-flex align-items-center gap-2">
                             <button class="btn btn-sm btn-outline-primary" onclick="viewSubmission('${item.__id}')"><i class="fas fa-eye"></i></button>
@@ -460,6 +472,10 @@
                                 <label class="form-label">Type</label>
                                 <input class="form-control" value="${data.type || ''}" readonly>
                             </div>
+                            <div class="mb-3">
+                                <label class="form-label">Reflective Writing</label>
+                                <textarea class="form-control" id="subDescription" rows="4" ${readOnly}>${data.description || ''}</textarea>
+                            </div>
                             ${data.type === 'text' ? `
                                 <div class="mb-3">
                                     <label class="form-label">Content</label>
@@ -491,6 +507,8 @@
                 const payload = {};
                 const titleEl = document.getElementById('subTitle');
                 if (titleEl) payload.title = titleEl.value;
+                const descEl = document.getElementById('subDescription');
+                if (descEl) payload.description = descEl.value;
                 if (type === 'text') {
                     payload.content = document.getElementById('subContent')?.value || '';
                 } else if (type === 'link') {

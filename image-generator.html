@@ -33,7 +33,7 @@
                                     <label for="imagePrompt" class="form-label">Describe the image you want to
                                         create</label>
                                     <textarea class="form-control prompt-textarea" id="imagePrompt"
-                                        placeholder="Example: A futuristic cityscape with flying cars and neon lights, digital art style"
+                                        placeholder="Example: A fluffy cat looking for food and a home"
                                         required></textarea>
                                     <div class="form-text">Be as descriptive as possible for better results.</div>
                                 </div>
@@ -52,8 +52,7 @@
                                     <div class="col-md-6">
                                         <label for="imageSize" class="form-label">Size</label>
                                         <select class="form-select" id="imageSize">
-                                            <option value="512x512">512x512 (Square)</option>
-                                            <option value="1024x1024">1024x1024 (HD Square)</option>
+                                            <option value="1024x1024" selected>1024x1024 (Square)</option>
                                             <option value="1024x768">1024x768 (Landscape)</option>
                                             <option value="768x1024">768x1024 (Portrait)</option>
                                         </select>
@@ -68,22 +67,7 @@
                             </form>
                         </div>
 
-                        <!-- API Configuration -->
-                        <div class="mt-4">
-                            <div class="alert alert-info">
-                                <h6><i class="fas fa-info-circle me-2"></i>API Configuration</h6>
-                                <p class="mb-2">To use this feature, you need to configure your Recraft API key:</p>
-                                <div class="input-group">
-                                    <input type="password" class="form-control" id="recraftApiKey"
-                                        placeholder="Enter your Recraft API key">
-                                    <button class="btn btn-outline-secondary" type="button"
-                                        onclick="saveApiKey('recraft')">
-                                        Save Key
-                                    </button>
-                                </div>
-                                <small class="text-muted">Your API key is stored locally and never shared.</small>
-                            </div>
-                        </div>
+
 
                         <!-- Generated Images -->
                         <div id="generatedImages" class="mt-4">

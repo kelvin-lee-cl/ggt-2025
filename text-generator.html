@@ -32,7 +32,7 @@
                                 <div class="mb-4">
                                     <label for="textPrompt" class="form-label">What would you like to generate?</label>
                                     <textarea class="form-control prompt-textarea" id="textPrompt"
-                                        placeholder="Example: Write a 500-word essay about the importance of renewable energy sources"
+                                        placeholder="Example: Write a 500-word essay about creativity and if the definition of creativity changes in AI Era"
                                         required></textarea>
                                     <div class="form-text">Be specific about the type of content, length, and style you
                                         want.</div>
@@ -62,15 +62,75 @@
                                 </div>
 
                                 <div class="mb-4">
-                                    <label for="textTone" class="form-label">Tone</label>
-                                    <select class="form-select" id="textTone">
-                                        <option value="formal">Formal</option>
-                                        <option value="casual">Casual</option>
-                                        <option value="academic">Academic</option>
-                                        <option value="persuasive">Persuasive</option>
-                                        <option value="informative">Informative</option>
-                                        <option value="creative">Creative</option>
+                                    <label for="promptingFramework" class="form-label">Prompting Framework
+                                        (Optional)</label>
+                                    <select class="form-select" id="promptingFramework" onchange="showFrameworkGuide()">
+                                        <option value="none">No Framework</option>
+                                        <option value="pps">Persona-Problem-Solution (PPS)</option>
+                                        <option value="ctc">Context-Task-Constraints (CTC)</option>
+                                        <option value="clear">CLEAR Framework</option>
+                                        <option value="smart">SMART Framework</option>
+                                        <option value="quest">QUEST Framework</option>
+                                        <option value="guide">GUIDE Framework</option>
+                                        <option value="focus">FOCUS Framework</option>
+                                        <option value="idea">IDEA Framework</option>
+                                        <option value="risen">RISEN Framework</option>
+                                        <option value="rhodes">RHODES Framework</option>
+                                        <option value="create">CREATE Framework</option>
                                     </select>
+                                    <div class="form-text">Select a prompting framework to structure your prompt more
+                                        effectively.</div>
+
+                                    <!-- Framework Guide -->
+                                    <div id="frameworkGuide" class="mt-3" style="display: none;">
+                                        <div class="alert alert-info">
+                                            <h6 id="frameworkTitle" class="mb-2"></h6>
+                                            <p id="frameworkDescription" class="mb-2"></p>
+                                            <p id="frameworkWhenToUse" class="mb-0"><strong>When to use:</strong> <span
+                                                    id="frameworkUsage"></span></p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Custom Framework Input -->
+                                    <div id="customFrameworkInput" class="mt-3" style="display: none;">
+                                        <label for="customFrameworkText" class="form-label">Customize Framework
+                                            Template</label>
+                                        <textarea class="form-control" id="customFrameworkText" rows="4"
+                                            placeholder="Customize the framework template here..."
+                                            oninput="updatePromptPreview()"></textarea>
+                                        <div class="form-text">Use placeholders: {originalPrompt}, {type}, {length},
+                                            {tone}</div>
+
+                                        <!-- Preview of actual prompt -->
+                                        <div class="mt-3">
+                                            <label class="form-label">Preview of actual prompt sent to AI:</label>
+                                            <div id="promptPreview" class="border p-3 rounded bg-light"
+                                                style="min-height: 100px; white-space: pre-wrap; font-family: monospace; font-size: 0.9em;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <label for="textTone" class="form-label">Tone</label>
+                                        <select class="form-select" id="textTone">
+                                            <option value="formal">Formal</option>
+                                            <option value="casual">Casual</option>
+                                            <option value="academic">Academic</option>
+                                            <option value="persuasive">Persuasive</option>
+                                            <option value="informative">Informative</option>
+                                            <option value="creative">Creative</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="textLanguage" class="form-label">Language</label>
+                                        <select class="form-select" id="textLanguage">
+                                            <option value="english">English</option>
+                                            <option value="traditional-chinese">Traditional Chinese (繁體中文)</option>
+                                            <option value="simplified-chinese">Simplified Chinese (简体中文)</option>
+                                        </select>
+                                    </div>
                                 </div>
 
                                 <div class="d-grid">
@@ -103,8 +163,30 @@
                         <div id="generatedTextResults" class="mt-4" style="display: none;">
                             <h6 class="mb-3">Generated Text</h6>
                             <div class="result-container">
+                                <!-- Original Prompt Display -->
+                                <div class="mb-4">
+                                    <h6 class="mb-2 text-primary">
+                                        <i class="fas fa-question-circle me-2"></i>Your Original Prompt
+                                    </h6>
+                                    <div id="originalPromptDisplay" class="border p-3 rounded bg-light"
+                                        style="min-height: 80px; white-space: pre-wrap; font-style: italic;"></div>
+                                </div>
+
+                                <!-- Framework-Structured Prompt Display -->
+                                <div id="structuredPromptDisplay" class="mb-4" style="display: none;">
+                                    <h6 class="mb-2 text-info">
+                                        <i class="fas fa-cogs me-2"></i>Framework-Structured Prompt (Sent to AI)
+                                    </h6>
+                                    <div id="structuredPromptContent" class="border p-3 rounded bg-light"
+                                        style="min-height: 80px; white-space: pre-wrap; font-family: monospace; font-size: 0.9em;">
+                                    </div>
+                                </div>
+
+                                <!-- Generated Content -->
                                 <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <h6 class="mb-0">Result</h6>
+                                    <h6 class="mb-0 text-success">
+                                        <i class="fas fa-magic me-2"></i>Generated Result
+                                    </h6>
                                     <div>
                                         <button class="btn btn-sm btn-outline-primary" onclick="copyToClipboard()">
                                             <i class="fas fa-copy"></i> Copy

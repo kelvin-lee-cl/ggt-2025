@@ -125,8 +125,8 @@ class ExerciseSubmission {
                             </div>
                             
                             <div class="mb-3">
-                                <label for="exerciseDescription" class="form-label">Description</label>
-                                <textarea class="form-control" id="exerciseDescription" rows="3" placeholder="Describe your exercise or project"></textarea>
+                                <label for="exerciseDescription" class="form-label">Reflective Writing</label>
+                                <textarea class="form-control" id="exerciseDescription" rows="3" placeholder="Write your reflection here"></textarea>
                             </div>
 
                             <div class="mb-3">
@@ -166,10 +166,6 @@ class ExerciseSubmission {
                                 <!-- Dynamic content based on submission type -->
                             </div>
 
-                            <div class="mb-3">
-                                <label for="exerciseTags" class="form-label">Tags (optional)</label>
-                                <input type="text" class="form-control" id="exerciseTags" placeholder="Enter tags separated by commas">
-                            </div>
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -250,7 +246,6 @@ class ExerciseSubmission {
 
         const title = document.getElementById('exerciseTitle').value;
         const description = document.getElementById('exerciseDescription').value;
-        const tags = document.getElementById('exerciseTags').value;
 
         if (!title.trim()) {
             showAlert('Please enter an exercise title', 'warning');
@@ -264,7 +259,6 @@ class ExerciseSubmission {
             let submissionData = {
                 title: title,
                 description: description,
-                tags: tags.split(',').map(tag => tag.trim()).filter(tag => tag),
                 lessonId: lessonId,
                 type: type,
                 timestamp: new Date().toISOString(),
