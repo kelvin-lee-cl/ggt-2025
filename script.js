@@ -101,13 +101,16 @@ function initializeFirebaseAuth() {
 }
 
 async function firebaseGoogleLogin() {
+    // Hoist variables so they're accessible in finally
+    let loginBtn = null;
+    let originalText = '';
     try {
         if (__isFirebaseSigningIn) {
             return; // prevent concurrent popups
         }
         __isFirebaseSigningIn = true;
-        const loginBtn = document.getElementById('loginBtn');
-        const originalText = loginBtn ? loginBtn.innerHTML : '';
+        loginBtn = document.getElementById('loginBtn');
+        originalText = loginBtn ? loginBtn.innerHTML : '';
         if (loginBtn) {
             showLoading(loginBtn);
         }
@@ -134,7 +137,7 @@ async function firebaseGoogleLogin() {
         showAlert('Google sign-in failed. Please try again.', 'danger');
     } finally {
         __isFirebaseSigningIn = false;
-        const loginBtn = document.getElementById('loginBtn');
+        // Use hoisted references to avoid ReferenceError
         if (loginBtn) {
             hideLoading(loginBtn, 'Login');
             if (originalText) loginBtn.innerHTML = originalText;
