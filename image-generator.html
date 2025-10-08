@@ -33,7 +33,7 @@
                                     <label for="imagePrompt" class="form-label">Describe the image you want to
                                         create</label>
                                     <textarea class="form-control prompt-textarea" id="imagePrompt"
-                                        placeholder="Example: A fluffy cat looking for food and a home"
+                                        placeholder="Example: A fluffy ginger cat taking a stroll in the streets of Hong Kong, looking for food and a home"
                                         required></textarea>
                                     <div class="form-text">Be as descriptive as possible for better results.</div>
                                 </div>
@@ -67,22 +67,7 @@
                             </form>
                         </div>
 
-                        <!-- API Configuration -->
-                        <div class="mt-4">
-                            <div class="alert alert-info">
-                                <h6><i class="fas fa-info-circle me-2"></i>API Configuration</h6>
-                                <p class="mb-2">To use this feature, you need to configure your Recraft API key:</p>
-                                <div class="input-group">
-                                    <input type="password" class="form-control" id="recraftApiKey"
-                                        placeholder="Enter your Recraft API key">
-                                    <button class="btn btn-outline-secondary" type="button"
-                                        onclick="saveApiKey('recraft')">
-                                        Save Key
-                                    </button>
-                                </div>
-                                <small class="text-muted">Your API key is stored locally and never shared.</small>
-                            </div>
-                        </div>
+
 
                         <!-- Generated Images -->
                         <div id="generatedImages" class="mt-4">
@@ -105,9 +90,9 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js"></script>
-    <script src="navbar.js?v=1"></script>
-    <script src="script.js?v=2.0.5"></script>
-    <script src="image-generator.js?v=2.0.5"></script>
+    <script src="navbar.js"></script>
+    <script src="script.js"></script>
+    <script src="image-generator.js"></script>
 </body>
 
 </html>
