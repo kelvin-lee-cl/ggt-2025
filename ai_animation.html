@@ -1,0 +1,2084 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How AI Art Works - Animation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .animation-container {
+            height: 100vh;
+            box-sizing: border-box;
+            padding-bottom: 24px;
+            /* ensures buttons are not cut off */
+            width: 100vw;
+            max-width: none;
+            margin: 0;
+            /* Optional: add horizontal padding for aesthetics */
+            /* padding-left: 24px; padding-right: 24px; */
+        }
+
+        /* Main container styles */
+        .animation-container {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Scene container */
+        .scene {
+            position: relative;
+            height: 400px;
+            margin-bottom: 20px;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .scene.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Caption styles */
+        .caption {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px 25px;
+            border-radius: 20px;
+            font-size: 1.2rem;
+            color: #2C3E50;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 80%;
+            animation: bounceIn 0.5s ease-out;
+            border: 3px solid #FFD700;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            z-index: 100;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: translateX(-50%) translateY(-20px);
+                opacity: 0;
+            }
+
+            50% {
+                transform: translateX(-50%) translateY(10px);
+            }
+
+            100% {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Update captions to be more kid-friendly */
+        #scene1 .caption {
+            content: "1. Tell the computer your magical picture idea ✨";
+        }
+
+        #scene2 .caption {
+            content: "2. Your idea flies through the internet to reach the Gen-AI Data Center 🚀";
+        }
+
+        #scene3 .caption {
+            content: "3. The AI brain thinks about your idea 🤔";
+        }
+
+        #scene4 .caption {
+            content: "4. The AI starts painting your picture 🎨";
+        }
+
+
+
+        #scene11 .caption {
+            content: "11. The AI learns to make even better pictures next time 🌟";
+        }
+
+        /* User computer */
+        .computer {
+            position: absolute;
+            bottom: 20px;
+            left: 50px;
+            width: 400px;
+            height: 230px;
+            background: #2C3E50;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .computer::before {
+            content: '';
+            position: absolute;
+            bottom: -40px;
+            width: 80px;
+            height: 40px;
+            background: #2C3E50;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .computer::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            width: 160px;
+            height: 15px;
+            background: #34495E;
+            border-radius: 5px;
+        }
+
+        /* Computer screen with window interface */
+        .screen {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+            border: 2px solid #34495E;
+            padding: 0;
+        }
+
+        .window-header {
+            background: #34495E;
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .window-button {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+        }
+
+        .close-button {
+            background: #FF5F57;
+        }
+
+        .minimize-button {
+            background: #FFBD2E;
+        }
+
+        .maximize-button {
+            background: #28C940;
+        }
+
+        .window-title {
+            color: white;
+            font-size: 1rem;
+            margin-left: 15px;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .prompt-input-container {
+            display: flex;
+            padding: 15px;
+            gap: 15px;
+            align-items: flex-start;
+            background: white;
+            flex-grow: 1;
+            height: calc(100% - 40px);
+        }
+
+        .prompt-input {
+            flex-grow: 1;
+            border: 2px solid #E5E9F2;
+            border-radius: 8px;
+            padding: 15px;
+            font-size: 1.1rem;
+            color: #2C3E50;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+
+            line-height: 1.5;
+            resize: none;
+        }
+
+        .prompt-input:focus {
+            outline: none;
+            border-color: #4A90E2;
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.1);
+        }
+
+        .enter-button {
+            background: #4A90E2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            height: 50px;
+            align-self: flex-start;
+        }
+
+        .enter-button:hover {
+            background: #357ABD;
+            transform: translateY(-1px);
+        }
+
+        .enter-button:active {
+            transform: translateY(0);
+        }
+
+        /* Internet connection visualization */
+        .internet-connection {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #4A90E2;
+            z-index: 1;
+        }
+
+        .internet-connection::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #4A90E2, #357ABD);
+            animation: flow 2s linear infinite;
+        }
+
+        .data-packet {
+            position: absolute;
+            background: #4f46e5;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 15px;
+            font-size: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            animation: travelThroughInternet 3s ease-in-out;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: bold;
+            text-align: center;
+            border: 3px solid #FFD700;
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        }
+
+        .data-packet::before {
+            content: '✨';
+            font-size: 1.8rem;
+        }
+
+        @keyframes travelThroughInternet {
+            0% {
+                left: 120px;
+                bottom: 100px;
+                transform: scale(1);
+            }
+
+            25% {
+                left: 300px;
+                bottom: 150px;
+                transform: scale(1.1) rotate(5deg);
+            }
+
+            50% {
+                left: 450px;
+                bottom: 100px;
+                transform: scale(1) rotate(-5deg);
+            }
+
+            75% {
+                left: 600px;
+                bottom: 150px;
+                transform: scale(1.1) rotate(5deg);
+            }
+
+            100% {
+                left: 750px;
+                bottom: 100px;
+                transform: scale(1) rotate(0);
+            }
+        }
+
+        @keyframes flow {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        /* Gen-AI Data Center styles */
+        .cloud {
+            position: absolute;
+            top: 60%;
+            left: 400px;
+            transform: translateY(-50%);
+            width: 300px;
+            height: 250px;
+            background: #1a1a2e;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 20px;
+            border: 20px solid #4a4a8a;
+            overflow: hidden;
+            position: relative;
+            animation: borderGlow 3s infinite;
+        }
+
+        .cloud::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            z-index: 1;
+        }
+
+        .cloud-header {
+            background: #0f3460;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            position: relative;
+            z-index: 2;
+            border-bottom: 2px solid #00ff9f;
+        }
+
+        .cloud-title {
+            color: #00ff9f;
+            font-size: 1.2rem;
+            margin-left: 15px;
+            flex-grow: 1;
+            text-align: center;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px #00ff9f;
+        }
+
+        .cloud-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background: rgba(26, 26, 46, 0.9);
+        }
+
+        .processing-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .flying-images {
+            position: absolute;
+            left: -100px;
+            width: 100px;
+            height: 100%;
+        }
+
+        .flying-image {
+            position: absolute;
+            font-size: 3rem;
+            animation: flyIn 3s infinite;
+            text-shadow: 0 0 20px #00ff9f;
+            background: rgba(0, 255, 159, 0.2);
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 255, 159, 0.4);
+            backdrop-filter: blur(5px);
+            border: 2px solid rgba(0, 255, 159, 0.3);
+            transform-origin: center;
+            transition: transform 0.3s ease;
+        }
+
+        .flying-image:hover {
+            transform: scale(1.2);
+        }
+
+        .flying-image:nth-child(1) {
+            /* Unicorn */
+            color: #FF69B4;
+            text-shadow: 0 0 20px #FF69B4;
+            background: rgba(255, 105, 180, 0.2);
+            top: 10%;
+            animation-delay: 0s;
+        }
+
+        .flying-image:nth-child(2) {
+            /* Castle */
+            color: #9370DB;
+            text-shadow: 0 0 20px #9370DB;
+            background: rgba(147, 112, 219, 0.2);
+            top: 30%;
+            animation-delay: 0.5s;
+        }
+
+        .flying-image:nth-child(3) {
+            /* Rainbow */
+            color: #FF4500;
+            text-shadow: 0 0 20px #FF4500;
+            background: rgba(255, 69, 0, 0.2);
+            top: 40%;
+            animation-delay: 1s;
+        }
+
+        .flying-image:nth-child(4) {
+            /* Candy */
+            color: #FF1493;
+            text-shadow: 0 0 20px #FF1493;
+            background: rgba(255, 20, 147, 0.2);
+            top: 60%;
+            animation-delay: 1.5s;
+        }
+
+        .flying-image:nth-child(5) {
+            /* Lollipop */
+            color: #FF6347;
+            text-shadow: 0 0 20px #FF6347;
+            background: rgba(255, 99, 71, 0.2);
+            top: 50%;
+            animation-delay: 2s;
+        }
+
+        .processing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(79, 70, 229, 0.1);
+            border-radius: 10px;
+            border: 1px solid #4a4a8a;
+        }
+
+        .processing-dot {
+            width: 12px;
+            height: 12px;
+            background: #e94560;
+            border-radius: 50%;
+            animation: processing 1.5s infinite;
+        }
+
+        .processing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .processing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes processing {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+
+            50% {
+                transform: scale(1.5);
+                opacity: 1;
+            }
+        }
+
+        .server-racks {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            padding: 15px;
+            width: 100%;
+            max-width: 280px;
+        }
+
+        .server-rack {
+            background: #16213e;
+            border: 1px solid #4a4a8a;
+            border-radius: 8px;
+            height: 50px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .server-lights {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .server-light {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00ff9f;
+            animation: serverLight 2s infinite alternate;
+            box-shadow: 0 0 10px #00ff9f;
+        }
+
+        .database-icon {
+            font-size: 1.2rem;
+            animation: pulse 2s infinite;
+            color: #00ff9f;
+            text-shadow: 0 0 10px #00ff9f;
+        }
+
+        @keyframes serverLight {
+            0% {
+                background: #00ff9f;
+                box-shadow: 0 0 10px #00ff9f;
+            }
+
+            100% {
+                background: #00b8ff;
+                box-shadow: 0 0 10px #00b8ff;
+            }
+        }
+
+        .data-packet.entering {
+            animation: enterDataCenter 1s ease-in-out forwards;
+        }
+
+        @keyframes enterDataCenter {
+            0% {
+                transform: scale(1) rotate(0);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.2) rotate(5deg);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: scale(0) rotate(10deg);
+                opacity: 0;
+            }
+        }
+
+        /* Building details */
+        .building-windows {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            padding: 20px;
+            width: 100%;
+            max-width: 250px;
+        }
+
+        .window {
+            background: #E5E9F2;
+            border-radius: 4px;
+            height: 30px;
+            animation: windowGlow 2s infinite alternate;
+        }
+
+        @keyframes windowGlow {
+            0% {
+                background: #E5E9F2;
+            }
+
+            100% {
+                background: #4A90E2;
+            }
+        }
+
+        /* AI Processing Elements */
+        .ai-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .neural-network {
+            position: absolute;
+            width: 200px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            padding: 10px;
+        }
+
+        .neuron {
+            width: 20px;
+            height: 20px;
+            background: #FF5E62;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .neuron::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.5);
+            transform: rotate(45deg);
+        }
+
+        /* Image Generation Process */
+        .image-process {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-stages {
+            position: absolute;
+            width: 200px;
+            height: 150px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .image-stage {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            opacity: 0;
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+
+        .image-stage:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .image-stage:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .image-stage:nth-child(3) {
+            animation-delay: 1s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Generated image with effects */
+        .generated-image {
+            position: absolute;
+            width: 140px;
+            height: 140px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            overflow: hidden;
+        }
+
+        .generated-image::before {
+            content: '🎨';
+            position: absolute;
+            font-size: 4rem;
+            animation: paint 2s ease-in-out infinite;
+        }
+
+        @keyframes paint {
+            0% {
+                transform: scale(1) rotate(0deg);
+            }
+
+            50% {
+                transform: scale(1.2) rotate(180deg);
+            }
+
+            100% {
+                transform: scale(1) rotate(360deg);
+            }
+        }
+
+        /* Update scene content */
+        #scene3 .cloud {
+            background: linear-gradient(135deg, #FF9A9E 0%, #FAD0C4 100%);
+        }
+
+        #scene3 .neural-network {
+            opacity: 1;
+        }
+
+        #scene4 .image-stages {
+            opacity: 1;
+        }
+
+
+        /* Add new scene for AI learning */
+        #scene11 {
+            display: none;
+        }
+
+        #scene11.active {
+            display: block;
+        }
+
+        .learning-process {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .learning-stages {
+            position: absolute;
+            width: 200px;
+            height: 150px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .learning-stage {
+            width: 100%;
+            height: 30px;
+            background: white;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            font-size: 0.9rem;
+            color: #2C3E50;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.5s ease-in-out forwards;
+            opacity: 0;
+        }
+
+        .learning-stage:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .learning-stage:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .learning-stage:nth-child(3) {
+            animation-delay: 1s;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(-50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Social media icons */
+        .social-icons {
+            position: absolute;
+            bottom: 50px;
+            right: 50px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-icon {
+            width: 50px;
+            height: 50px;
+            background: #FF9A9E;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            transform: scale(1.1);
+            background: #FF5E62;
+        }
+
+        /* Feedback icons */
+        .feedback {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: #FF5E62;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            animation: float 2s ease-in-out infinite;
+        }
+
+        /* Animations */
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes flip {
+            0% {
+                transform: rotateY(0);
+            }
+
+            100% {
+                transform: rotateY(180deg);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                text-shadow: 0 0 10px #00ff9f;
+            }
+
+            50% {
+                transform: scale(1.1);
+                text-shadow: 0 0 20px #00ff9f;
+            }
+
+            100% {
+                transform: scale(1);
+                text-shadow: 0 0 10px #00ff9f;
+            }
+        }
+
+        /* Typing animation */
+        .typing {
+            position: relative;
+            font-family: monospace;
+            font-size: 1rem;
+            color: #2C3E50;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1em;
+            background: #000;
+            margin-left: 2px;
+            animation: blink 1s infinite;
+        }
+
+        /* Navigation buttons */
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 0;
+            z-index: 1000;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            border-radius: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-button {
+            padding: 10px 20px;
+            background: #FF9A9E;
+            border: none;
+            border-radius: 20px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background: #FF5E62;
+            transform: translateY(-2px);
+        }
+
+        .nav-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Update scene content */
+        #scene1 .screen {
+            padding: 0;
+        }
+
+        #scene1 .prompt-input-container {
+            padding: 20px;
+        }
+
+        #scene1 .prompt-input {
+            width: 100%;
+            max-width: 600px;
+            height: 100px;
+        }
+
+        #scene2 .data-packet {
+            animation: moveToCloud 5s ease-in-out infinite;
+        }
+
+        @keyframes moveToCloud {
+            0% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(100px, -100px);
+            }
+
+            100% {
+                transform: translate(300px, 0);
+            }
+        }
+
+        #scene6 .data-packet {
+            animation: moveToComputer 3s ease-in-out infinite;
+        }
+
+        @keyframes moveToComputer {
+            0% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(-200px, 100px);
+            }
+
+            100% {
+                transform: translate(-400px, 0);
+            }
+        }
+
+        /* Update scene content */
+        #scene7 .social-icons {
+            animation: bounce 1s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        #scene10 .feedback {
+            animation: moveToCloud 3s ease-in-out infinite;
+        }
+
+        /* Add database icon styles */
+        .database-icon {
+            font-size: 1.2rem;
+            text-align: center;
+            margin-top: 5px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes borderGlow {
+            0% {
+                border-color: #00ff9f;
+                box-shadow: 0 0 20px #00ff9f;
+            }
+
+            25% {
+                border-color: #00b8ff;
+                box-shadow: 0 0 20px #00b8ff;
+            }
+
+            50% {
+                border-color: #ff00ff;
+                box-shadow: 0 0 20px #ff00ff;
+            }
+
+            75% {
+                border-color: #ffd700;
+                box-shadow: 0 0 20px #ffd700;
+            }
+
+            100% {
+                border-color: #00ff9f;
+                box-shadow: 0 0 20px #00ff9f;
+            }
+        }
+
+        /* Power Meter Styles */
+        .power-meter {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 150px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            border: 2px solid #00ff9f;
+            overflow: hidden;
+        }
+
+        .power-level {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 0%;
+            background: linear-gradient(to top, #00ff9f, #00b8ff);
+            animation: powerUp 4s infinite;
+            box-shadow: 0 0 20px #00ff9f;
+        }
+
+        .power-percentage {
+            position: absolute;
+            top: -25px;
+            width: 100%;
+            text-align: center;
+            color: #00ff9f;
+            font-size: 0.8rem;
+            text-shadow: 0 0 10px #00ff9f;
+        }
+
+        /* Energy Particles Styles */
+        .energy-particles {
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            bottom: 0;
+            width: 4px;
+            height: 20px;
+            background: #00ff9f;
+            animation: particleFloat 2s infinite;
+            box-shadow: 0 0 10px #00ff9f;
+        }
+
+        .particle:nth-child(1) {
+            left: 20%;
+            animation-delay: 0s;
+        }
+
+        .particle:nth-child(2) {
+            left: 40%;
+            animation-delay: 0.4s;
+        }
+
+        .particle:nth-child(3) {
+            left: 60%;
+            animation-delay: 0.8s;
+        }
+
+        .particle:nth-child(4) {
+            left: 80%;
+            animation-delay: 1.2s;
+        }
+
+        .particle:nth-child(5) {
+            left: 90%;
+            animation-delay: 1.6s;
+        }
+
+        /* Output Images Styles */
+        .output-images {
+            position: absolute;
+            right: -100px;
+            width: 100px;
+            height: 100%;
+        }
+
+        .output-image {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            animation: materialize 3s infinite;
+            text-shadow: 0 0 10px #00ff9f;
+        }
+
+        /* Animations */
+        @keyframes flyIn {
+            0% {
+                transform: translateX(0) rotate(0deg);
+                opacity: 1;
+            }
+
+            50% {
+                transform: translateX(200px) rotate(180deg);
+                opacity: 0.5;
+            }
+
+            100% {
+                transform: translateX(400px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes powerUp {
+            0% {
+                height: 0%;
+            }
+
+            50% {
+                height: 100%;
+            }
+
+            100% {
+                height: 0%;
+            }
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: translateY(-20px) scale(1.5);
+                opacity: 0.5;
+            }
+
+            100% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes materialize {
+            0% {
+                transform: translateY(-50%) scale(0);
+                opacity: 0;
+            }
+
+            50% {
+                transform: translateY(-50%) scale(1.2);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-50%) scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Add new styles for image generation effects */
+        .generating-image {
+            position: relative;
+            width: 60%;
+            height: auto;
+            margin: 0 auto;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 255, 159, 0.3);
+            border: 3px solid #FFD700;
+            animation: imageGeneration 12s steps(1) infinite;
+        }
+
+        .generating-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            filter: blur(20px) grayscale(100%);
+            animation: imageClear 12s steps(1) infinite;
+        }
+
+        .generating-image-static {
+            position: relative;
+            width: 50%;
+            height: 120%;
+            margin: 0 auto;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 255, 159, 0.3);
+            border: 3px solid #FFD700;
+        }
+
+        .generating-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg,
+                    rgba(255, 255, 255, 0.1) 25%,
+                    transparent 25%,
+                    transparent 50%,
+                    rgba(255, 255, 255, 0.1) 50%,
+                    rgba(255, 255, 255, 0.1) 75%,
+                    transparent 75%,
+                    transparent);
+            background-size: 20px 20px;
+            animation: loadingEffect 1s linear infinite;
+            pointer-events: none;
+        }
+
+        .generating-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEWFhYWDg4N3d3dtbW17e3t1dXWBgYGHh4d5eXlzc3OLi4ubm5uVlZWPj4+NjY19fX2JiYl/f39ra2uRkZGZmZlpaWmXl5dvb29xcXGTk5NnZ2c8TV1mAAAAG3RSTlNAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAvEOwtAAAFVklEQVR4XpWWB67c2BUFb3g557T/hRo9/WUMZHlgr4Bg8Z4qQgQJlHI4A8SzFVrapvmTF9O7dmYRFZ60YiBhJRCgh1FYhiLAmdvX0CzTOpNE77ME0Zty/nWWzchDtiqrmQDeuv3powQ5ta2eN0FY0InkqDD73lT9c9lEzwUNqgFHs9VQce3TVClFCQrSTfOiYkVJQBmpbq2L6iZavPnAPcoU0dSw0SUTqz/GtrGuXfbyyBniKykOWQWGqwwMA7QiYAxi+IlPdqo+hYHnUt5ZPfnsHJyNiDtnpJyayNBkF6cWoYGAMY92U2hXHF/C1M8uP/ZtYdiuj26UdAdQQSXQErwSOMzt/XWRWAz5GuSBIkwG1H3FabJ2OsUOUhGC6tK4EMtJO0ttC6IBD3kM0ve0tJwMdSfjZo+EEISaeTr9P3wYrGjXqyC1krcKdhMpxEnt5JetoulscpyzhXN5FRpuPHvbeQaKxFAEB6EN+cYN6xD7RYGpXpNndMmZgM5Dcs3YSNFDHUo2LGfZuukSWyUYirJAdYbF3MfqEKmjM+I2EfhA94iG3L7uKrR+GdWD73ydlIB+6hgref1QTlmgmbM3/LeX5GI1Ux1RWpgxpLuZ2+I+IjzZ8wqE4nilvQdkUdfhzI5QDWy+kw5Wgg2pGpeEVeCCA7b85BO3F9DzxB3cdqvBzWcmzbyMiqhzuYqtHRVG2y4x+KOlnyqla8AoWWpuBoYRxzXrfKuILl6SfiWCbjxoZJUaCBj1CjH7GIaDbc9kqBY3W/Rgjda1iqQcOJu2WW+76pZC9QG7M00dffe9hNnseupFL53r8F7YHSwJWUKP2q+k7RdsxyOB11n0xtOvnW4irMMFNV4H0uqwS5ExsmP9AxbDTc9JwgneAT5vTiUSm1E7BSflSt3bfa1tv8Di3R8n3Af7MNWzs49hmauE2wP+ttrq+AsWpFG2awvsuOqbipWHgtuvuaAE+A1Z/7gC9hesnr+7wqCwG8c5yAg3AL1fm8T9AZtp/bbJGwl1pNrE7RuOX7PeMRUERVaPpEs+yqeoSmuOlokqw49pgomjLeh7icHNlG19yjs6XXOMedYm5xH2YxpV2tc0Ro2jJfxC50ApuxGob7lMsxfTbeUv07TyYxpeLucEH1gNd4IKH2LAg5TdVhlCafZvpskfncCfx8pOhJzd76bJWeYFnFciwcYfubRc12Ip/ppIhA1/mSZ/RxjFDrJC5xifFjJpY2Xl5zXdguFqYyTR1zSp1Y9p+tktDYYSNflcxI0iyO4TPBdlRcpeqjK/piF5bklq77VSEaA+z8qmJTFzIWiitbnzR794USKBUaT0NTEsVjZqLaFVqJoPN9ODG70IPbfBHKK+/q/AWR0tJzYHRULOa4MP+W/HfGadZUbfw177G7j/OGbIs8TahLyynl4X4RinF793Oz+BU0saXtUHrVBFT/DnA3ctNPoGbs4hRIjTok8i+algT1lTHi4SxFvONKNrgQFAq2/gFnWMXgwffgYMJpiKYkmW3tTg3ZQ9Jq+f8XN+A5eeUKHWvJWJ2sgJ1Sop+wwhqFVijqWaJhwtD8MNlSBeWNNWTa5Z5kPZw5+LbVT99wqTdx29lMUH4OIG/D86ruKEauBjvH5xy6um/Sfj7ei6UUVk4AIl3MyD4MSSTOFgSwsH/QJWaQ5as7ZcmgBZkzjjU1UrQ74ci1gWBCSGHtuV1H2mhSnO3Wp/3fEV5a+4wz//6qy8JxjZsmxxy5+4w9CDNJY09T072iKG0EnOS0arEYgXqYnXcYHwjTtUNAcMelOd4xpkoqiTYICWFq0JSiPfPDQdnt+4/wuqcXY47QILbgAAAABJRU5ErkJggg==');
+            opacity: 0.3;
+            animation: noiseEffect 7s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes imageGeneration {
+            0% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+
+            20% {
+                transform: scale(0.9);
+                opacity: 0.7;
+            }
+
+            40% {
+                transform: scale(0.95);
+                opacity: 0.8;
+            }
+
+            58% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes imageClear {
+            0% {
+                filter: blur(20px) grayscale(100%);
+            }
+
+            20% {
+                filter: blur(15px) grayscale(80%);
+            }
+
+            40% {
+                filter: blur(10px) grayscale(60%);
+            }
+
+            58% {
+                filter: blur(0) grayscale(0%);
+            }
+
+            100% {
+                filter: blur(0) grayscale(0%);
+            }
+        }
+
+        @keyframes loadingEffect {
+            0% {
+                background-position: 0 0;
+            }
+
+            100% {
+                background-position: 40px 40px;
+            }
+        }
+
+        @keyframes noiseEffect {
+            0% {
+                opacity: 0.3;
+            }
+
+            50% {
+                opacity: 0.1;
+            }
+
+            100% {
+                opacity: 0.3;
+            }
+        }
+
+        .edit-button:hover {
+            transform: scale(1.2);
+            text-shadow: 0 0 10px rgba(0, 255, 159, 0.5);
+        }
+
+        .edit-button:active {
+            transform: scale(0.95);
+        }
+
+        /* Add these styles to your existing CSS */
+        .data-center-popup {
+            display: none;
+            position: fixed;
+            /* Changed from absolute to fixed */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            /* Center both horizontally and vertically */
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            width: 400px;
+            z-index: 9999;
+            /* Increased z-index */
+            margin: 0;
+            /* Removed margin-top */
+        }
+
+        .cloud {
+            position: relative;
+            /* Ensure this is set */
+            cursor: pointer;
+            /* Add pointer cursor */
+        }
+
+        .cloud:hover .data-center-popup {
+            display: block;
+        }
+
+        /* Update full image overlay for iframe context */
+        .full-image-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            /* Increased z-index */
+        }
+
+        /* Add a semi-transparent overlay behind the popup */
+        .popup-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9998;
+        }
+
+        .cloud:hover .popup-backdrop {
+            display: block;
+        }
+
+        .popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: #f0f0f0;
+            border-radius: 8px 8px 0 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .popup-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .popup-close:hover {
+            color: #333;
+        }
+
+        .popup-content {
+            padding: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .image-grid img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .image-grid img:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="animation-container">
+        <div id="scene1" class="scene active">
+            <div class="computer">
+                <div class="screen">
+                    <div class="window-header">
+                        <div class="window-button close-button"></div>
+                        <div class="window-button minimize-button"></div>
+                        <div class="window-button maximize-button"></div>
+                        <div class="window-title">AI Art Generator</div>
+                    </div>
+                    <div class="prompt-input-container">
+                        <textarea class="prompt-input"
+                            placeholder="Type your magical picture idea here...">A magical picture of a rainbow unicorn flying over a candy castle</textarea>
+                        <button class="enter-button">
+                            <span>Enter</span>
+                            <span>↵</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="caption">1. Tell the computer your magical picture idea ✨ - Prompt Writing</div>
+        </div>
+
+        <div id="scene2" class="scene">
+            <div class="computer" style="width: 200px; height: 120px; bottom: 20px; left: 20px;">
+                <div class="screen">
+                    <div class="window-header">
+                        <div class="window-button close-button"></div>
+                        <div class="window-button minimize-button"></div>
+                        <div class="window-button maximize-button"></div>
+                        <div class="window-title">AI Art Generator</div>
+                    </div>
+                    <div
+                        style="padding: 8px; font-size: 14px; color: #2C3E50; line-height: 1.3; text-align: center; font-weight: 500;">
+                        A magical picture of a rainbow unicorn flying over a candy castle
+                    </div>
+                </div>
+            </div>
+            <div class="cloud">
+                <div class="cloud-header">
+                    <div class="window-button close-button"></div>
+                    <div class="window-button minimize-button"></div>
+                    <div class="window-button maximize-button"></div>
+                    <div class="cloud-title">Gen-AI Data Center</div>
+                </div>
+                <div class="cloud-content">
+                    <div class="processing-indicator">
+                        <div class="processing-dot"></div>
+                        <div class="processing-dot"></div>
+                        <div class="processing-dot"></div>
+                    </div>
+                    <div class="server-racks">
+                        <div class="server-rack">
+                            <div class="server-lights">
+                                <div class="server-light"></div>
+                                <div class="server-light"></div>
+                                <div class="server-light"></div>
+                            </div>
+                            <div class="database-icon">🗄️</div>
+                        </div>
+                        <div class="server-rack">
+                            <div class="server-lights">
+                                <div class="server-light"></div>
+                                <div class="server-light"></div>
+                                <div class="server-light"></div>
+                            </div>
+                            <div class="database-icon">🗄️</div>
+                        </div>
+                        <div class="server-rack">
+                            <div class="server-lights">
+                                <div class="server-light"></div>
+                                <div class="server-light"></div>
+                                <div class="server-light"></div>
+                            </div>
+                            <div class="database-icon">🗄️</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Add popup window with backdrop -->
+                <div class="popup-backdrop"></div>
+                <div class="data-center-popup">
+                    <div class="popup-header">
+                        <span>Data Center Images</span>
+                        <button class="popup-close">×</button>
+                    </div>
+                    <div class="popup-content">
+                        <div class="image-grid">
+                            <img src="images/data-center/1.jpg" alt="Data Center 1">
+                            <img src="images/data-center/3.jpeg" alt="Data Center 3">
+                            <img src="images/data-center/4.webp" alt="Data Center 4">
+                            <img src="images/data-center/5.png" alt="Data Center 5">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="data-packet" style="left: 120px; bottom: 100px;">Your Magical Picture Idea! 🎨 <br>(Prompt)
+            </div>
+            <div class="caption">2. Your idea flies through the internet to reach the Gen-AI Data Center 🚀</div>
+        </div>
+
+        <div id="scene3" class="scene">
+            <div class="computer" style="width: 200px; height: 120px; bottom: 20px; left: 20px;">
+                <div class="screen">
+                    <div class="window-header">
+                        <div class="window-button close-button"></div>
+                        <div class="window-button minimize-button"></div>
+                        <div class="window-button maximize-button"></div>
+                        <div class="window-title">AI Art Generator</div>
+                    </div>
+                    <div
+                        style="padding: 8px; font-size: 14px; color: #2C3E50; line-height: 1.3; text-align: center; font-weight: 500;">
+                        A magical picture of a rainbow unicorn flying over a candy castle
+                    </div>
+                </div>
+            </div>
+            <div class="cloud">
+                <div class="cloud-header">
+                    <div class="window-button close-button"></div>
+                    <div class="window-button minimize-button"></div>
+                    <div class="window-button maximize-button"></div>
+                    <div class="cloud-title">Gen-AI Data Center</div>
+                </div>
+                <div class="cloud-content">
+                    <div class="processing-container">
+                        <div class="flying-images">
+                            <div class="flying-image">🦄</div>
+                            <div class="flying-image">🏰</div>
+                            <div class="flying-image">🌈</div>
+                            <div class="flying-image">🍬</div>
+                            <div class="flying-image">🍭</div>
+                        </div>
+                        <div class="processing-indicator">
+                            <div class="processing-dot"></div>
+                            <div class="processing-dot"></div>
+                            <div class="processing-dot"></div>
+                        </div>
+                        <div class="server-racks">
+                            <div class="server-rack" style="left: 70px; transform: scale(2);">
+                                <div class="server-lights">
+                                    <div class="server-light"></div>
+                                    <div class="server-light"></div>
+                                    <div class="server-light"></div>
+                                </div>
+                                <div class="database-icon"
+                                    style="font-size: 2rem; opacity: 1; color: #00ff9f; text-shadow: 0 0 15px #00ff9f;">
+                                    🗄️</div>
+                            </div>
+                        </div>
+                        <div class="output-images">
+                            <div class="output-image">🖼️</div>
+                        </div>
+                    </div>
+                    <div class="power-meter">
+                        <div class="power-level"></div>
+                        <div class="power-percentage">0%</div>
+                    </div>
+                </div>
+                <div class="energy-particles">
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                </div>
+            </div>
+            <div class="caption">3. The AI brain thinks about your idea 🤔</div>
+        </div>
+
+        <div id="scene4" class="scene">
+            <div class="computer" style="width: 200px; height: 120px; bottom: 20px; left: 20px;">
+                <div class="screen">
+                    <div class="window-header">
+                        <div class="window-button close-button"></div>
+                        <div class="window-button minimize-button"></div>
+                        <div class="window-button maximize-button"></div>
+                        <div class="window-title">AI Art Generator</div>
+                    </div>
+                    <div
+                        style="padding: 8px; font-size: 14px; color: #2C3E50; line-height: 1.3; text-align: center; font-weight: 500;">
+                        A magical picture of a rainbow unicorn flying over a candy castle
+                    </div>
+                </div>
+            </div>
+            <div class="cloud">
+                <div class="cloud-header">
+                    <div class="window-button close-button"></div>
+                    <div class="window-button minimize-button"></div>
+                    <div class="window-button maximize-button"></div>
+                    <div class="cloud-title">Gen-AI Data Center</div>
+                </div>
+                <div class="cloud-content">
+                    <div class="processing-container">
+                        <div class="generating-image" style="position: absolute; left: 20%; top: -20%; ">
+                            <img src="images/a-magical-picture-of-a-rainbow-unicorn-flying-over.png"
+                                alt="AI Generated Image" style="max-width: 100%; height: auto;">
+                        </div>
+                        <div class="server-rack"
+                            style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%);">
+                            <div class="server-lights">
+                                <div class="server-light"></div>
+                                <div class="server-light"></div>
+                                <div class="server-light"></div>
+                            </div>
+                            <div class="database-icon"
+                                style="font-size: 2rem; opacity: 1; color: #00ff9f; text-shadow: 0 0 15px #00ff9f;">🗄️
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="caption">4. The AI starts painting your picture 🎨</div>
+        </div>
+
+
+
+        <div id="scene5" class="scene">
+            <div class="computer" style="width: 200px; height: 120px; bottom: 20px; left: 20px;">
+                <div class="screen">
+                    <div class="window-header">
+                        <div class="window-button close-button"></div>
+                        <div class="window-button minimize-button"></div>
+                        <div class="window-button maximize-button"></div>
+                        <div class="window-title">AI Art Generator</div>
+                    </div>
+                    <div
+                        style="padding: 8px; font-size: 14px; color: #2C3E50; line-height: 1.3; text-align: center; font-weight: 500;">
+                        A magical picture of a rainbow unicorn flying over a candy castle
+                    </div>
+                </div>
+            </div>
+            <div class="cloud">
+                <div class="cloud-header">
+                    <div class="window-button close-button"></div>
+                    <div class="window-button minimize-button"></div>
+                    <div class="window-button maximize-button"></div>
+                    <div class="cloud-title">Gen-AI Data Center</div>
+                </div>
+                <div class="cloud-content">
+                    <div class="processing-container">
+                        <div class="generating-image-static" style="position: absolute; left: 20%; top:-10px;">
+                            <img src="images/a-magical-picture-of-a-rainbow-unicorn-flying-over.png"
+                                alt="AI Generated Image" style="max-width: 100%; height: auto;">
+                        </div>
+                        <div class="server-rack"
+                            style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%);">
+                            <div class="server-lights">
+                                <div class="server-light"></div>
+                                <div class="server-light"></div>
+                                <div class="server-light"></div>
+                            </div>
+                            <div class="database-icon"
+                                style="font-size: 2rem; opacity: 1; color: #00ff9f; text-shadow: 0 0 15px #00ff9f;">🗄️
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="data-packet"
+                style="left: 400px; bottom: 100px; animation: moveToComputer 5s ease-in-out infinite;">Your Generated
+                Image! 🎨</div>
+            <div class="caption">5. Your art travels back to you</div>
+        </div>
+
+        <div id="scene6" class="scene">
+            <div class="computer"
+                style="width: 400px; height: 250px; bottom: 20px; left: 50%; transform: translateX(-50%);">
+                <div class="screen">
+                    <div class="window-header">
+                        <div class="window-button close-button"></div>
+                        <div class="window-button minimize-button"></div>
+                        <div class="window-button maximize-button"></div>
+                        <div class="window-title">AI Art Generator</div>
+                    </div>
+                    <div class="image-editor"
+                        style="padding: 10px; height: calc(100% - 30px); display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                        <div class="generating-image-static" style="position: absolute; left: 25%; top:90px;">
+                            <img src="images/a-magical-picture-of-a-rainbow-unicorn-flying-over.png"
+                                alt="AI Generated Image" style="max-width: 100%; height: auto;">
+                        </div>
+                        <div class="edit-buttons" style="display: flex; gap: 15px; margin-top: 5px;">
+                            <button class="edit-button"
+                                style="background: none; border: none; font-size: 1.5rem; cursor: pointer; transition: transform 0.2s;"
+                                title="Edit Colors">🎨</button>
+                            <button class="edit-button"
+                                style="background: none; border: none; font-size: 1.5rem; cursor: pointer; transition: transform 0.2s;"
+                                title="Add Effects">✨</button>
+                            <button class="edit-button"
+                                style="background: none; border: none; font-size: 1.5rem; cursor: pointer; transition: transform 0.2s;"
+                                title="Adjust Size">📏</button>
+                            <button class="edit-button"
+                                style="background: none; border: none; font-size: 1.5rem; cursor: pointer; transition: transform 0.2s;"
+                                title="Save Image">💾</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="caption">6. Your creation appears on screen</div>
+        </div>
+
+        <div id="scene7" class="scene">
+            <div class="computer"
+                style="width: 400px; height: 250px; bottom: 20px; left: 30%; transform: translateX(-50%);">
+                <div class="screen">
+                    <div class="window-header">
+                        <div class="window-button close-button"></div>
+                        <div class="window-button minimize-button"></div>
+                        <div class="window-button maximize-button"></div>
+                        <div class="window-title">AI Art Generator</div>
+                    </div>
+                    <div class="image-editor"
+                        style="padding: 10px; height: calc(100% - 30px); display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                        <div class="generating-image-static" style="position: absolute; left: 25%; top:90px;">
+                            <img src="images/a-magical-picture-of-a-rainbow-unicorn-flying-over.png"
+                                alt="AI Generated Image" style="max-width: 100%; height: auto;">
+                        </div>
+                        <div class="edit-buttons" style="display: flex; gap: 15px; margin-top: 5px;">
+                            <button class="edit-button"
+                                style="background: none; border: none; font-size: 1.5rem; cursor: pointer; transition: transform 0.2s;"
+                                title="Edit Colors">🎨</button>
+                            <button class="edit-button"
+                                style="background: none; border: none; font-size: 1.5rem; cursor: pointer; transition: transform 0.2s;"
+                                title="Add Effects">✨</button>
+                            <button class="edit-button"
+                                style="background: none; border: none; font-size: 1.5rem; cursor: pointer; transition: transform 0.2s;"
+                                title="Adjust Size">📏</button>
+                            <button class="edit-button"
+                                style="background: none; border: none; font-size: 1.5rem; cursor: pointer; transition: transform 0.2s;"
+                                title="Save Image">💾</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="social-icons">
+                <div class="social-icon"
+                    style="background: #25D366; color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                    <i class="fab fa-whatsapp"></i>
+                </div>
+                <div class="social-icon"
+                    style="background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                    <i class="fab fa-instagram"></i>
+                </div>
+                <div class="social-icon"
+                    style="background: #1877F2; color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                    <i class="fab fa-facebook-f"></i>
+                </div>
+            </div>
+            <div class="caption">7. Share your art with friends</div>
+        </div>
+
+
+
+        <div id="scene8" class="scene">
+            <div class="computer" style="width: 200px; height: 120px; bottom: 20px; left: 20px;">
+                <div class="screen">
+                    <div class="window-header">
+                        <div class="window-button close-button"></div>
+                        <div class="window-button minimize-button"></div>
+                        <div class="window-button maximize-button"></div>
+                        <div class="window-title">AI Art Generator</div>
+                    </div>
+                    <div
+                        style="padding: 8px; font-size: 14px; color: #2C3E50; line-height: 1.3; text-align: center; font-weight: 500;">
+                        A magical picture of a rainbow unicorn flying over a candy castle
+                    </div>
+                </div>
+            </div>
+            <div class="cloud">
+                <div class="cloud-header">
+                    <div class="window-button close-button"></div>
+                    <div class="window-button minimize-button"></div>
+                    <div class="window-button maximize-button"></div>
+                    <div class="cloud-title">Gen-AI Data Center</div>
+                </div>
+                <div class="cloud-content">
+                    <div class="processing-container">
+                        <div class="generating-image-static" style="position: absolute; left: 20%; top:-10px;">
+                            <img src="images/a-magical-picture-of-a-rainbow-unicorn-flying-over.png"
+                                alt="AI Generated Image" style="max-width: 100%; height: auto;">
+                        </div>
+                        <div class="server-rack"
+                            style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%);">
+                            <div class="server-lights">
+                                <div class="server-light"></div>
+                                <div class="server-light"></div>
+                                <div class="server-light"></div>
+                            </div>
+                            <div class="database-icon"
+                                style="font-size: 2rem; opacity: 1; color: #00ff9f; text-shadow: 0 0 15px #00ff9f;">🗄️
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="feedback" style="bottom: 100px; left:250px;">❤️</div>
+            <div class="caption">8. Your feedback helps AI learn</div>
+        </div>
+
+
+        <div class="nav-buttons">
+            <button class="nav-button" id="prevBtn" disabled>Previous</button>
+            <button class="nav-button" id="nextBtn">Next</button>
+        </div>
+    </div>
+
+    <script>
+        // Scene management
+        const scenes = document.querySelectorAll('.scene');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        let currentScene = 0;
+
+        // Update button states
+        function updateButtons() {
+            prevBtn.disabled = currentScene === 0;
+            nextBtn.disabled = currentScene === scenes.length - 1;
+        }
+
+        // Show specific scene
+        function showScene(index) {
+            scenes.forEach(scene => scene.classList.remove('active'));
+            scenes[index].classList.add('active');
+            currentScene = index;
+            updateButtons();
+
+            // Add special animations for specific scenes
+            if (index === 3) { // Neural network scene
+                const neurons = document.querySelectorAll('.neuron');
+                neurons.forEach((neuron, i) => {
+                    neuron.style.animationDelay = `${i * 0.2}s`;
+                });
+            }
+        }
+
+        // Event listeners
+        prevBtn.addEventListener('click', () => {
+            if (currentScene > 0) {
+                showScene(currentScene - 1);
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentScene < scenes.length - 1) {
+                showScene(currentScene + 1);
+            }
+        });
+
+        // Initialize
+        updateButtons();
+
+        // Auto-advance scenes with longer duration
+        let autoAdvance = setInterval(() => {
+            if (currentScene < scenes.length - 1) {
+                showScene(currentScene + 1);
+            } else {
+                clearInterval(autoAdvance);
+            }
+        }, 6000); // Change scene every 6 seconds
+
+        // Pause auto-advance when user interacts
+        document.querySelector('.animation-container').addEventListener('mouseenter', () => {
+            clearInterval(autoAdvance);
+        });
+
+        // Add this to your existing JavaScript
+        document.addEventListener('DOMContentLoaded', function () {
+            const popup = document.querySelector('.data-center-popup');
+            const backdrop = document.querySelector('.popup-backdrop');
+            const closeButton = document.querySelector('.popup-close');
+            const images = document.querySelectorAll('.image-grid img');
+            const cloud = document.querySelector('.cloud');
+
+            // Close popup when clicking the close button or backdrop
+            function closePopup() {
+                popup.style.display = 'none';
+                backdrop.style.display = 'none';
+            }
+
+            closeButton.addEventListener('click', closePopup);
+            backdrop.addEventListener('click', closePopup);
+
+            // Show full image when clicking on a thumbnail
+            images.forEach(img => {
+                img.addEventListener('click', function (e) {
+                    e.stopPropagation(); // Prevent event bubbling
+                    const fullImage = document.createElement('div');
+                    fullImage.className = 'full-image-overlay';
+                    fullImage.innerHTML = `
+                        <div class="full-image-container">
+                            <img src="${this.src}" alt="${this.alt}">
+                            <button class="close-full-image">×</button>
+                        </div>
+                    `;
+                    document.body.appendChild(fullImage);
+
+                    // Close full image when clicking the close button or overlay
+                    fullImage.querySelector('.close-full-image').addEventListener('click', () => {
+                        fullImage.remove();
+                    });
+                    fullImage.addEventListener('click', (e) => {
+                        if (e.target === fullImage) {
+                            fullImage.remove();
+                        }
+                    });
+                });
+            });
+
+            // Prevent popup from closing when clicking inside it
+            popup.addEventListener('click', function (e) {
+                e.stopPropagation();
+            });
+        });
+    </script>
+
+    <style>
+        /* Add these styles for the full image view */
+        .full-image-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .full-image-container {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .full-image-container img {
+            max-width: 100%;
+            max-height: 90vh;
+            object-fit: contain;
+        }
+
+        .close-full-image {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+        }
+    </style>
+</body>
+
+</html>
