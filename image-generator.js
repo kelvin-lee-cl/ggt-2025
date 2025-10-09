@@ -33,12 +33,6 @@ async function generateImage(prompt, style, size) {
     showLoading(submitBtn);
 
     try {
-        // Prefer server key; fallback to local
-        const apiKey = await getRecraftServerApiKey();
-        if (!apiKey) {
-            throw new Error('API key not configured. Please contact an administrator to set up the Recraft API key.');
-        }
-
         // Call via Netlify proxy to satisfy CSP and hide key
         const response = await callRecraftProxy(prompt, style, size, true);
 
