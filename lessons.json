@@ -56,7 +56,7 @@
                         },
                         {
                             "title": "AI Data Center Simulation - How AI Works",
-                            "description": "Interactive simulation demonstrating how AI works by simulating a user sending prompts to a Data Center, which generates images and sends them back. Users can share images and provide feedback to help the AI learn and improve.",
+                            "description": "An interactive simulation that demonstrates how AI works by simulating a user sending prompts to an AI service in a data center, which generates images and returns them. Users can share these images and provide feedback to help the AI learn and improve.",
                             "link": "https://gen-ai-explain.netlify.app/",
                             "type": "article"
                         },
