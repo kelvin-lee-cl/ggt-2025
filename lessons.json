@@ -10,7 +10,7 @@
             "objectives": [
                 "Define Artificial Intelligence and Generative AI in simple terms",
                 "Explain the four core steps of Generative AI: learning from data, creating content, receiving feedback, and improving output, using the chef analogy",
-                "Identify the five major types of Generative AI applications: design, writing, simplifying information, chatbots, and multimedia"
+                "Identify the five major types of Generative AI applications: image generation, writing, analyzing information, chatbots, and multimedia (short videos and music)"
             ],
             "sections": [
                 {
@@ -53,6 +53,12 @@
                             "description": "The journalist got the worst results in standardized by directly copied whatever responses were generated",
                             "link": "https://youtu.be/WlIWKp2yHf0?t=2026",
                             "type": "video"
+                        },
+                        {
+                            "title": "AI Data Center Simulation - How AI Works",
+                            "description": "Interactive simulation demonstrating how AI works by simulating a user sending prompts to a Data Center, which generates images and sends them back. Users can share images and provide feedback to help the AI learn and improve.",
+                            "link": "https://gen-ai-explain.netlify.app/",
+                            "type": "article"
                         },
                         {
                             "title": "【生成AI起源🔍】ChatGPT AI核心科技點樣靠Google八神創?🔥",
@@ -274,6 +280,12 @@
                             "title": "NVIDIA CEO Jensen Huang's Vision for the Future",
                             "description": "There is a recognition of the need for society to adapt to the changes brought about by AI, with a focus on how these changes might affect jobs and the workforce.",
                             "link": "https://youtu.be/7ARBJQn6QkM?t=3351",
+                            "type": "video"
+                        },
+                        {
+                            "title": "Deloitte caught out using AI in $440,000 report | 7.30",
+                            "description": "A report by Deloitte, commissioned by the government at a cost of $440,000, was found to contain over 20 mistakes after a reviewer noticed errors in the footnotes and references, including fabricated book titles and incorrect judge names.",
+                            "link": "https://youtu.be/oN0nViY4gn4?t=127",
                             "type": "video"
                         },
                         {

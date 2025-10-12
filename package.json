@@ -4,6 +4,9 @@
   "description": "A comprehensive educational platform built as a static website with authentication, AI tools integration, and student progress tracking.",
   "main": "admin.js",
   "scripts": {
+    "dev": "netlify dev",
+    "build": "echo 'No build step required for static site'",
+    "start": "netlify dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
