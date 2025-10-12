@@ -713,11 +713,46 @@
             }
         }
 
+        // Check authentication before allowing access to lesson
+        function checkAuthentication() {
+            // Wait for Firebase to initialize and check auth state
+            if (typeof firebase === 'undefined') {
+                // Firebase not loaded yet, wait and retry
+                setTimeout(checkAuthentication, 100);
+                return;
+            }
+
+            if (!firebase.apps || !firebase.apps.length) {
+                // Firebase not initialized yet, wait and retry
+                setTimeout(checkAuthentication, 100);
+                return;
+            }
+
+            const auth = firebase.auth();
+            auth.onAuthStateChanged(user => {
+                if (!user) {
+                    // User not authenticated, redirect to login
+                    if (typeof showAlert === 'function') {
+                        showAlert('Please log in to access lessons.', 'warning');
+                    } else {
+                        alert('Please log in to access lessons.');
+                    }
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 2000);
+                    return;
+                }
+
+                // User is authenticated, proceed with lesson initialization
+                initializeFirebase();
+                initLesson();
+                setTimeout(checkFirebaseConnectivity, 300);
+            });
+        }
+
         // Initialize when page loads
         document.addEventListener('DOMContentLoaded', function () {
-            initializeFirebase();
-            initLesson();
-            setTimeout(checkFirebaseConnectivity, 300);
+            checkAuthentication();
         });
     </script>
 </body>
