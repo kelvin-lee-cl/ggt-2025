@@ -126,46 +126,36 @@
                     "type": "text"
                 },
                 {
-                    "title": "Popular AI Models",
+                    "title": "Popular AI tools for text generation",
                     "content": [
                         {
-                            "name": "GPT (OpenAI)",
-                            "icon": "fas fa-brain",
-                            "color": "text-primary",
-                            "description": "Advanced language model by OpenAI"
-                        },
-                        {
-                            "name": "Gemini (Google DeepMind)",
-                            "icon": "fas fa-gem",
-                            "color": "text-success",
-                            "description": "Google's multimodal AI model"
-                        },
-                        {
-                            "name": "Copilot (Microsoft / GitHub)",
-                            "icon": "fas fa-code",
-                            "color": "text-warning",
-                            "description": "AI-powered coding assistant"
-                        },
-                        {
-                            "name": "DeepSeek (DeepSeek AI)",
+                            "name": "Perplexity AI",
                             "icon": "fas fa-search",
                             "color": "text-info",
-                            "description": "Open-source AI research model"
+                            "description": "AI-powered search engine with real-time information",
+                            "link": "https://www.perplexity.ai",
+                            "button": {
+                                "text": "🔍 Try Perplexity AI",
+                                "url": "https://www.perplexity.ai",
+                                "class": "btn btn-outline-info btn-sm rounded-pill px-3 py-2 shadow-sm",
+                                "icon": "fas fa-external-link-alt"
+                            }
                         },
                         {
-                            "name": "Claude (Anthropic)",
-                            "icon": "fas fa-user-tie",
+                            "name": "Doubao",
+                            "icon": "fas fa-robot",
                             "color": "text-danger",
-                            "description": "Constitutional AI assistant"
-                        },
-                        {
-                            "name": "Llama (Meta / Facebook)",
-                            "icon": "fas fa-horse",
-                            "color": "text-secondary",
-                            "description": "Meta's open-source language model"
+                            "description": "ByteDance's advanced AI assistant for Chinese users",
+                            "link": "https://www.doubao.com",
+                            "button": {
+                                "text": "🤖 Try Doubao",
+                                "url": "https://www.doubao.com",
+                                "class": "btn btn-outline-danger btn-sm rounded-pill px-3 py-2 shadow-sm",
+                                "icon": "fas fa-external-link-alt"
+                            }
                         }
                     ],
-                    "type": "technologies"
+                    "type": "projects"
                 },
                 {
                     "title": "Supplementary Content",
@@ -251,18 +241,18 @@
                     "title": "Hands-on Practice on AI Tools",
                     "content": [
                         {
-                            "name": "NoteGPT",
-                            "icon": "fas fa-sticky-note",
-                            "color": "text-primary",
-                            "description": "AI note taking tool for clever learning. Summarize YouTube videos, PDFs, articles, lectures, audios, PPTs, and images.",
-                            "link": "https://notegpt.io/"
-                        },
-                        {
                             "name": "Sesame AI",
                             "icon": "fas fa-search",
                             "color": "text-warning",
                             "description": "AI-powered search and knowledge management platform",
                             "link": "https://www.sesame.com/"
+                        },
+                        {
+                            "name": "NoteGPT",
+                            "icon": "fas fa-sticky-note",
+                            "color": "text-primary",
+                            "description": "AI note taking tool for clever learning. Summarize YouTube videos, PDFs, articles, lectures, audios, PPTs, and images.",
+                            "link": "https://notegpt.io/"
                         }
                     ],
                     "type": "projects"
@@ -679,6 +669,48 @@
                     "title": "DOM Fundamentals",
                     "content": "Learn how to interact with and manipulate the Document Object Model to create dynamic web pages.",
                     "type": "text"
+                },
+                {
+                    "title": "Popular Gen-AI for text",
+                    "content": [
+                        {
+                            "name": "GPT (OpenAI)",
+                            "icon": "fas fa-brain",
+                            "color": "text-primary",
+                            "description": "Advanced language model by OpenAI"
+                        },
+                        {
+                            "name": "Gemini (Google DeepMind)",
+                            "icon": "fas fa-gem",
+                            "color": "text-success",
+                            "description": "Google's multimodal AI model"
+                        },
+                        {
+                            "name": "Copilot (Microsoft / GitHub)",
+                            "icon": "fas fa-code",
+                            "color": "text-warning",
+                            "description": "AI-powered coding assistant"
+                        },
+                        {
+                            "name": "DeepSeek (DeepSeek AI)",
+                            "icon": "fas fa-search",
+                            "color": "text-info",
+                            "description": "Open-source AI research model"
+                        },
+                        {
+                            "name": "Claude (Anthropic)",
+                            "icon": "fas fa-user-tie",
+                            "color": "text-danger",
+                            "description": "Constitutional AI assistant"
+                        },
+                        {
+                            "name": "Llama (Meta / Facebook)",
+                            "icon": "fas fa-horse",
+                            "color": "text-secondary",
+                            "description": "Meta's open-source language model"
+                        }
+                    ],
+                    "type": "technologies"
                 }
             ],
             "actions": {
