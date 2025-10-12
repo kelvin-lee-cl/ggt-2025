@@ -11,7 +11,7 @@ function initializeImageGenerator() {
     form.addEventListener('submit', handleImageGeneration);
 
     loadGeneratedImages();
-    loadApiKey('recraft');
+    // Server-side API keys are configured, no need to load local keys
 }
 
 function handleImageGeneration(event) {
@@ -155,34 +155,7 @@ function loadGeneratedImages() {
     }
 }
 
-async function saveApiKey(service) {
-    const apiKey = document.getElementById('recraftApiKey').value;
-    if (apiKey.trim()) {
-        try {
-            const serverSuccess = await setRecraftServerApiKey(apiKey.trim());
-            if (serverSuccess) {
-                showAlert('API key saved successfully on server for all users!', 'success');
-            } else {
-                localStorage.setItem(`${service}_api_key`, apiKey.trim());
-                showAlert('API key saved locally (server unavailable).', 'warning');
-            }
-            document.getElementById('recraftApiKey').value = '';
-        } catch (error) {
-            localStorage.setItem(`${service}_api_key`, apiKey.trim());
-            showAlert('API key saved locally (server error).', 'warning');
-            document.getElementById('recraftApiKey').value = '';
-        }
-    } else {
-        showAlert('Please enter a valid API key.', 'warning');
-    }
-}
-
-function loadApiKey(service) {
-    const savedKey = localStorage.getItem(`${service}_api_key`);
-    if (savedKey) {
-        document.getElementById('recraftApiKey').value = savedKey;
-    }
-}
+// API key management functions removed - using server-side configuration
 
 // Real Recraft API integration (uncomment and modify as needed)
 // Server key helpers (mirror text-generator.js pattern)
