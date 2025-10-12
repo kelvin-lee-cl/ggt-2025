@@ -3,7 +3,7 @@
 	"siteId": "ac73931e-4b5e-4424-985f-81005d6f2466",
 	"geolocation": {
 		"data": {
-			"city": "Fo Tan",
+			"city": "Sha Tin Wai",
 			"country": {
 				"code": "HK",
 				"name": "Hong Kong"
@@ -13,9 +13,9 @@
 				"name": "Sha Tin"
 			},
 			"timezone": "Asia/Hong_Kong",
-			"latitude": 22.4017,
-			"longitude": 114.1835
+			"latitude": 22.3847,
+			"longitude": 114.1965
 		},
-		"timestamp": 1760024687499
+		"timestamp": 1760235224830
 	}
 }
