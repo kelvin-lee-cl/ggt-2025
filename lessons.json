@@ -227,7 +227,7 @@
             "status": "not-started",
             "statusText": "Not started",
             "objectives": [
-                "Understand AI as a double-edged sword, recognizing its benefits and cognitive risks such as brain rot.",
+                "Recognize AI as a double-edged sword, appreciating its transformative benefits while remaining vigilant about risks such as fraud, misinformation, and other potential harms.",
                 "Discuss the future of AI work, emphasizing hands-on tasks and creativity.",
                 "Explore different AI tools to boost learning and achieve academic success efficiently."
             ],
@@ -253,6 +253,20 @@
                             "color": "text-primary",
                             "description": "AI note taking tool for clever learning. Summarize YouTube videos, PDFs, articles, lectures, audios, PPTs, and images.",
                             "link": "https://notegpt.io/"
+                        },
+                        {
+                            "name": "QuizGecko",
+                            "icon": "fas fa-question-circle",
+                            "color": "text-success",
+                            "description": "AI-powered quiz generator and learning platform for creating interactive quizzes",
+                            "link": "https://quizgecko.com/home"
+                        },
+                        {
+                            "name": "Monica",
+                            "icon": "fas fa-robot",
+                            "color": "text-info",
+                            "description": "All-in-one AI assistant with chat, search, writing, and coding capabilities",
+                            "link": "https://monica.im/"
                         }
                     ],
                     "type": "projects"
