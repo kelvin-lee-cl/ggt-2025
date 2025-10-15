@@ -121,8 +121,8 @@
             ],
             "sections": [
                 {
-                    "title": "Insights of prompting",
-                    "content": "The Persona-Problem-Solution (PPS) method is a popular way to guide AI and a good fallback if you forget other frameworks. AI performs better when given clear examples, multiple steps, and continuous feedback to understand problems and provide better answers.",
+                    "title": "5 Ways to Make AI a Better Teammate | Jeremy Utley",
+                    "content": "Unlock AI's full creative power by thinking and prompting like a coach: use Chain of Thought Reasoning to guide its logic, Few-Shot Prompting to show examples, Reverse Prompting to turn the table and get it to ask you, Assign a Role to AI to set context and expertise, and Roleplaying to immerse in rich perspectives. This mindset transforms AI from a tool into a dynamic creative teammate.",
                     "type": "text"
                 },
                 {
@@ -164,6 +164,12 @@
                             "title": "How Stanford Teaches AI-Powered Creativity in Just 13 MinutesㅣJeremy Utley",
                             "description": "This video teaches how to treat AI as teammate rather than a tool",
                             "link": "https://youtu.be/wv779vmyPVY?t=186",
+                            "type": "video"
+                        },
+                        {
+                            "title": "Stanford's Practical Guide to 10x Your AI Productivity | Jeremy Utley",
+                            "description": "This video teaches 5 ways to make AI a Better Teammate.",
+                            "link": "https://www.youtube.com/watch?v=yMOmmnjy3sE",
                             "type": "video"
                         },
                         {
@@ -242,10 +248,24 @@
                     "content": [
                         {
                             "name": "Sesame AI",
-                            "icon": "fas fa-search",
+                            "icon": "fas fa-microphone",
                             "color": "text-warning",
-                            "description": "AI-powered search and knowledge management platform",
+                            "description": "AI Voice model for natural and expressive speech",
                             "link": "https://www.sesame.com/"
+                        },
+                        {
+                            "name": "Cantonese AI",
+                            "icon": "fas fa-language",
+                            "color": "text-warning",
+                            "description": "Preserve Cantonese and Hong Kong culture with technology",
+                            "link": "https://cantonese.ai/"
+                        },
+                        {
+                            "name": "Heygen",
+                            "icon": "fas fa-video",
+                            "color": "text-primary",
+                            "description": "AI video generator provides an all-in-one solution for producing high-quality AI spokesperson videos.",
+                            "link": "https://app.heygen.com/home"
                         },
                         {
                             "name": "NoteGPT",
@@ -255,18 +275,18 @@
                             "link": "https://notegpt.io/"
                         },
                         {
-                            "name": "QuizGecko",
-                            "icon": "fas fa-question-circle",
-                            "color": "text-success",
-                            "description": "AI-powered quiz generator and learning platform for creating interactive quizzes",
-                            "link": "https://quizgecko.com/home"
-                        },
-                        {
                             "name": "Monica",
                             "icon": "fas fa-robot",
                             "color": "text-info",
                             "description": "All-in-one AI assistant with chat, search, writing, and coding capabilities",
                             "link": "https://monica.im/"
+                        },
+                        {
+                            "name": "Recall AI",
+                            "icon": "fas fa-book-reader",
+                            "color": "text-success",
+                            "description": "AI tool that boosts learning and retention by providing instant summaries, chat, and a self-organizing knowledge base across platforms.",
+                            "link": "https://www.getrecall.ai/"
                         }
                     ],
                     "type": "projects"
