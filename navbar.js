@@ -12,13 +12,6 @@
                     setupEventListeners();
                 } catch (_) { }
             }
-            // Apply current language after injection
-            if (typeof initializeLanguage === 'function') {
-                try {
-                    updateLanguageUI();
-                    translatePage();
-                } catch (_) { }
-            }
             // Update auth UI if available
             if (typeof updateAuthUI === 'function') {
                 try { updateAuthUI(); } catch (_) { }

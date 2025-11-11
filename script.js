@@ -3,9 +3,7 @@
 // Global variables
 let currentUser = null;
 let studentProgress = JSON.parse(localStorage.getItem('studentProgress')) || {};
-let currentLanguage = localStorage.getItem('language') || 'en';
 let currentTheme = localStorage.getItem('theme') || 'light';
-const languages = ['en', 'zh-tw', 'zh-cn'];
 let __isFirebaseSigningIn = false; // guard to prevent concurrent popup sign-ins
 
 // Initialize the application
@@ -15,7 +13,6 @@ document.addEventListener('DOMContentLoaded', function () {
     setupEventListeners();
     animateOnScroll();
     initializeScrollHighlighting();
-    initializeLanguage();
     initializeTheme();
     if (typeof loadHomepageSlider === 'function') {
         setTimeout(loadHomepageSlider, 300);
@@ -90,6 +87,29 @@ function initializeFirebaseAuth() {
                         await userRef.set({ userId: user.uid, email: user.email, lessons: {}, createdAt: new Date().toISOString(), lastUpdated: new Date().toISOString() });
                     }
                 } catch (e) { console.warn('Init userProgress failed', e); }
+
+                // Check for redirect URL after successful login
+                const redirectUrl = sessionStorage.getItem('redirectAfterLogin');
+                if (redirectUrl && !window.redirectExecuted) {
+                    // Check if we're already on the target page to prevent redirect loops
+                    const currentPath = window.location.pathname + window.location.search;
+                    const targetPath = redirectUrl.startsWith('/') ? redirectUrl : '/' + redirectUrl;
+
+                    if (currentPath !== targetPath) {
+                        // Set flag to prevent multiple redirects
+                        window.redirectExecuted = true;
+                        // Clear the stored redirect URL
+                        sessionStorage.removeItem('redirectAfterLogin');
+                        // Redirect to the intended lesson
+                        setTimeout(() => {
+                            window.location.href = redirectUrl;
+                        }, 1500); // Slightly longer delay to ensure UI is stable
+                    } else {
+                        // We're already on the target page, just clear the redirect URL
+                        sessionStorage.removeItem('redirectAfterLogin');
+                    }
+                }
+
             } else {
                 currentUser = null;
             }
@@ -1137,79 +1157,6 @@ function requireAuth(callback) {
     callback();
 }
 
-// Language switching functionality
-function initializeLanguage() {
-    updateLanguageUI();
-    translatePage();
-}
-
-function toggleLanguage() {
-    const currentIndex = languages.indexOf(currentLanguage);
-    const nextIndex = (currentIndex + 1) % languages.length;
-    currentLanguage = languages[nextIndex];
-    localStorage.setItem('language', currentLanguage);
-    updateLanguageUI();
-    translatePage();
-}
-
-function updateLanguageUI() {
-    const languageText = document.getElementById('languageText');
-    if (languageText) {
-        switch (currentLanguage) {
-            case 'en':
-                languageText.textContent = '中文';
-                break;
-            case 'zh-tw':
-                languageText.textContent = '简体';
-                break;
-            case 'zh-cn':
-                languageText.textContent = 'English';
-                break;
-        }
-    }
-}
-
-function translatePage() {
-    const elements = document.querySelectorAll('[data-en][data-zh-tw][data-zh-cn]');
-    elements.forEach(element => {
-        let text;
-        switch (currentLanguage) {
-            case 'en':
-                text = element.getAttribute('data-en');
-                break;
-            case 'zh-tw':
-                text = element.getAttribute('data-zh-tw');
-                break;
-            case 'zh-cn':
-                text = element.getAttribute('data-zh-cn');
-                break;
-        }
-        if (text) {
-            // Support explicit \n in data-* attributes for line breaks
-            const hasBreaks = /\\n/.test(text);
-            if (hasBreaks) {
-                element.innerHTML = text.replace(/\\n/g, '<br>');
-            } else {
-                element.textContent = text;
-            }
-        }
-    });
-
-    // Update page title
-    switch (currentLanguage) {
-        case 'en':
-            document.title = 'Girls Go Tech AI Application - Learning Platform';
-            break;
-        case 'zh-tw':
-            document.title = 'Girls Go Tech AI Application - Learning Platform';
-            break;
-        case 'zh-cn':
-            document.title = 'Girls Go Tech AI Application - Learning Platform';
-            break;
-    }
-}
-
-
 // Theme Management Functions
 function initializeTheme() {
     applyTheme(currentTheme);
@@ -1223,10 +1170,12 @@ function toggleTheme() {
     updateThemeUI();
 }
 
+
 function applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
     currentTheme = theme;
 }
+
 
 function updateThemeUI() {
     const themeIcon = document.getElementById('themeIcon');

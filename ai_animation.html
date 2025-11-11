@@ -1528,7 +1528,22 @@
 </head>
 
 <body>
-    <div class="animation-container">
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="lessonNavbar" style="display: none;">
+        <div class="container">
+            <a class="navbar-brand" href="#" id="backToLessonBtn">
+                <i class="fas fa-arrow-left me-2"></i>
+                <span id="backToLessonText">Back to Lesson</span>
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="https://ggt-ai-2025.netlify.app/index.html#tools" target="_blank">
+                    <i class="fas fa-home me-1"></i>AI Tools Home
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="animation-container" id="mainContent">
         <div id="scene1" class="scene active">
             <div class="computer">
                 <div class="screen">
@@ -2039,6 +2054,42 @@
                 e.stopPropagation();
             });
         });
+
+        // Lesson navigation functionality
+        function initializeLessonNavigation() {
+            // Check if we came from a lesson page
+            const urlParams = new URLSearchParams(window.location.search);
+            const fromLesson = urlParams.get('from');
+
+            if (fromLesson) {
+                // Show the navbar
+                const navbar = document.getElementById('lessonNavbar');
+                const mainContent = document.getElementById('mainContent');
+
+                if (navbar && mainContent) {
+                    navbar.style.display = 'block';
+                    mainContent.classList.add('with-navbar');
+
+                    // Update the back button
+                    const backBtn = document.getElementById('backToLessonBtn');
+                    const backText = document.getElementById('backToLessonText');
+
+                    if (backBtn && backText) {
+                        backBtn.href = `lesson.html?lesson=${fromLesson}`;
+                        backText.textContent = `Back to ${fromLesson.charAt(0).toUpperCase() + fromLesson.slice(1)}`;
+
+                        // Add click handler
+                        backBtn.addEventListener('click', function (e) {
+                            e.preventDefault();
+                            window.location.href = `lesson.html?lesson=${fromLesson}`;
+                        });
+                    }
+                }
+            }
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initializeLessonNavigation);
     </script>
 
     <style>
@@ -2077,6 +2128,20 @@
             color: white;
             font-size: 30px;
             cursor: pointer;
+        }
+
+        /* Navbar styles */
+        #lessonNavbar {
+            z-index: 1000;
+        }
+
+        #mainContent {
+            margin-top: 0;
+            transition: margin-top 0.3s ease;
+        }
+
+        #mainContent.with-navbar {
+            margin-top: 60px;
         }
     </style>
 </body>

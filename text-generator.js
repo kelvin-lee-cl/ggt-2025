@@ -29,14 +29,26 @@ function handleTextGeneration(event) {
     event.preventDefault();
 
     requireAuth(() => {
-        const prompt = document.getElementById('textPrompt').value;
-        const type = document.getElementById('textType').value;
-        const length = document.getElementById('textLength').value;
+        const framework = document.getElementById('promptingFramework').value;
         const tone = document.getElementById('textTone').value;
         const language = document.getElementById('textLanguage').value;
-        const framework = document.getElementById('promptingFramework').value;
 
-        generateText(prompt, type, length, tone, language, framework);
+        if (framework === 'none') {
+            // Use traditional form inputs - validate required fields
+            const prompt = document.getElementById('textPrompt').value;
+            const type = document.getElementById('textType').value;
+            const length = document.getElementById('textLength').value;
+
+            if (!prompt.trim()) {
+                showAlert('Please enter a prompt for text generation.', 'warning');
+                return;
+            }
+
+            generateText(prompt, type, length, tone, language, framework);
+        } else {
+            // Use framework-based generation - no additional validation needed
+            generateText('', '', '', tone, language, framework);
+        }
     });
 }
 
@@ -66,10 +78,10 @@ async function generateText(prompt, type, length, tone, language, framework) {
         // Add to generated texts history
         const textData = {
             id: Date.now(),
-            prompt: prompt,
+            prompt: framework === 'none' ? prompt : `Framework: ${framework}`,
             structuredPrompt: structuredPrompt,
-            type: type,
-            length: length,
+            type: framework === 'none' ? type : 'framework-generated',
+            length: framework === 'none' ? length : 'variable',
             tone: tone,
             framework: framework,
             text: response.text,
@@ -98,13 +110,18 @@ function showFrameworkGuide() {
     const frameworkSelect = document.getElementById('promptingFramework');
     const frameworkGuide = document.getElementById('frameworkGuide');
     const customFrameworkInput = document.getElementById('customFrameworkInput');
+    const basicInputFields = document.getElementById('basicInputFields');
     const selectedFramework = frameworkSelect.value;
 
     if (selectedFramework === 'none') {
         frameworkGuide.style.display = 'none';
         customFrameworkInput.style.display = 'none';
+        basicInputFields.style.display = 'block';
         return;
     }
+
+    // Hide basic input fields when framework is selected
+    basicInputFields.style.display = 'none';
 
     // Show framework guide
     frameworkGuide.style.display = 'block';
@@ -113,41 +130,49 @@ function showFrameworkGuide() {
     // Update guide content
     const guide = getFrameworkGuide(selectedFramework);
     document.getElementById('frameworkTitle').textContent = guide.title;
-    document.getElementById('frameworkDescription').textContent = guide.description;
+    document.getElementById('frameworkDescription').innerHTML = guide.description;
     document.getElementById('frameworkUsage').textContent = guide.whenToUse;
 
-    // Load custom framework text
+    // Load framework template (editable)
     const customText = document.getElementById('customFrameworkText');
     customText.value = guide.template;
+    customText.readOnly = false; // Allow editing of the template
 
     // Update prompt preview
     updatePromptPreview();
 }
 
 function updatePromptPreview() {
-    const originalPrompt = document.getElementById('textPrompt').value;
-    const type = document.getElementById('textType').value;
-    const length = document.getElementById('textLength').value;
     const tone = document.getElementById('textTone').value;
     const language = document.getElementById('textLanguage').value;
-    const customFrameworkText = document.getElementById('customFrameworkText');
+    const framework = document.getElementById('promptingFramework').value;
     const promptPreview = document.getElementById('promptPreview');
 
-    if (!originalPrompt.trim()) {
-        promptPreview.textContent = 'Enter your prompt above to see the preview...';
-        return;
-    }
-
-    if (customFrameworkText && customFrameworkText.value.trim()) {
-        const preview = customFrameworkText.value
-            .replace('{originalPrompt}', originalPrompt)
-            .replace('{type}', type)
-            .replace('{length}', length)
-            .replace('{tone}', tone)
-            .replace('{language}', language);
-        promptPreview.textContent = preview;
+    if (framework && framework !== 'none') {
+        // Check if user has customized the framework template
+        const customFrameworkText = document.getElementById('customFrameworkText');
+        if (customFrameworkText && customFrameworkText.value.trim()) {
+            // Use the custom framework text with placeholders filled
+            const preview = customFrameworkText.value
+                .replace('{tone}', tone)
+                .replace('{language}', language);
+            promptPreview.textContent = preview;
+        } else {
+            // Use the default framework template
+            const preview = createStructuredPrompt('', '', '', tone, language, framework);
+            promptPreview.textContent = preview;
+        }
     } else {
         // Show composed prompt when no framework is selected
+        const originalPrompt = document.getElementById('textPrompt').value;
+        const type = document.getElementById('textType').value;
+        const length = document.getElementById('textLength').value;
+
+        if (!originalPrompt.trim()) {
+            promptPreview.textContent = 'Enter your prompt above to see the preview...';
+            return;
+        }
+
         const composed = `${originalPrompt}\n\nPlease generate a ${type} in a ${tone} tone, approximately ${length} words, written in ${language}.`;
         promptPreview.textContent = composed;
     }
@@ -155,71 +180,60 @@ function updatePromptPreview() {
 
 function getFrameworkGuide(framework) {
     const guides = {
-        'pps': {
-            title: 'Persona-Problem-Solution (PPS) Framework',
-            description: 'Structures prompts by defining the AI\'s role (Persona), the specific challenge (Problem), and the desired output (Solution).',
-            whenToUse: 'Best for role-specific tasks, expert consultations, and when you need the AI to adopt a particular perspective or expertise.',
-            template: 'Persona: You are a {type} expert with deep knowledge in this field.\nProblem: {originalPrompt}\nSolution: Please provide a comprehensive {type} that addresses this problem with a {tone} tone, approximately {length} words, written in {language}.'
-        },
-        'ctc': {
-            title: 'Context-Task-Constraints (CTC) Framework',
-            description: 'Provides background context, defines the specific task, and sets clear boundaries or constraints.',
-            whenToUse: 'Ideal for complex projects, when you need to set specific parameters, or when working with detailed requirements.',
-            template: 'Context: You are an expert in {type} writing with extensive experience in creating high-quality content.\nTask: Create a {type} based on the following request: {originalPrompt}\nConstraints: Use a {tone} tone, aim for approximately {length} words, write in {language}, and ensure the content is well-structured and engaging.'
-        },
+
         'clear': {
             title: 'CLEAR Framework',
-            description: 'Context-Logic-Expectations-Action-Restrictions approach for comprehensive prompt structuring.',
-            whenToUse: 'Perfect for research tasks, analysis projects, and when you need to explain the reasoning behind your request.',
-            template: 'Context: You are a professional {type} writer with expertise in creating compelling content.\nLogic: The request requires a well-crafted {type} that effectively communicates the intended message.\nExpectations: The output should be a comprehensive {type} that addresses the user\'s request.\nAction: Create a {type} based on: {originalPrompt}\nRestrictions: Use a {tone} tone, approximately {length} words, and maintain professional quality.'
+            description: '<strong>Context</strong>: Provide background information that explains why you are looking for this information.\n<strong>Logic</strong>: Explain the reasoning behind your research and what you are trying to accomplish.\n<strong>Expectations</strong>: Clearly define what kind of answer you need, including specific details or structure.\n<strong>Action</strong>: Specify the task that needs to be performed, such as summarizing, comparing, or listing information.<br><strong>Restrictions</strong>: Mention any limitations, such as word count, tone, or type of sources to use.',
+            whenToUse: 'Perfect for generating comprehensive content with clear reasoning and professional standards.',
+            template: 'Context:\nAs secondary students, we want guidance on emerging careers related to {topic} (e.g., AI, environmental design).\n\nLogic:\nUnderstanding opportunities helps us prepare subject choices for senior forms.\n\nExpectations:\nList 3–5 career options, each with required skills, typical salary in Hong Kong, and recommended school subjects.\n\nAction:\nCreate an easy‑to‑read comparison summary.\n\nRestrictions:\nUse updated salary data (2022–2024) from reliable local sources. \n\nRemark:\nRemove any visual and syntactical marker like ###, ***, ---, and etc in the generated result'
         },
         'smart': {
             title: 'SMART Framework',
-            description: 'Specific-Measurable-Achievable-Relevant-Time-bound approach for goal-oriented prompts.',
-            whenToUse: 'Excellent for project planning, goal setting, and when you need measurable outcomes.',
-            template: 'Specific: Create a {type} based on: {originalPrompt}\nMeasurable: The content should be approximately {length} words.\nAchievable: Use your expertise to create high-quality content.\nRelevant: Focus on the specific request and maintain relevance.\nTime-bound: Provide a complete, well-structured {type} with a {tone} tone.'
+            description: '<strong>Specific</strong>: Clearly define what you need, avoiding vague or broad questions.\n<br><strong>Measurable</strong>: Ensure that the response can be evaluated based on defined success criteria.\n<br><strong>Achievable</strong>: Make sure the request is realistic and within the AI\'s capabilities.\n<br><strong>Relevant</strong>: Keep your request aligned with your goal or purpose.\n<br><strong>Time-bound</strong>: Include a timeframe, if applicable, to ensure timely and relevant information.',
+            whenToUse: 'Excellent for generating goal-oriented content with clear objectives and measurable outcomes.',
+            template: 'Specific: Plan and execute a social project addressing {topic} (e.g., mental health, recycling, elder care) in {language} with {tone} tone.\n\nMeasurable: Engage around 100 participants across multiple activities.\n\nAchievable: Use available school space, materials under HK$1 000, and volunteer manpower.\n\nRelevant: Aim for visible, positive community impact tied to {topic}.\n\nTime‑bound: Limit the project to a two‑day event — Day 1 for set‑up and activity launch, Day 2 for follow‑up, reflection, and sharing of outcomes.\n\nRemark:\nRemove any visual and syntactical marker like ###, ***, ---, and etc in the generated result'
         },
         'quest': {
             title: 'QUEST Framework',
-            description: 'Question-Understanding-Expectation-Scope-Time approach for research and inquiry-based tasks.',
+            description: '<strong>Question</strong>: Start with a clear question or problem you need to answer.\n<br><strong>Understanding</strong>: Explain what you already know and what gaps exist in your knowledge.\n<br><strong>Expectation</strong>: Define what a good response looks like and what key points it should address.\n<br><strong>Scope</strong>: Determine the focus of your research, specifying what should be included or excluded.\n<br><strong>Time</strong>: Provide any relevant time constraints for information (e.g., recent studies only).',
             whenToUse: 'Best for research projects, investigative tasks, and when you need to explore a topic thoroughly.',
-            template: 'Question: How can I create an effective {type} based on: {originalPrompt}?\nUnderstanding: You need a {type} with a {tone} tone, approximately {length} words.\nExpectation: A well-structured, engaging {type} that addresses the request.\nScope: Focus on the specific request while maintaining quality and relevance.\nTime: Provide a complete response that meets all requirements.'
+            template: 'Question: How do high‑achieving Hong Kong students balance intense academic expectations with mental health and personal interests?\n\nUnderstanding: I feel pressure from DSE expectations, parental ambitions, and peer competition. I wonder if other students feel this, how they cope, and whether it\'s possible to do well academically and have a life outside studying.\n\nExpectation: 1) Statistics on academic stress among Hong Kong secondary students; 2) time management strategies used by successful students; 3) how to communicate with parents about pressure; 4) extracurricular activities that support both wellbeing and university applications;"\n\nScope: Focus on Hong Kong\'s competitive education system and DSE context; include both high‑achievers and students with diverse goals; exclude burnout recovery (mental health crisis support); prioritise actionable strategies.\n\nTime: Include current data on Hong Kong student stress from 2022 onward; reference recent education reforms or new wellbeing initiatives.\n\nRemark:\nRemove any visual and syntactical marker like ###, ***, ---, and etc in the generated result'
         },
         'guide': {
             title: 'GUIDE Framework',
-            description: 'Goal-Understanding-Information-Direction-Evaluation approach for comprehensive guidance.',
+            description: '<strong>Goal</strong>: Clearly state what you are trying to achieve with your research.\n<br><strong>Understanding</strong>: Explain what prior knowledge you have on the topic.\n<br><strong>Information</strong>: List the key pieces of information that should be included in the response.\n<br><strong>Direction</strong>: Provide specific guidance on how you want the response to be structured or presented.\n<br><strong>Evaluation</strong>: Define how you will assess the quality of the response.',
             whenToUse: 'Ideal for mentoring tasks, educational content, and when you need step-by-step guidance.',
-            template: 'Goal: Create a high-quality {type} based on: {originalPrompt}\nUnderstanding: You are an expert {type} writer with extensive experience.\nInformation: The content should be approximately {length} words with a {tone} tone.\nDirection: Structure the {type} with clear organization and engaging content.\nEvaluation: Ensure the output meets professional standards and addresses the request effectively.'
+            template: 'Goal:\nTurn a hobby or passion into a structured project that I can develop, share, and feel proud of—without it becoming another source of stress.\n\nUnderstanding:\nI have interests (photography, writing, gaming, fashion design, etc.) but I\'m unsure how to develop them seriously while balancing school; I worry they\'re "not practical."\n\nInformation:\nHow to define realistic goals for your passion project (just for fun vs. building skills vs. sharing with others). Time management strategies for hobbies during busy school periods. Tools, resources, and communities related to your specific interest. How to get feedback and improve your craft\nWays to share your work (Instagram, blogs, school events, competitions)\nHow passion projects can strengthen university applications (without being forced). Stories from Hong Kong students who developed hobbies into meaningful pursuits\n\nDirection:\nCreate a customisable project roadmap (fill in your hobby, set milestones); include resource lists by hobby type; use monthly progress tracker format; write in {language} and {tone} tone.\n\nEvaluation:\nQuality check: Does this feel genuinely fun, not like another obligation? Can I do this within my real schedule? Are there Hong Kong examples I can relate to?\n\nRemark:\nRemove any visual and syntactical marker like ###, ***, ---, and etc in the generated result'
         },
         'focus': {
             title: 'FOCUS Framework',
-            description: 'Function-Outcome-Criteria-Underlying Assumptions-Strategy approach for strategic thinking.',
+            description: '<strong>Function</strong>: Define the purpose or role the AI should play in answering your question.\n<br><strong>Outcome</strong>: Specify what the ideal response should include.\n<br><strong>Criteria</strong>: Identify key factors that will determine the quality of the answer.\n<br><strong>Underlying Assumptions</strong>: State any biases or assumptions that should be acknowledged.\n<br><strong>Strategy</strong>: Provide a research method or approach you prefer the AI to take.',
             whenToUse: 'Perfect for strategic planning, decision-making tasks, and when you need to consider multiple perspectives.',
-            template: 'Function: Create a {type} that effectively communicates the intended message.\nOutcome: A well-structured {type} based on: {originalPrompt}\nCriteria: Use a {tone} tone, approximately {length} words, and maintain high quality.\nUnderlying Assumptions: The content should be relevant, engaging, and professionally written.\nStrategy: Create a comprehensive {type} that addresses all aspects of the request.'
+            template: 'Function: Act as a study coach.\nOutcome: Provide 5 effective study techniques for exams.\nCriteria: Techniques should be easy to implement, science-backed, and engaging.\nUnderlying Assumptions: Students may struggle with focus or motivation.\nStrategy: Suggest active recall, spaced repetition, and visual aids; write in {language} and {tone} tone.\n\nRemark:\nRemove any visual and syntactical marker like ###, ***, ---, and etc in the generated result'
         },
         'idea': {
             title: 'IDEA Framework',
-            description: 'Intent-Details-Examples-Adjustments approach for iterative development.',
+            description: '<strong>Intent</strong>: Define the purpose behind your research and what you aim to achieve.\n<br><strong>Details</strong>: Provide relevant background information and clarify what you already know.\n<br><strong>Examples</strong>: Include references or case studies that can help shape the response.\n<br><strong>Adjustments</strong>: Allow for refinement based on initial responses and new insights.',
             whenToUse: 'Great for creative projects, iterative development, and when you need flexibility in the process.',
-            template: 'Intent: Create an effective {type} based on: {originalPrompt}\nDetails: The content should be approximately {length} words with a {tone} tone.\nExamples: Use professional writing standards and engaging content structure.\nAdjustments: Ensure the {type} meets all requirements and maintains quality throughout.'
+            template: 'Intent: Examine parental and societal expectations influencing study and digital behavior in 13-15-year-old females; write it in {language} and {tone} tone.\n\nDetails: Family expectations often drive prolonged study hours coupled with monitoring or restrictions on digital use.\n\nExamples: Use cultural context of Hong Kong\'s education competitiveness.\n\nAdjustments: Consider comparing perspectives of students vs. parents.\n\nRemark:\nRemove any visual and syntactical marker like ###, ***, ---, and etc in the generated result'
         },
         'risen': {
             title: 'RISEN Framework',
-            description: 'Requirement-Information-Strategy-Evaluation-Negotiation approach for complex projects.',
+            description: '<strong>Requirement</strong>: Clearly define what information or solution you are seeking.\n<br><strong>Information</strong>: Specify what background knowledge or supporting data is needed.\n<br><strong>Strategy</strong>: Describe the approach the AI should take to answer the question.\n<br><strong>Evaluation</strong>: Indicate how you will determine the accuracy or usefulness of the response.\n<br><strong>Negotiation</strong>: Leave room for flexibility in the response, allowing the AI to adjust its answer based on available information.',
             whenToUse: 'Best for complex projects, negotiations, and when you need to balance multiple requirements.',
-            template: 'Requirement: Create a {type} based on: {originalPrompt}\nInformation: The content should be approximately {length} words with a {tone} tone.\nStrategy: Use professional writing techniques and engaging content structure.\nEvaluation: Ensure the output meets quality standards and addresses the request.\nNegotiation: Adapt the content to best serve the user\'s needs while maintaining professional standards.'
+            template: 'Requirement: Explore impacts of AI teacher replacement on student learning quality and social development; write it in {language} and {tone} tone.\n\nInformation: Research on classroom interaction, mentorship, and emotional support from teachers.\n\nStrategy: Propose mixed-methods study using surveys, interviews, and academic data.\n\nEvaluation: Use qualitative feedback and quantitative academic performance for analysis.\n\nNegotiation: Adjust focus if initial results show AI supplementing rather than replacing teachers.\n\nRemark:\nRemove any visual and syntactical marker like ###, ***, ---, and etc in the generated result'
         },
         'rhodes': {
             title: 'RHODES Framework',
-            description: 'Research-Hypothesis-Objectives-Development-Execution-Synthesis approach for scientific methodology.',
-            whenToUse: 'Perfect for research projects, scientific writing, and when you need a systematic approach.',
-            template: 'Research: Analyze the request: {originalPrompt}\nHypothesis: A well-crafted {type} will effectively address this request.\nObjectives: Create a {type} that is approximately {length} words with a {tone} tone.\nDevelopment: Structure the content with clear organization and engaging elements.\nExecution: Write a comprehensive {type} that meets all requirements.\nSynthesis: Ensure the final output effectively addresses the original request.'
+            description: '<strong>Research</strong>: Identify the topic or problem that needs investigation. Focus on key aspects and provide relevant background.\n<br><strong>Hypothesis</strong>: Create a testable statement that can be supported or disproven with evidence. Ensure it links two or more variables.\n<br><strong>Objectives</strong>: Define what you want to achieve. Clarify gaps in knowledge and outline measurable outcomes.\n<br><strong>Development</strong>: Plan the steps needed to explore the hypothesis. This may include gathering data, comparing sources, or reviewing literature.\n<br><strong>Execution</strong>: Carry out the research by analyzing data, collecting expert opinions, or testing different sources.\n<br><strong>Synthesis</strong>: Summarize insights, findings, and conclusions. Make sure the final response directly addresses the hypothesis.',
+            whenToUse: 'Perfect for research projects, scientific writing, and when your research follows a hypothesis-based approach and you need a systematic approach.',
+            template: 'Research: Investigate how social media usage influences self-esteem and body image, referencing engagement rates, common concerns, and prior studies.\n\nHypothesis: Higher engagement with visually-focused platforms correlates with lower self-esteem and more negative body image.\n\nObjectives: Measure usage, self-esteem, and body image; examine correlations; address local data gaps.\n\nDevelopment: Plan surveys/interviews, select validated scales, define timeline and ethics.\n\nExecution: Collect data from teenage girls, analyze correlations and trends.\n\nSynthesis: Summarize links between engagement and self-esteem; inform mental health and literacy programs.\n\nRemark:\nRemove any visual and syntactical marker like ###, ***, ---, and etc in the generated result and write it in {language} and {tone} tone.'
         },
         'create': {
             title: 'CREATE Framework',
-            description: 'Conceptualize-Research-Experiment-Analyze-Transform-Evaluate approach for innovation.',
+            description: '<strong>Conceptualize</strong>: Define the idea or challenge you want to explore. Outline the core problem and any initial thoughts.\n<br><strong>Research</strong>: Gather relevant background information, trends, and supporting data. Identify gaps in existing knowledge.\n<br><strong>Experiment</strong>: Test different approaches, methods, or solutions. This could involve brainstorming, prototyping, or analyzing various possibilities.\n<br><strong>Analyze</strong>: Evaluate the results of your experiments. Determine what worked, what didn\'t, and why.\n<br><strong>Transform</strong>: Refine and shape the idea based on your findings. Adapt and improve it into a structured plan or solution.\n<br><strong>Evaluate</strong>: Measure the success of your final approach. Assess whether it meets the original goal and consider future improvements.',
             whenToUse: 'Ideal for creative projects, innovation tasks, and when you need to explore new approaches.',
-            template: 'Conceptualize: Develop a {type} based on: {originalPrompt}\nResearch: Consider the best approach for a {tone} tone, approximately {length} words.\nExperiment: Use different writing techniques to create engaging content.\nAnalyze: Evaluate the effectiveness of the content structure and approach.\nTransform: Refine the {type} to meet all requirements and maintain quality.\nEvaluate: Ensure the final output effectively addresses the user\'s request.'
+            template: 'You are a health and fitness expert specializing in stress reduction and sleep improvement through exercise.\n\nConceptualize: Define the challenge of poor sleep quality and high stress, and the goal to design an exercise routine addressing these issues.\n\nResearch: Use current scientific findings about exercise types (aerobic, yoga, stretching) that enhance sleep and reduce stress.\n\nExperiment: Propose and test variations in exercise types, intensity, and timing (morning vs. evening) to optimize sleep and stress outcomes.\n\nAnalyze: Evaluate effectiveness based on sleep improvement metrics and stress reduction indicators.\n\nTransform: Refine the routine into a practical weekly schedule combining best exercise modes and timings suited for stress relief and sleep enhancement.\n\nEvaluate: Include criteria to measure success and recommend future adjustments.\n\nProvide the entire exercise routine plan with clear steps and explanations in {language} and {tone} tone.\n\nRemark:\nRemove any visual and syntactical marker like ###, ***, ---, and etc in the generated result and write it in {language} and {tone} tone.'
         }
     };
 
@@ -232,80 +246,109 @@ function createStructuredPrompt(originalPrompt, type, length, tone, language, fr
         return `${originalPrompt}\n\nPlease generate a ${type} in a ${tone} tone, approximately ${length} words, written in ${language}.`;
     }
 
-    // Check if user has customized the framework
+    // Check if user has customized the framework template
     const customFrameworkText = document.getElementById('customFrameworkText');
     if (customFrameworkText && customFrameworkText.value.trim()) {
         return customFrameworkText.value
-            .replace('{originalPrompt}', originalPrompt)
-            .replace('{type}', type)
-            .replace('{length}', length)
             .replace('{tone}', tone)
             .replace('{language}', language);
     }
 
+    // Use framework templates as direct content generators
     const frameworkTemplates = {
-        'pps': `Persona: You are a ${type} expert with deep knowledge in this field.
-Problem: ${originalPrompt}
-Solution: Please provide a comprehensive ${type} that addresses this problem with a ${tone} tone, approximately ${length} words, written in ${language}.`,
+        'pps': `Persona: You are a professional content creator and writing expert with deep knowledge across various fields.
+Problem: Generate high-quality, engaging content that provides value to readers.
+Solution: Create comprehensive, well-structured content with a ${tone} tone, written in ${language}. Focus on clarity, engagement, and practical value.`,
 
-        'ctc': `Context: You are an expert in ${type} writing with extensive experience in creating high-quality content.
-Task: Create a ${type} based on the following request: ${originalPrompt}
-Constraints: Use a ${tone} tone, aim for approximately ${length} words, write in ${language}, and ensure the content is well-structured and engaging.`,
+        'ctc': `Context: You are an expert content creator with extensive experience in writing high-quality, engaging content across various topics.
+Task: Generate valuable, well-structured content that serves the reader's needs.
+Constraints: Use a ${tone} tone, write in ${language}, and ensure the content is well-structured, engaging, and provides clear value to the reader.`,
 
-        'clear': `Context: You are a professional ${type} writer with expertise in creating compelling content.
-Logic: The request requires a well-crafted ${type} that effectively communicates the intended message.
-Expectations: The output should be a comprehensive ${type} that addresses the user's request.
-Action: Create a ${type} based on: ${originalPrompt}
-Restrictions: Use a ${tone} tone, approximately ${length} words, write in ${language}, and maintain professional quality.`,
+        'clear': `Context:
+As secondary students, we want guidance on emerging careers related to {topic} (e.g., AI, environmental design).
+Logic:
+Understanding opportunities helps us prepare subject choices for senior forms.
+Expectations:
+List 3–5 career options, each with required skills, typical salary in Hong Kong, and recommended school subjects.
+Action:
+Create an easy‑to‑read comparison summary.
+Restrictions:
+Use updated salary data (2022–2024) from reliable local sources. 
 
-        'smart': `Specific: Create a ${type} based on: ${originalPrompt}
-Measurable: The content should be approximately ${length} words.
-Achievable: Use your expertise to create high-quality content.
-Relevant: Focus on the specific request and maintain relevance.
-Time-bound: Provide a complete, well-structured ${type} with a ${tone} tone, written in ${language}.`,
+Remark:
+Remove any visual and syntactical marker like ###, ***, ---, and etc in the generated result`,
 
-        'quest': `Question: How can I create an effective ${type} based on: ${originalPrompt}?
-Understanding: You need a ${type} with a ${tone} tone, approximately ${length} words, written in ${language}.
-Expectation: A well-structured, engaging ${type} that addresses the request.
-Scope: Focus on the specific request while maintaining quality and relevance.
-Time: Provide a complete response that meets all requirements.`,
+        'smart': `Specific: Plan and execute a social project addressing {topic} (e.g., mental health, recycling, elder care) in ${language} with ${tone} tone.
+Measurable: Engage around 100 participants across multiple activities.
+Achievable: Use available school space, materials under HK$1 000, and volunteer manpower.
+Relevant: Aim for visible, positive community impact tied to {topic}.
+Time‑bound: Limit the project to a two‑day event — Day 1 for set‑up and activity launch, Day 2 for follow‑up, reflection, and sharing of outcomes.
 
-        'guide': `Goal: Create a high-quality ${type} based on: ${originalPrompt}
-Understanding: You are an expert ${type} writer with extensive experience.
-Information: The content should be approximately ${length} words with a ${tone} tone, written in ${language}.
-Direction: Structure the ${type} with clear organization and engaging content.
-Evaluation: Ensure the output meets professional standards and addresses the request effectively.`,
+Remark:
+Remove any visual and syntactical marker like ###, ***, ---, and etc in the generated result`,
 
-        'focus': `Function: Create a ${type} that effectively communicates the intended message.
-Outcome: A well-structured ${type} based on: ${originalPrompt}
-Criteria: Use a ${tone} tone, approximately ${length} words, write in ${language}, and maintain high quality.
+        'quest': `Question: How can I create the most valuable and engaging content for readers?
+Understanding: You need to generate content with a ${tone} tone, written in ${language}.
+Expectation: Well-structured, engaging content that provides clear value.
+Scope: Focus on creating content that informs, engages, and serves reader needs.
+Time: Provide a complete response that meets all quality standards.`,
+
+        'guide': `Goal:
+Turn a hobby or passion into a structured project that I can develop, share, and feel proud of—without it becoming another source of stress.
+Understanding:
+I have interests (photography, writing, gaming, fashion design, etc.) but I'm unsure how to develop them seriously while balancing school; I worry they're "not practical."
+Information:
+How to define realistic goals for your passion project (just for fun vs. building skills vs. sharing with others)
+Time management strategies for hobbies during busy school periods
+Tools, resources, and communities related to your specific interest
+How to get feedback and improve your craft
+Ways to share your work (Instagram, blogs, school events, competitions)
+How passion projects can strengthen university applications (without being forced)
+Stories from Hong Kong students who developed hobbies into meaningful pursuits
+Direction:
+Create a customisable project roadmap (fill in your hobby, set milestones); include resource lists by hobby type; use monthly progress tracker format.
+Evaluation:
+Quality check: Does this feel genuinely fun, not like another obligation? Can I do this within my real schedule? Are there Hong Kong examples I can relate to?`,
+
+        'focus': `Function: Create content that effectively communicates valuable information.
+Outcome: Well-structured, engaging content that serves reader needs.
+Criteria: Use a ${tone} tone, write in ${language}, and maintain high quality.
 Underlying Assumptions: The content should be relevant, engaging, and professionally written.
-Strategy: Create a comprehensive ${type} that addresses all aspects of the request.`,
+Strategy: Create comprehensive content that addresses reader needs effectively.`,
 
-        'idea': `Intent: Create an effective ${type} based on: ${originalPrompt}
-Details: The content should be approximately ${length} words with a ${tone} tone, written in ${language}.
-Examples: Use professional writing standards and engaging content structure.
-Adjustments: Ensure the ${type} meets all requirements and maintains quality throughout.`,
+        'idea': `Intent: Examine parental and societal expectations influencing study and digital behavior in 13-15-year-old females.
+Details: Family expectations often drive prolonged study hours coupled with monitoring or restrictions on digital use.
+Examples: Use cultural context of Hong Kong's education competitiveness.
+Adjustments: Consider comparing perspectives of students vs. parents.`,
 
-        'risen': `Requirement: Create a ${type} based on: ${originalPrompt}
-Information: The content should be approximately ${length} words with a ${tone} tone, written in ${language}.
-Strategy: Use professional writing techniques and engaging content structure.
-Evaluation: Ensure the output meets quality standards and addresses the request.
-Negotiation: Adapt the content to best serve the user's needs while maintaining professional standards.`,
+        'risen': `Requirement: Explore impacts of AI teacher replacement on student learning quality and social development.
+Information: Research on classroom interaction, mentorship, and emotional support from teachers.
+Strategy: Propose mixed-methods study using surveys, interviews, and academic data.
+Evaluation: Use qualitative feedback and quantitative academic performance for analysis.
+Negotiation: Adjust focus if initial results show AI supplementing rather than replacing teachers.`,
 
-        'rhodes': `Research: Analyze the request: ${originalPrompt}
-Hypothesis: A well-crafted ${type} will effectively address this request.
-Objectives: Create a ${type} that is approximately ${length} words with a ${tone} tone, written in ${language}.
-Development: Structure the content with clear organization and engaging elements.
-Execution: Write a comprehensive ${type} that meets all requirements.
-Synthesis: Ensure the final output effectively addresses the original request.`,
+        'rhodes': `Research: Investigate how social media usage influences self-esteem and body image, referencing engagement rates, common concerns, and prior studies.
+Hypothesis: Higher engagement with visually-focused platforms correlates with lower self-esteem and more negative body image.
+Objectives: Measure usage, self-esteem, and body image; examine correlations; address local data gaps.
+Development: Plan surveys/interviews, select validated scales, define timeline and ethics.
+Execution: Collect data from teenage girls, analyze correlations and trends.
+Synthesis: Summarize links between engagement and self-esteem; inform mental health and literacy programs.`,
 
-        'create': `Conceptualize: Develop a ${type} based on: ${originalPrompt}
-Research: Consider the best approach for a ${tone} tone, approximately ${length} words, written in ${language}.
-Experiment: Use different writing techniques to create engaging content.
-Analyze: Evaluate the effectiveness of the content structure and approach.
-Transform: Refine the ${type} to meet all requirements and maintain quality.
-Evaluate: Ensure the final output effectively addresses the user's request.`
+        'create': `You are a health and fitness expert specializing in stress reduction and sleep improvement through exercise.
+
+Conceptualize: Define the challenge of poor sleep quality and high stress, and the goal to design an exercise routine addressing these issues.
+
+Research: Use current scientific findings about exercise types (aerobic, yoga, stretching) that enhance sleep and reduce stress.
+
+Experiment: Propose and test variations in exercise types, intensity, and timing (morning vs. evening) to optimize sleep and stress outcomes.
+
+Analyze: Evaluate effectiveness based on sleep improvement metrics and stress reduction indicators.
+
+Transform: Refine the routine into a practical weekly schedule combining best exercise modes and timings suited for stress relief and sleep enhancement.
+
+Evaluate: Include criteria to measure success and recommend future adjustments.
+
+Provide the entire exercise routine plan with clear steps and explanations.`
     };
 
     return frameworkTemplates[framework] || originalPrompt;

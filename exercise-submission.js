@@ -329,8 +329,51 @@ class ExerciseSubmission {
     // Save submission to Firebase
     async saveSubmission(data) {
         const submissionsRef = this.db.collection('exerciseSubmissions');
-        return await submissionsRef.add(data);
+        const docRef = await submissionsRef.add({
+            ...data,
+            timestamp: new Date().toISOString(),
+            userId: this.auth.currentUser.uid,
+            userEmail: this.auth.currentUser.email
+        });
+
+        // Send notification
+        await this.sendSubmissionNotification(data);
+
+        return docRef.id;
     }
+
+    // Send notification when submission is made
+    async sendSubmissionNotification(submissionData) {
+        try {
+            const response = await fetch('/.netlify/functions/send-submission-notification', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    studentEmail: this.auth.currentUser.email,
+                    studentName: this.auth.currentUser.displayName || this.auth.currentUser.email,
+                    lessonId: submissionData.lessonId,
+                    submissionType: submissionData.type,
+                    submissionData: {
+                        title: submissionData.title,
+                        content: submissionData.content,
+                        files: submissionData.files || [],
+                        timestamp: new Date().toISOString()
+                    }
+                })
+            });
+
+            if (!response.ok) {
+                console.warn('Notification failed:', await response.text());
+            } else {
+                console.log('Notification sent successfully');
+            }
+        } catch (error) {
+            console.warn('Failed to send notification:', error);
+        }
+    }
+
 
     // Close modal
     closeModal() {
