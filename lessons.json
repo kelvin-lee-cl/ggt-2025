@@ -1067,8 +1067,8 @@
             ],
             "sections": [
                 {
-                    "title": "LLM does not remember anything",
-                    "content": "<img src=\"https://substackcdn.com/image/fetch/$s_!gRao!,w_1456,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fb9f7b880-75ef-4a98-8d5e-f4bf2f678e1c_1600x962.png\" alt=\"How RAG Works?\" class=\"img-fluid rounded shadow mb-3\" style=\"max-width: 100%; height: auto;\">",
+                    "title": "Flashcard App sample",
+                    "content": "<img src=\"images/lesson_hero/GGT_l9.png\" alt=\"LLM does not remember anything\" class=\"img-fluid rounded shadow mb-3\" style=\"max-width: 100%; height: auto;\">",
                     "type": "html"
                 },
                 {
@@ -1290,6 +1290,11 @@
                 "Grasp how Canvas apps and Script bots convert natural language prompts into websites or Python scripts"
             ],
             "sections": [
+                {
+                    "title": "Script Bot App sample",
+                    "content": "<img src=\"images/lesson_hero/GGT_l10.png\" alt=\"Sample\" class=\"img-fluid rounded shadow mb-3\" style=\"max-width: 100%; height: auto;\">",
+                    "type": "html"
+                },
                 {
                     "title": "AI Tools for Chatbot Development",
                     "content": [
