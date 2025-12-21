@@ -835,9 +835,9 @@
                             "type": "video"
                         },
                         {
-                            "title": "Token Calculator",
-                            "description": "The Token Calculator is a tool that helps you calculate the number of tokens in a text. It is a useful tool for understanding the cost of using AI models.",
-                            "link": "https://tokencalculator.ai/",
+                            "title": "Tokenizer Playground",
+                            "description": "Explore how different language models tokenize text. Test GPT-2, BERT, T5, and other models to see how they break down your input into tokens.",
+                            "link": "https://taubyte.com/tools/tokenizer",
                             "type": "article"
                         },
                         {
