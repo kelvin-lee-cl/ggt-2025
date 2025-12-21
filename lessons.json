@@ -516,8 +516,8 @@
                             "name": "Elmo Chat",
                             "icon": "fas fa-comments",
                             "color": "text-primary",
-                            "description": "AI-powered chat assistant",
-                            "downloadLink": "https://chromewebstore.google.com/detail/elmo-chat-your-ai-web-cop/ipnlcfhfdicbfbchfoihipknbaeenenm"
+                            "description": "Elmo Chat is an AI-powered chat assistant that allows you to chat with AI in real-time.",
+                            "link": "https://chromewebstore.google.com/detail/elmo-chat-your-ai-web-cop/ipnlcfhfdicbfbchfoihipknbaeenenm"
                         },
                         {
                             "name": "Monica Chrome Extension",
@@ -742,27 +742,43 @@
         {
             "id": "lesson7",
             "title": "How to Train Your Own Chatbot (Part I)",
-            "subtitle": "Learn the basics of chatbot training, including data collection and initial NLP model setup to build a responsive AI assistant.",
+            "subtitle": "Discover the different levels of conversational AI and how to train your own chatbot.",
             "progress": 0,
             "status": "not-started",
             "statusText": "Not started",
             "objectives": [
-                "Understand the concept of desirable difficulty and how it plays a role in learning and writing processes.",
-                "Leverage AI tools to manage and overcome desirable difficulties, enhancing the research and writing process to produce clearer and more coherent arguments.",
-                "Recognize writing as a powerful tool that extends memory, clarifies thinking, and helps organize complex ideas effectively."
+                "Explore the different levels of conversational AI and their significance in chatbot development.",
+                "Gain hands-on experience in creating your first personalized chatbot, tailored to your specific needs.",
+                "Comprehend the fundamental concepts of tokens and their role in chatbot training and deployment."
             ],
             "sections": [
                 {
-                    "title": "Writing is a system of discovery.",
-                    "content": [
-                        "If you want to learn how to think, learn how to write. - Jordan Peterson",
-                        "The person who can formulate and communicate the best argument almost always wins. This is true in many of life's domains. - Jordan Peterson",
-                        "Your mind is organized verbally, at the highest and most abstract levels. Thus, if you learn to think, through writing, then you will develop a well-organized, efficient mind – and one that is well-founded and certain. - Jordan Peterson"
-                    ],
-                    "type": "text"
+                    "title": "The Six Levels of Conversational AI",
+                    "content": "<img src=\"images/lesson_hero/GGT_l7.png\" alt=\"The Six Levels of Conversational AI\" class=\"img-fluid rounded shadow mb-3\" style=\"max-width: 100%; height: auto;\">",
+                    "type": "html"
                 },
                 {
-                    "title": "Popular Gen-AI for text",
+                    "title": "AI Tools for Chatbot Development",
+                    "content": [
+                        {
+                            "name": "POE AI",
+                            "icon": "fas fa-brain",
+                            "color": "text-info",
+                            "description": "Poe.com is an aggregator platform that integrates various AI chatbots, providing users with a centralized interface to access diverse conversational AI tools for different applications and industries.",
+                            "link": "https://kuse.ai/"
+                        },
+                        {
+                            "name": "⭐ChatHub",
+                            "icon": "fas fa-lightbulb",
+                            "color": "text-warning",
+                            "description": "ChatHub is a platform that provides a comprehensive overview of the performance of different AI models. It is a useful tool for comparing the performance of different AI models.",
+                            "link": "https://chathub.gg/zh-TW"
+                        }
+                    ],
+                    "type": "projects"
+                },
+                {
+                    "title": "Popular LLM",
                     "content": [
                         {
                             "name": "GPT (OpenAI)",
@@ -813,21 +829,27 @@
                             "type": "video"
                         },
                         {
-                            "title": "The AI Writing Epidemic? - Cole Hastings",
-                            "description": "In this video, Evan Edinger presents a detailed guide on how to identify writing generated by AI in 2025, focusing on various linguistic, stylistic, and structural red flags. Using examples from social media, emails, and public figures' posts, he explores common patterns and quirks typical of AI-generated text, contrasting them with genuine human writing.",
-                            "link": "https://www.youtube.com/watch?v=y7pgdDBu8z4",
+                            "title": "What is an AI Token? | LLM Tokens explained in 2 minutes!",
+                            "description": "AI Tokens are essential components for generative AI applications, including ChatGPT, AI Audio, and Video Generation models, serving as the foundation for understanding their operation, significance, and origins.",
+                            "link": "https://www.youtube.com/watch?v=OjrGu0L5K7M",
                             "type": "video"
                         },
                         {
-                            "title": "Britannica ProCon — Reliable, Nonpartisan Debates",
-                            "description": "Explore balanced pro/con coverage on key topics with summaries, quizzes, and classroom resources from Encyclopædia Britannica.",
-                            "link": "https://www.britannica.com/procon",
+                            "title": "Token Calculator",
+                            "description": "The Token Calculator is a tool that helps you calculate the number of tokens in a text. It is a useful tool for understanding the cost of using AI models.",
+                            "link": "https://tokencalculator.ai/",
                             "type": "article"
                         },
                         {
-                            "title": "Essay Writing Guide - Reading List",
-                            "description": "Explore the reading list from Essay's comprehensive writing guide, which is based on the structured writing method developed by Dr. Jordan B. Peterson. This guide has helped writers develop their ideas for over 25 years, providing resources to improve writing, thinking, and communication skills.",
-                            "link": "https://essay.app/guide/#reading-list",
+                            "title": "AI Model Leaderboards",
+                            "description": "AI Model Leaderboards is a platform that provides a comprehensive overview of the performance of different AI models. It is a useful tool for understanding the performance of different AI models and for comparing the performance of different AI models.",
+                            "link": "https://artificialanalysis.ai/leaderboards/models",
+                            "type": "article"
+                        },
+                        {
+                            "title": "LMArena",
+                            "description": "LMArena is a platform that provides a comprehensive overview of the performance of different AI models. It is a useful tool for understanding the performance of different AI models and for comparing the performance of different AI models.",
+                            "link": "https://lmarena.ai/leaderboard",
                             "type": "article"
                         }
                     ],
@@ -838,7 +860,15 @@
                     "content": [
                         {
                             "field": "Exercise Title",
-                            "value": "\"Ask AI to fact-check its own generated results\""
+                            "value": "\"1st encounter with AI Chatbot Aggregator Platform\""
+                        },
+                        {
+                            "field": "Reflective Writing",
+                            "value": "Try out ⭐'ChatHub'to find out which is your favorite LLM and explain why? "
+                        },
+                        {
+                            "field": "link",
+                            "value": "Share your first customized chatbot that you developed using POE"
                         }
                     ],
                     "type": "exercise-instructions"
@@ -866,21 +896,142 @@
         {
             "id": "lesson8",
             "title": "How to Train Your Own Chatbot (Part II)",
-            "subtitle": "Advance your chatbot by refining responses, adding context, testing performance, and continuously updating training data for better accuracy",
+            "subtitle": "",
             "progress": 0,
             "status": "not-started",
             "statusText": "Not started",
             "objectives": [
-                "Make HTTP requests",
-                "Handle API responses",
-                "Work with JSON data",
-                "Implement error handling"
+                "Understand the difference between RAG (Retrieval-Augmented Generation) systems like Perplexity AI and AI Chatbot Aggregator platforms like POE.",
+                "Become familiar with .csv table format and its typical structure for Gen-AI output and data organization.",
+                "Create a Role Play Bot that learns from RAG AI systems to enhance conversational capabilities and knowledge retrieval."
             ],
             "sections": [
                 {
-                    "title": "API Basics",
-                    "content": "Learn how to fetch data from external APIs and integrate it into your web applications.",
-                    "type": "text"
+                    "title": "Understanding Static AI",
+                    "content": "<img src=\"images/lesson_hero/GGT_l8.png\" alt=\"Understanding Static AI\" class=\"img-fluid rounded shadow mb-3\" style=\"max-width: 100%; height: auto;\"><p class=\"mt-3\">Static AI systems utilize fixed models and data retrieval mechanisms (such as LLMs and RAG - Retrieval-Augmented Generation). These systems are non-adaptive at runtime, meaning they operate with pre-trained models and static knowledge bases without the ability to learn or adapt dynamically during interactions.</p>",
+                    "type": "html"
+                },
+                {
+                    "title": "AI Tools for Chatbot Development",
+                    "content": [
+                        {
+                            "name": "POE AI",
+                            "icon": "fas fa-brain",
+                            "color": "text-info",
+                            "description": "Poe.com is an aggregator platform that integrates various AI chatbots, providing users with a centralized interface to access diverse conversational AI tools for different applications and industries.",
+                            "link": "https://kuse.ai/"
+                        },
+                        {
+                            "name": "Perplexity AI ",
+                            "icon": "fas fa-lightbulb",
+                            "color": "text-warning",
+                            "description": "Perplexity AI is a search engine that uses AI to provide answers to questions. It is a useful tool for finding information on the web.",
+                            "link": "https://www.perplexity.ai/"
+                        }
+                    ],
+                    "type": "projects"
+                },
+                {
+                    "title": "POE Chat-based bot",
+                    "content": [
+                        {
+                            "name": "Prompt bot",
+                            "icon": "fas fa-comments",
+                            "color": "text-primary",
+                            "description": "Create a bot by giving it instructions"
+                        },
+                        {
+                            "name": "Image generation bot",
+                            "icon": "fas fa-image",
+                            "color": "text-success",
+                            "description": "Create images by defining a visual style"
+                        },
+                        {
+                            "name": "Video generation bot",
+                            "icon": "fas fa-video",
+                            "color": "text-warning",
+                            "description": "Create videos by defining a visual and motion style"
+                        },
+                        {
+                            "name": "Role play bot",
+                            "icon": "fas fa-user-ninja",
+                            "color": "text-info",
+                            "description": "Define a character people can chat with"
+                        },
+                        {
+                            "name": "Script bot",
+                            "icon": "fas fa-code-branch",
+                            "color": "text-danger",
+                            "description": "Connect models into an AI workflow tailored to your tasks"
+                        },
+                        {
+                            "name": "Server bot",
+                            "icon": "fas fa-server",
+                            "color": "text-secondary",
+                            "description": "Create a bot based on a server you manage"
+                        },
+                        {
+                            "name": "Canvas app",
+                            "icon": "fas fa-paint-brush",
+                            "color": "text-dark",
+                            "description": "Create a rich web experience that goes beyond chat"
+                        }
+                    ],
+                    "type": "technologies"
+                },
+                {
+                    "title": "Supplementary Content",
+                    "content": [
+                        {
+                            "title": "RAG Chatbot vs AI Agent",
+                            "description": "RAG Chatbot vs AI Agent is a video that compares the differences between RAG Chatbot and AI Agent.",
+                            "link": "https://yourgpt.ai/blog/growth/rag-chatbot-vs-ai-agent",
+                            "type": "article"
+                        },
+                        {
+                            "title": "⭐We're Not Ready for Superintelligence",
+                            "description": "It discusses the potential risks and ethical considerations of artificial intelligence, emphasizing the urgent need for public engagement and action to ensure the safe development of superintelligent AI.",
+                            "link": "https://www.youtube.com/watch?v=5KVDDfAkRgc&t=1850s",
+                            "type": "video"
+                        },
+                        {
+                            "title": "Iconic Artificial Intelligence Fiction",
+                            "description": "Iconic Artificial Intelligence Fiction is a website that provides a comprehensive overview of the performance of different AI models. It is a useful tool for understanding the performance of different AI models and for comparing the performance of different AI models.",
+                            "link": "https://www.aiprm.com/en-gb/iconic-artificial-intelligence-fiction/",
+                            "type": "article"
+                        },
+                        {
+                            "title": "What is an Atomic Number? (Perplexity AI)",
+                            "description": "What is an Atomic Number? is a video that explains what an Atomic Number is.",
+                            "link": "https://www.perplexity.ai/search/what-is-atomic-number-p5geK_d8QVyriAU6w.b3Og#6",
+                            "type": "article"
+                        },
+                        {
+                            "title": "Sample of Role-play chatbot",
+                            "description": "Sample of Role-play chatbot is a sample of a role-play chatbot that you can use to create your own chatbot.",
+                            "link": "https://quicktable.netlify.app/#:~:text=Sample%20of%20Role%2Dplay%20chatbot",
+                            "type": "article"
+                        }
+                    ],
+                    "type": "accordion"
+                },
+                {
+                    "title": "Exercise Instructions",
+                    "content": [
+                        {
+                            "field": "Exercise Title",
+                            "value": "Develop a role-play chatbot that learns from RAG AI systems to enhance conversational capabilities and knowledge retrieval."
+                        },
+                        {
+                            "field": "Reflective Writing",
+                            "value": "Watch \"We're Not Ready for Superintelligence\" and share your thoughts on AGI."
+                        },
+                        {
+                            "field": "link",
+                            "value": "Share your role-play chatbot (LINK) that you developed using POE"
+                        }
+                    ],
+                    "type": "exercise-instructions"
                 }
             ],
             "actions": {
@@ -905,21 +1056,205 @@
         {
             "id": "lesson9",
             "title": "How to Build Your Own Review Exercise (Part I)",
-            "subtitle": "Plan your exercise by defining clear goals, selecting key topics, and choosing question types to engage learners effectively.",
+            "subtitle": "POE Canvas Tools, JSON/CSV Essentials, and Your First AI Flashcard Game",
             "progress": 0,
             "status": "not-started",
             "statusText": "Not started",
             "objectives": [
-                "Understand state concepts",
-                "Implement local storage",
-                "Use session storage",
-                "Manage complex state"
+                "Harness POE Canvas to create custom flashcards, quizzes, and interactive learning apps for efficient retention.",
+                "Deepen understanding of JSON and CSV as essential formats for handling structured data in apps, APIs, and exports.",
+                "Develop and deploy a fully functional POE flashcard game with AI integration, then share the live link for feedback."
             ],
             "sections": [
                 {
-                    "title": "State Management Patterns",
-                    "content": "Learn different approaches to managing state in web applications for better user experience.",
-                    "type": "text"
+                    "title": "LLM does not remember anything",
+                    "content": "<img src=\"https://substackcdn.com/image/fetch/$s_!gRao!,w_1456,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fb9f7b880-75ef-4a98-8d5e-f4bf2f678e1c_1600x962.png\" alt=\"How RAG Works?\" class=\"img-fluid rounded shadow mb-3\" style=\"max-width: 100%; height: auto;\">",
+                    "type": "html"
+                },
+                {
+                    "title": "AI Tools for Chatbot Development",
+                    "content": [
+                        {
+                            "name": "POE AI",
+                            "icon": "fas fa-brain",
+                            "color": "text-info",
+                            "description": "Poe.com is an aggregator platform that integrates various AI chatbots, providing users with a centralized interface to access diverse conversational AI tools for different applications and industries.",
+                            "link": "https://kuse.ai/"
+                        },
+                        {
+                            "name": "Perplexity AI ",
+                            "icon": "fas fa-lightbulb",
+                            "color": "text-warning",
+                            "description": "Perplexity AI is a search engine that uses AI to provide answers to questions. It is a useful tool for finding information on the web.",
+                            "link": "https://www.perplexity.ai/"
+                        }
+                    ],
+                    "type": "projects"
+                },
+                {
+                    "title": "Useful Prompt Statements for Learner",
+                    "content": [
+                        {
+                            "name": "Pareto Principle Learning Plan",
+                            "icon": "fas fa-chart-line",
+                            "color": "text-primary",
+                            "description": "I want to learn [topic]. Can you use the Pareto Principle, which identifies the 20% of the topic that will yield 80% of the desired results, to create a focused learning plan for me?",
+                            "copyToClipboard": true
+                        },
+                        {
+                            "name": "Learning Resources Suggestion",
+                            "icon": "fas fa-book",
+                            "color": "text-success",
+                            "description": "Suggest me various learning resources (like books, videos, podcasts, interactive exercises) for the [topic] that cater to different learning styles",
+                            "copyToClipboard": true
+                        },
+                        {
+                            "name": "Explain in Simple Terms",
+                            "icon": "fas fa-lightbulb",
+                            "color": "text-warning",
+                            "description": "Explain [topic] to me in the simplest terms possible as if I were a complete beginner.",
+                            "copyToClipboard": true
+                        },
+                        {
+                            "name": "Mental Models & Analogies",
+                            "icon": "fas fa-brain",
+                            "color": "text-info",
+                            "description": "Create mental models or analogies to help me understand and remember [topics]",
+                            "copyToClipboard": true
+                        },
+                        {
+                            "name": "Visualization Exercise",
+                            "icon": "fas fa-eye",
+                            "color": "text-danger",
+                            "description": "Guide me through a visualization exercise to help me internalize the [topic] and imagine myself successfully applying it to a real-life situation.",
+                            "copyToClipboard": true
+                        },
+                        {
+                            "name": "Socratic Method",
+                            "icon": "fas fa-question-circle",
+                            "color": "text-secondary",
+                            "description": "I want you to act as a Socrates and use Socratic Method to help me improve my critical thinking, logic, and reasoning skills. Your task is to ask open-ended questions to the statement I make and after I provide a response, give me constructive feedback to each response before you the next question.",
+                            "copyToClipboard": true
+                        },
+                        {
+                            "name": "Socratic Tutor",
+                            "icon": "fas fa-question-circle",
+                            "color": "text-tertiary",
+                            "description": "Act as a Socratic Tutor and help me understand the concept of [topic]. Ask me questions to guide my understanding and provide feedback to each response before you the next question.",
+                            "copyToClipboard": true
+                        },
+                        {
+                            "name": "Semantic Propositions Table",
+                            "icon": "fas fa-table-list",
+                            "color": "text-tertiary",
+                            "description": "Make a list of propositions in this [vocab list] in the format \"X is a type of Y\", \"W is caused by X\", \"A explains B\". Put it into a table with four columns, terms, proposition, type (Classification, Cause-Effect, Explanation), explanation.",
+                            "copyToClipboard": true
+                        },
+                        {
+                            "name": "Feynman Technique",
+                            "icon": "fas fa-graduation-cap",
+                            "color": "text-dark",
+                            "description": "Break down [topic] into its core components using the Feynman Technique, then quiz me step-by-step until I can explain it back simply in my own words.",
+                            "copyToClipboard": true
+                        },
+                        {
+                            "name": "Role-Playing Scenario",
+                            "icon": "fas fa-theater-masks",
+                            "color": "text-primary",
+                            "description": "Teach me [topic] through a role-playing scenario where I practice applying concepts in a simulated real-world situation, with feedback after each step.",
+                            "copyToClipboard": true
+                        },
+                        {
+                            "name": "Compare & Contrast",
+                            "icon": "fas fa-balance-scale",
+                            "color": "text-success",
+                            "description": "Compare and contrast [topic] with [related topic] in a table, highlighting similarities, differences, and when to use each one.",
+                            "copyToClipboard": true
+                        },
+                        {
+                            "name": "Mind Map Design",
+                            "icon": "fas fa-project-diagram",
+                            "color": "text-warning",
+                            "description": "Design a mind map for [topic] in text format, starting with the central idea and branching into subtopics, examples, and connections.",
+                            "copyToClipboard": true
+                        },
+                        {
+                            "name": "Story/Narrative Learning",
+                            "icon": "fas fa-book-open",
+                            "color": "text-info",
+                            "description": "Transform [topic] into a memorable story or narrative, weaving in key principles as plot points so I can recall them through the storyline.",
+                            "copyToClipboard": true
+                        },
+                        {
+                            "name": "Debate Both Sides",
+                            "icon": "fas fa-comments",
+                            "color": "text-danger",
+                            "description": "Debate both sides of a controversial aspect of [topic] with me: present arguments for and against, then help me refine my position with counterpoints.",
+                            "copyToClipboard": true
+                        },
+                        {
+                            "name": "Teach Back Challenge",
+                            "icon": "fas fa-chalkboard-teacher",
+                            "color": "text-success",
+                            "description": "After I’ve learned [topic], challenge me to teach it back to you as if you’re a beginner. Provide feedback on my clarity, accuracy, and depth of understanding, then suggest how I can explain it better.",
+                            "copyToClipboard": true
+                        }
+                    ],
+                    "type": "technologies"
+                },
+                {
+                    "title": "Supplementary Content",
+                    "content": [
+                        {
+                            "title": "Oxford Researchers Discovered How to Use AI To Learn Like A Genius",
+                            "description": "This video explains how to use AI to learn like a genius.",
+                            "link": "https://www.youtube.com/watch?v=TPLPpz6dD3A",
+                            "type": "video"
+                        },
+                        {
+                            "title": "The Limits of AI: Generative AI, NLP, AGI, & What’s Next?",
+                            "description": "🤖 How far can AI go? Jeff Crume examines generative AI, NLP, and AGI, unpacking solved milestones like reasoning and creativity while tackling ongoing challenges like hallucinations and sustainability. Learn about the limits of AI and its role alongside humans in shaping the future.",
+                            "link": "https://www.youtube.com/watch?v=rBlCOLfMYfw",
+                            "type": "video"
+                        },
+                        {
+                            "title": "Flash Card App",
+                            "description": "Flash Card App is a tool that helps you create flash cards and quiz for your learning.",
+                            "link": "https://poe.com/ggt_flashcard_app",
+                            "type": "article"
+                        },
+                        {
+                            "title": "Semantic Propositions Table",
+                            "description": "The Semantic Propositions Table is a learning tool that helps you generate flashcards and quizzes to better understand the relationships between key terms. ",
+                            "link": "https://poe.com/Flashcard_4col_app",
+                            "type": "article"
+                        },
+                        {
+                            "title": "Flash Card App (AI Agents)",
+                            "description": "The Flash Card App (powered by AI agents) helps you generate interactive flashcards and quizzes to master relationships between key terms in your studies.",
+                            "link": "https://flashcard-ggt.netlify.app/",
+                            "type": "article"
+                        }
+                    ],
+                    "type": "accordion"
+                },
+                {
+                    "title": "Exercise Instructions",
+                    "content": [
+                        {
+                            "field": "Exercise Title",
+                            "value": "Build a flashcard app in POE Canvas to supercharge your vocabulary building.."
+                        },
+                        {
+                            "field": "Reflective Writing",
+                            "value": "Check out the above prompt statement and share your thoughts on your favorite prompt statement"
+                        },
+                        {
+                            "field": "link",
+                            "value": "Share your flashcard app (LINK) that you developed using POE"
+                        }
+                    ],
+                    "type": "exercise-instructions"
                 }
             ],
             "actions": {
@@ -944,21 +1279,270 @@
         {
             "id": "lesson10",
             "title": "How to Build Your Own Review Exercise (Part II)",
-            "subtitle": "Develop and deploy the exercise using interactive tools, gather feedback, and assess its effectiveness for continuous improvement.",
+            "subtitle": "Build STEM Practice with POE Script Bots, Prompt generation with RAG AI",
             "progress": 0,
             "status": "not-started",
             "statusText": "Not started",
             "objectives": [
-                "Optimize loading times",
-                "Minimize bundle sizes",
-                "Implement lazy loading",
-                "Use performance tools"
+                "Leverage POE script bots to generate dynamic practice questions, quizzes, and interactive exercises.",
+                "Learn to craft precise prompts for Perplexity AI that generate optimized instructions for POE script bots.",
+                "Document all project links in Google Sheets or Excel using powerful formulas for organization and sharing.",
+                "Grasp how Canvas apps and Script bots convert natural language prompts into websites or Python scripts"
             ],
             "sections": [
                 {
-                    "title": "Performance Best Practices",
-                    "content": "Learn techniques to make your websites load faster and provide better user experience.",
-                    "type": "text"
+                    "title": "AI Tools for Chatbot Development",
+                    "content": [
+                        {
+                            "name": "POE AI",
+                            "icon": "fas fa-brain",
+                            "color": "text-info",
+                            "description": "Poe.com is an aggregator platform that integrates various AI chatbots, providing users with a centralized interface to access diverse conversational AI tools for different applications and industries.",
+                            "link": "https://kuse.ai/"
+                        },
+                        {
+                            "name": "Perplexity AI ",
+                            "icon": "fas fa-lightbulb",
+                            "color": "text-warning",
+                            "description": "Perplexity AI is a search engine that uses AI to provide answers to questions. It is a useful tool for finding information on the web.",
+                            "link": "https://www.perplexity.ai/"
+                        }
+                    ],
+                    "type": "projects"
+                },
+                {
+                    "title": "Useful Educational Resources",
+                    "content": [
+                        {
+                            "name": "Symbolab",
+                            "icon": "fas fa-calculator",
+                            "color": "text-primary",
+                            "description": "AI-powered solver for algebra, calculus, graphing, geometry, and step-by-step explanations; free basic access",
+                            "link": "https://www.symbolab.com/geometry-calculator"
+                        },
+                        {
+                            "name": "Desmos",
+                            "icon": "fas fa-chart-line",
+                            "color": "text-success",
+                            "description": "Free interactive graphing calculator with sliders, tables, and multilingual support for functions and data visualization",
+                            "link": "https://www.desmos.com/calculator?lang=zh-TW"
+                        },
+                        {
+                            "name": "GeoGebra",
+                            "icon": "fas fa-shapes",
+                            "color": "text-info",
+                            "description": "Free dynamic tools for interactive geometry, graphing, algebra, 3D modeling, and calculus; apps and lessons included",
+                            "link": "https://www.geogebra.org/"
+                        },
+                        {
+                            "name": "IXL",
+                            "icon": "fas fa-graduation-cap",
+                            "color": "text-warning",
+                            "description": "Adaptive practice questions for math, science, and other subjects with real-time feedback; free daily limits",
+                            "link": "https://www.ixl.com/"
+                        },
+                        {
+                            "name": "PhotoMath",
+                            "icon": "fas fa-mobile-alt",
+                            "color": "text-danger",
+                            "description": "Free mobile app scans handwritten or printed math problems for instant step-by-step solutions up to calculus",
+                            "link": "https://photomath.com/"
+                        },
+                        {
+                            "name": "Wolfram Alpha",
+                            "icon": "fas fa-search",
+                            "color": "text-primary",
+                            "description": "Computational knowledge engine for solving equations, stats, physics, and real-world queries; free core features",
+                            "link": "https://www.wolframalpha.com/"
+                        },
+                        {
+                            "name": "PhET Interactive Simulations",
+                            "icon": "fas fa-flask",
+                            "color": "text-success",
+                            "description": "Free browser-based simulations for physics, chemistry, biology, earth science, and math concepts",
+                            "link": "https://phet.colorado.edu/"
+                        },
+                        {
+                            "name": "Concord Consortium",
+                            "icon": "fas fa-microscope",
+                            "color": "text-info",
+                            "description": "Free interactive STEM models, virtual labs, and simulations for biology, physics, and data science",
+                            "link": "https://learn.concord.org/"
+                        },
+                        {
+                            "name": "Kaggle",
+                            "icon": "fas fa-database",
+                            "color": "text-warning",
+                            "description": "Free datasets, notebooks, competitions, and data science/ML courses with GPU access",
+                            "link": "https://www.kaggle.com/"
+                        },
+                        {
+                            "name": "Open Data (Esri China)",
+                            "icon": "fas fa-map",
+                            "color": "text-danger",
+                            "description": "Free geographic datasets, maps, and spatial analysis tools focused on Hong Kong and China",
+                            "link": "https://opendata.esrichina.hk/"
+                        },
+                        {
+                            "name": "Hong Kong Map Government",
+                            "icon": "fas fa-map-marked-alt",
+                            "color": "text-primary",
+                            "description": "Official free geospatial data, interactive maps, and GIS tools for Hong Kong planning and analysis",
+                            "link": "https://www.map.gov.hk/gm/"
+                        },
+                        {
+                            "name": "Science Buddies",
+                            "icon": "fas fa-atom",
+                            "color": "text-success",
+                            "description": "Free science fair project ideas, experiments, and guides across engineering, physics, and biology",
+                            "link": "https://www.sciencebuddies.org/"
+                        },
+                        {
+                            "name": "Science Books Online",
+                            "icon": "fas fa-book",
+                            "color": "text-info",
+                            "description": "Free downloadable science textbooks, lecture notes, and resources for physics, chemistry, and more",
+                            "link": "https://www.sciencebooksonline.info/"
+                        },
+                        {
+                            "name": "CrashCourse <br>(YouTube Channel)",
+                            "icon": "fas fa-play-circle",
+                            "color": "text-primary",
+                            "description": "Fast-paced video courses on biology, chemistry, physics, astronomy, and computer science",
+                            "link": "https://www.youtube.com/@crashcourse"
+                        },
+                        {
+                            "name": "IBM Technology <br> (YouTube Channel)",
+                            "icon": "fas fa-laptop-code",
+                            "color": "text-info",
+                            "description": "Educational videos on AI, quantum computing, data science,and cloud tech from IBM experts",
+                            "link": "https://www.youtube.com/@IBMTechnology"
+                        },
+                        {
+                            "name": "Kurzgesagt (YouTube Channel)",
+                            "icon": "fas fa-video",
+                            "color": "text-danger",
+                            "description": "Animated videos explaining complex science, cosmology, biology, and philosophy topics accessibly",
+                            "link": "https://www.youtube.com/@kurzgesagt"
+                        },
+                        {
+                            "name": "TeachEngineering",
+                            "icon": "fas fa-cogs",
+                            "color": "text-warning",
+                            "description": "Free K-12 engineering lessons, hands-on activities, and standards-aligned STEM curricula",
+                            "link": "https://www.teachengineering.org/"
+                        },
+                        {
+                            "name": "Veritasium (YouTube Channel)",
+                            "icon": "fas fa-film",
+                            "color": "text-success",
+                            "description": "Engaging science videos with experiments, myths debunked, and deep dives into physics and math",
+                            "link": "https://www.youtube.com/@veritasium"
+                        },
+                        {
+                            "name": "Our World in Data",
+                            "icon": "fas fa-globe",
+                            "color": "text-info",
+                            "description": "Free interactive charts and data on global trends in health, environment, energy, and science",
+                            "link": "https://ourworldindata.org/"
+                        },
+                        {
+                            "name": "Britannica ProCon",
+                            "icon": "fas fa-balance-scale",
+                            "color": "text-warning",
+                            "description": "Free balanced pro/con arguments on science debates, ethics, and policy topics",
+                            "link": "https://www.britannica.com/procon"
+                        },
+                        {
+                            "name": "TED-Ed",
+                            "icon": "fas fa-lightbulb",
+                            "color": "text-warning",
+                            "description": "Animated lessons worth sharing on science, math, history, and interdisciplinary STEM topics",
+                            "link": "https://ed.ted.com/"
+                        },
+                        {
+                            "name": "Learn Your Way <br>(Google)",
+                            "icon": "fas fa-google",
+                            "color": "text-danger",
+                            "description": "Free personalized STEM learning paths, resources, and tools from Google for all ages",
+                            "link": "https://learnyourway.withgoogle.com/"
+                        },
+                        {
+                            "name": "Sprouts <br> (YouTube Channel)",
+                            "icon": "fas fa-seedling",
+                            "color": "text-danger",
+                            "description": "Animated educational videos on biology, psychology, health, and everyday science concepts",
+                            "link": "https://www.youtube.com/channel/UC-RKpEc4eE9PwJaupN91xYQ"
+                        },
+                        {
+                            "name": "Domain of Science  <br>(YouTube Channel)",
+                            "icon": "fas fa-brain",
+                            "color": "text-primary",
+                            "description": "Animated maps and explanations of physics, math, biology, and other domains of science",
+                            "link": "https://www.youtube.com/@domainofscience"
+                        }
+                    ],
+                    "type": "technologies"
+                },
+                {
+                    "title": "Supplementary Content",
+                    "content": [
+                        {
+                            "title": "Learning Techniques & Study Tips",
+                            "description": "This playlist contains 17 videos that teach you how to learn and study effectively.",
+                            "link": "https://www.youtube.com/watch?v=tkm0TNFzIeg&list=PLTp9Bu0cTGUwTDYvupbPlnQNvtXBHpF_T&index=1",
+                            "type": "video"
+                        },
+                        {
+                            "title": "Interactive Factorization Tutor",
+                            "description": "Master number factorization with step-by-step guidance and visual explanations. Perfect for students building algebra fundamentals.",
+                            "link": "https://poe.com/Factorization_App",
+                            "type": "article"
+                        },
+                        {
+                            "title": "Atomic Number Explorer",
+                            "description": "Discover elements and their atomic numbers through interactive learning tools designed to make chemistry engaging and intuitive.",
+                            "link": "https://poe.com/atomic-number",
+                            "type": "article"
+                        },
+                        {
+                            "title": "History Timeline Creator & Quiz Maker",
+                            "description": "Build custom historical timelines and test your knowledge with quizzes that bring past events to life.",
+                            "link": "https://poe.com/History-GGT",
+                            "type": "article"
+                        },
+                        {
+                            "title": "History-GGT Demo: World War I Sample",
+                            "description": "Preview how the History-GGT app works with a sample timeline and quiz covering key moments of World War I.",
+                            "link": "https://poe.com/History_WWI",
+                            "type": "article"
+                        },
+                        {
+                            "title": "Concept Visualizer Map",
+                            "description": "Turn any idea into a mind map with visual connections that help you understand and organize complex concepts clearly.",
+                            "link": "https://poe.com/GGT-concept_bot",
+                            "type": "article"
+                        }
+                    ],
+                    "type": "accordion"
+                },
+                {
+                    "title": "Exercise Instructions",
+                    "content": [
+                        {
+                            "field": "Exercise Title",
+                            "value": "Create a Math Practice Bot in POE to Boost Your Problem-Solving Skills"
+                        },
+                        {
+                            "field": "Reflective Writing",
+                            "value": "Explore the listed educational tools and reflect on which resource you found most valuable and why."
+                        },
+                        {
+                            "field": "link",
+                            "value": "Share the link to your custom Script Bot created in POE that helps enhance mathematical learning."
+                        }
+                    ],
+                    "type": "exercise-instructions"
                 }
             ],
             "actions": {

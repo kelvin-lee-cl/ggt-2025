@@ -108,6 +108,51 @@
             color: white !important;
         }
 
+        /* Prompt preview styles */
+        .prompt-preview {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.5;
+            min-height: 4.5em;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .prompt-card {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .prompt-card:hover .prompt-preview {
+            display: block;
+            -webkit-line-clamp: unset;
+            overflow: visible;
+            white-space: normal;
+            min-height: auto;
+        }
+
+        .prompt-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            z-index: 5;
+        }
+
+        .copy-btn-prompt {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+            opacity: 0.8;
+            transition: opacity 0.2s ease;
+        }
+
+        .copy-btn-prompt:hover {
+            opacity: 1;
+        }
+
         /* Dark mode styles for Exercise Instructions table */
         [data-theme="dark"] .table {
             color: white !important;
@@ -519,12 +564,22 @@
                             <div class="card-body">
                                 <h4 class="mb-3">${section.title}</h4>
                                 <div class="row mt-4">
-                                    ${section.content.map(tech => `
+                                    ${section.content.map((tech, index) => `
                                         <div class="col-md-4 mb-3">
-                                            <div class="text-center p-3 border rounded">
+                                            <div class="prompt-card text-center p-3 border rounded position-relative">
+                                                ${tech.copyToClipboard ? `
+                                                    <button class="btn btn-sm btn-outline-primary copy-btn-prompt" onclick="copyPromptToClipboard('prompt-${index}', this)" title="Copy prompt">
+                                                        <i class="fas fa-copy"></i>
+                                                    </button>
+                                                ` : ''}
                                                 <i class="${tech.icon} fa-2x ${tech.color} mb-2"></i>
                                                 <h6>${tech.name}</h6>
-                                                <p class="small text-muted">${tech.description}</p>
+                                                <p class="small text-muted ${tech.copyToClipboard ? 'prompt-preview' : ''}" id="prompt-${index}" data-full-text="${tech.description.replace(/"/g, '&quot;')}">${tech.description}</p>
+                                                ${tech.link ? `
+                                                    <a href="${tech.link}" target="_blank" class="btn btn-outline-primary btn-sm mt-2">
+                                                        <i class="fas fa-external-link-alt me-1"></i>Visit Website
+                                                    </a>
+                                                ` : ''}
                                                 ${tech.downloadLink ? `
                                                     <a href="${tech.downloadLink}" target="_blank" class="btn btn-outline-primary btn-sm mt-2">
                                                         <i class="fas fa-download me-1"></i>Download
@@ -1122,6 +1177,29 @@
         function showSubmissionsModal() {
             // Show submissions modal (you can implement this based on your submission system)
             alert('View submissions functionality will be implemented here. This will show your submitted projects.');
+        }
+
+        // Copy prompt to clipboard
+        function copyPromptToClipboard(promptId, button) {
+            const promptElement = document.getElementById(promptId);
+            const textToCopy = promptElement.getAttribute('data-full-text') || promptElement.textContent;
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                // Visual feedback
+                const originalHTML = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check"></i>';
+                button.classList.remove('btn-outline-primary');
+                button.classList.add('btn-success');
+                
+                setTimeout(() => {
+                    button.innerHTML = originalHTML;
+                    button.classList.remove('btn-success');
+                    button.classList.add('btn-outline-primary');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+                alert('Failed to copy prompt to clipboard. Please try again.');
+            });
         }
     </script>
 
