@@ -1083,7 +1083,7 @@
         {
             "id": "lesson9",
             "title": "How to Build Your Own Review Exercise (Part I)",
-            "subtitle": "POE Canvas Tools, JSON/CSV Essentials, and Your First AI Flashcard Game",
+            "subtitle": "POE Canvas Tools, JSON/CSV Essentials, and Your First AI Vocab Builder Game",
             "progress": 0,
             "status": "not-started",
             "statusText": "Not started",
@@ -1094,7 +1094,7 @@
             ],
             "sections": [
                 {
-                    "title": "Flashcard App sample",
+                    "title": "Vocab Builder App sample",
                     "content": "<img src=\"images/lesson_hero/GGT_l9.png\" alt=\"LLM does not remember anything\" class=\"img-fluid rounded shadow mb-3\" style=\"max-width: 100%; height: auto;\">",
                     "type": "html"
                 },
