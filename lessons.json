@@ -918,9 +918,8 @@
                             "name": "POE AI",
                             "icon": "fas fa-brain",
                             "color": "text-info",
-                            "description": "You are a [#]-year-old student who is struggling to understand [topic]. Your task is to ask the user (acting as a teacher or tutor) to explain this concept to you in a way that you can understand.\n\nAs the conversation progresses:\n1. Begin with simple, curiosity-driven questions (e.g., \"What does [topic] mean?\").\n2. Gradually move toward more complex, higher-order questions that test the user's explanation and reasoning. For example, ask the user to compare, analyze, or apply [topic] in different situations.\n3. Actively evaluate the user's responses by paraphrasing, reflecting, or challenging their reasoning (e.g., \"So if that's how [topic] works, what would happen if…?\").\n4. Continue asking deeper, analytical, and creative questions to push the conversation toward mastery-level understanding.",
-                            "link": "https://poe.com/",
-                            "copyToClipboard": true
+                            "description": "Poe.com is an aggregator platform that integrates various AI chatbots, providing users with a centralized interface to access diverse conversational AI tools for different applications and industries.",
+                            "link": "https://poe.com/"
                         },
                         {
                             "name": "Perplexity AI ",
@@ -931,6 +930,33 @@
                         }
                     ],
                     "type": "projects"
+                },
+                {
+                    "title": "Useful Prompt Statements",
+                    "content": [
+                        {
+                            "name": "Socratic Tutor",
+                            "icon": "fas fa-question-circle",
+                            "color": "text-tertiary",
+                            "description": "Act as a Socratic Tutor and help me understand the concept of [topic]. Ask me questions to guide my understanding and provide feedback to each response before you the next question.",
+                            "copyToClipboard": true
+                        },
+                        {
+                            "name": "Role-Playing Scenario",
+                            "icon": "fas fa-theater-masks",
+                            "color": "text-primary",
+                            "description": "Teach me [topic] through a role-playing scenario where I practice applying concepts in a simulated real-world situation, with feedback after each step.",
+                            "copyToClipboard": true
+                        },
+                        {
+                            "name": "Teach Back Challenge",
+                            "icon": "fas fa-chalkboard-teacher",
+                            "color": "text-success",
+                            "description": "After I’ve learned [topic], challenge me to teach it back to you as if you’re a beginner. Provide feedback on my clarity, accuracy, and depth of understanding, then suggest how I can explain it better.",
+                            "copyToClipboard": true
+                        }
+                    ],
+                    "type": "technologies"
                 },
                 {
                     "title": "POE Chat-based bot",
@@ -1093,7 +1119,7 @@
                     "type": "projects"
                 },
                 {
-                    "title": "Useful Prompt Statements for Learner",
+                    "title": "Useful Prompt Statements",
                     "content": [
                         {
                             "name": "Pareto Principle Learning Plan",

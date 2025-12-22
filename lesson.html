@@ -145,12 +145,15 @@
             top: 10px;
             right: 10px;
             z-index: 10;
-            opacity: 0.8;
+            opacity: 1;
             transition: opacity 0.2s ease;
+            background-color: white !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         .copy-btn-prompt:hover {
             opacity: 1;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
 
         /* Dark mode styles for Exercise Instructions table */
@@ -568,13 +571,13 @@
                                         <div class="col-md-4 mb-3">
                                             <div class="prompt-card text-center p-3 border rounded position-relative">
                                                 ${tech.copyToClipboard ? `
-                                                    <button class="btn btn-sm btn-outline-primary copy-btn-prompt" onclick="copyPromptToClipboard('prompt-${index}', this)" title="Copy prompt">
-                                                        <i class="fas fa-copy"></i>
+                                                    <button class="btn btn-sm btn-primary copy-btn-prompt" onclick="copyPromptToClipboard('prompt-${index}', this)" title="Copy prompt" style="position: absolute !important; top: 5px !important; right: 5px !important; z-index: 1000 !important; background-color: #0d6efd !important; color: white !important; border: none !important; box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important; padding: 4px 8px !important; min-width: 60px !important;">
+                                                        <i class="fas fa-copy"></i> Copy
                                                     </button>
                                                 ` : ''}
                                                 <i class="${tech.icon} fa-2x ${tech.color} mb-2"></i>
                                                 <h6>${tech.name}</h6>
-                                                <p class="small text-muted ${tech.copyToClipboard ? 'prompt-preview' : ''}" id="prompt-${index}" data-full-text="${tech.description.replace(/"/g, '&quot;')}">${tech.description}</p>
+                                                <p class="small text-muted ${tech.copyToClipboard ? 'prompt-preview' : ''}" id="prompt-${index}" data-full-text="${(tech.promptText || tech.description).replace(/"/g, '&quot;').replace(/\n/g, '&#10;')}">${tech.description}</p>
                                                 ${tech.link ? `
                                                     <a href="${tech.link}" target="_blank" class="btn btn-outline-primary btn-sm mt-2">
                                                         <i class="fas fa-external-link-alt me-1"></i>Visit Website
@@ -1182,7 +1185,11 @@
         // Copy prompt to clipboard
         function copyPromptToClipboard(promptId, button) {
             const promptElement = document.getElementById(promptId);
-            const textToCopy = promptElement.getAttribute('data-full-text') || promptElement.textContent;
+            let textToCopy = promptElement.getAttribute('data-full-text') || promptElement.textContent;
+            // Decode HTML entities (including &#10; for newlines)
+            const textarea = document.createElement('textarea');
+            textarea.innerHTML = textToCopy;
+            textToCopy = textarea.value;
             
             navigator.clipboard.writeText(textToCopy).then(() => {
                 // Visual feedback
