@@ -1251,6 +1251,12 @@
                             "type": "article"
                         },
                         {
+                            "title": "Flash Card App ver.2",
+                            "description": "Flash Card App is a tool that helps you create flash cards and quiz for your learning.",
+                            "link": "https://poe.com/Flashcard_sample",
+                            "type": "article"
+                        },
+                        {
                             "title": "Semantic Propositions Table",
                             "description": "The Semantic Propositions Table is a learning tool that helps you generate flashcards and quizzes to better understand the relationships between key terms. ",
                             "link": "https://poe.com/Flashcard_4col_app",
