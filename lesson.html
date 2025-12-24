@@ -643,6 +643,7 @@
                                             </h2>
                                             <div id="collapse${index}" class="accordion-collapse collapse ${index === 0 ? 'show' : ''}" data-bs-parent="#lessonAccordion">
                                                 <div class="accordion-body">
+                                                    ${item.image ? `<img src="${item.image}" alt="${item.title}" class="img-fluid rounded mb-3" style="max-width: 100%; height: auto; ${item.imageWidth ? 'width: ' + item.imageWidth + ';' : ''}">` : ''}
                                                     ${item.description && item.description.includes('\n') ? `
                                                         <ul class="mb-3">
                                                             ${item.description.split('\n').filter(line => line.trim()).map(line => `
@@ -658,9 +659,16 @@
                                                             <i class="fab fa-youtube me-1"></i>Watch on YouTube
                                                         </a>
                                                     ` : item.type === 'article' && item.link ? `
-                                                        <a href="${item.link}" target="_blank" class="btn btn-primary btn-sm">
-                                                            <i class="fas fa-external-link-alt me-1"></i>Read Article
-                                                        </a>
+                                                        <div class="d-flex gap-2 flex-wrap">
+                                                            <a href="${item.link}" target="_blank" class="btn btn-primary btn-sm">
+                                                                <i class="fas fa-external-link-alt me-1"></i>App Sample
+                                                            </a>
+                                                            ${item.chatHistoryLink ? `
+                                                                <a href="${item.chatHistoryLink}" target="_blank" class="btn btn-outline-primary btn-sm">
+                                                                    <i class="fas fa-comments me-1"></i>Chat History
+                                                                </a>
+                                                            ` : ''}
+                                                        </div>
                                                     ` : item.code ? `<pre><code>${item.code}</code></pre>` : ''}
                                                 </div>
                                             </div>

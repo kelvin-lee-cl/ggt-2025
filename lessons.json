@@ -1245,26 +1245,50 @@
                             "type": "video"
                         },
                         {
-                            "title": "Flash Card App",
-                            "description": "Flash Card App is a tool that helps you create flash cards and quiz for your learning.",
-                            "link": "https://poe.com/ggt_flashcard_app",
-                            "type": "article"
-                        },
-                        {
-                            "title": "Flash Card App ver.2",
-                            "description": "Flash Card App is a tool that helps you create flash cards and quiz for your learning.",
+                            "title": "Vocab Blitz App (POE Canvas App)",
+                            "image": "images/card_img/vocab_v1.png",
+                            "imageWidth": "300px",
                             "link": "https://poe.com/Flashcard_sample",
+                            "chatHistoryLink": "https://poe.com/s/rvVMu346DSsROu6PrN3W",
                             "type": "article"
                         },
                         {
-                            "title": "Semantic Propositions Table",
-                            "description": "The Semantic Propositions Table is a learning tool that helps you generate flashcards and quizzes to better understand the relationships between key terms. ",
+                            "title": "Vocab Builder Master ver.2 (POE Canvas App)",
+                            "image": "images/card_img/vocab_v2.png",
+                            "imageWidth": "300px",
+                            "link": "https://poe.com/quizapp_ggt",
+                            "chatHistoryLink": "https://poe.com/s/lhGUJQYEY513Sx9yeUx1",
+                            "type": "article"
+                        },
+                        {
+                            "title": "Vocab Quest ver.3 (POE Canvas App)",
+                            "image": "images/card_img/vocab_v3.png",
+                            "imageWidth": "300px",
+                            "link": "https://poe.com/VocabFlow",
+                            "chatHistoryLink": "https://poe.com/s/l6S3j4MzNF2b1XayWZ43",
+                            "type": "article"
+                        },
+                        {
+                            "title": "Vocab Builder App ver.4 (POE Canvas App)",
+                            "description": "",
+                            "image": "images/card_img/vocab_v4.png",
+                            "imageWidth": "300px",
+                            "link": "https://poe.com/VocabFlow",
+                            "chatHistoryLink": "https://poe.com/s/Q9aiJ8gChe1nRoFJV8hX",
+                            "type": "article"
+                        },
+                        {
+                            "title": "AI Concept Card (POE Canvas App)",
+                            "image": "images/card_img/vocab_v5.png",
+                            "imageWidth": "300px",
                             "link": "https://poe.com/Flashcard_4col_app",
+                            "chatHistoryLink": "https://poe.com/s/KDu26lExwzhn5gqzpSm8",
                             "type": "article"
                         },
                         {
-                            "title": "Flash Card App (AI Agents)",
-                            "description": "The Flash Card App (powered by AI agents) helps you generate interactive flashcards and quizzes to master relationships between key terms in your studies.",
+                            "title": "Flash Card App (Cursor - AI Agents)",
+                            "image": "images/card_img/vocab_v6.png",
+                            "imageWidth": "700px",
                             "link": "https://flashcard-ggt.netlify.app/",
                             "type": "article"
                         }
@@ -1276,7 +1300,7 @@
                     "content": [
                         {
                             "field": "Exercise Title",
-                            "value": "Build a flashcard app in POE Canvas to supercharge your vocabulary building.."
+                            "value": "Build a Vocab Builder app in POE Canvas to supercharge your vocabulary building.."
                         },
                         {
                             "field": "Reflective Writing",
