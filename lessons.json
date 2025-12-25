@@ -1264,7 +1264,7 @@
                             "title": "Vocab Quest ver.3 (POE Canvas App)",
                             "image": "images/card_img/vocab_v3.png",
                             "imageWidth": "300px",
-                            "link": "https://poe.com/VocabFlow",
+                            "link": "https://poe.com/ggt_flashcard_app",
                             "chatHistoryLink": "https://poe.com/s/l6S3j4MzNF2b1XayWZ43",
                             "type": "article"
                         },
@@ -1558,25 +1558,28 @@
                         {
                             "title": "Interactive Factorization Tutor",
                             "description": "Master number factorization with step-by-step guidance and visual explanations. Perfect for students building algebra fundamentals.",
+                            "image": "images/card_img/app_v1.png",
+                            "imageWidth": "300px",
+                            "chatHistoryLink": "https://poe.com/s/SbvFzYpO4R0pjpsDAnkr",
                             "link": "https://poe.com/Factorization_App",
                             "type": "article"
                         },
                         {
-                            "title": "History Timeline Creator & Quiz Maker",
-                            "description": "Build custom historical timelines and test your knowledge with quizzes that bring past events to life.",
-                            "link": "https://poe.com/History-GGT",
-                            "type": "article"
-                        },
-                        {
                             "title": "History-GGT Demo: World War I Sample",
-                            "description": "Preview how the History-GGT app works with a sample timeline and quiz covering key moments of World War I.",
+                            "description": "Preview how the History-GGT app works with a sample timeline and quiz covering key moments of WWI.",
+                            "image": "images/card_img/app_v2.png",
+                            "imageWidth": "300px",
                             "link": "https://poe.com/History_WWI",
+                            "chatHistoryLink": "https://poe.com/s/LuM2iYqQTT0tqgiF6euv",
                             "type": "article"
                         },
                         {
                             "title": "Concept Visualizer Map",
                             "description": "Turn any idea into a mind map with visual connections that help you understand and organize complex concepts clearly.",
+                            "image": "images/card_img/app_v3.png",
+                            "imageWidth": "300px",
                             "link": "https://poe.com/GGT-concept_bot",
+                            "chatHistoryLink": "https://poe.com/s/qiT36QONjLRB96dJaqbI",
                             "type": "article"
                         }
                     ],
