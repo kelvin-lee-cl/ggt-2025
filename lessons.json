@@ -1735,6 +1735,12 @@
                             "description": "Learn practical cues to identify AI-generated content and verify information critically.",
                             "link": "https://www.youtube.com/watch?v=9Ch4a6ffPZY",
                             "type": "video"
+                        },
+                        {
+                            "title": "Prompts That Make AI Output Falsehoods (Article)",
+                            "description": "Alignment Forum examples of prompts that can lead GPT-style models to produce false or misleading answers—useful for understanding how wording and framing affect reliability.",
+                            "link": "https://www.alignmentforum.org/posts/iNvWCTpyEd4zTqjjv/examples-of-prompts-that-make-gpt-4-output-falsehoods",
+                            "type": "article"
                         }
                     ],
                     "type": "accordion"
