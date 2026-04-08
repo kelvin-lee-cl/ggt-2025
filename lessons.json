@@ -1833,6 +1833,20 @@
                             "link": "https://audiocleaner.ai/"
                         },
                         {
+                            "name": "Interactive tutoring chatbot",
+                            "icon": "fas fa-comments",
+                            "color": "text-primary",
+                            "description": "Sample for interactive tutoring: open the link to use the pre-built Perplexity chat with an interactive tutoring prompt.",
+                            "link": "https://www.perplexity.ai/search/act-as-an-interactive-tutoring-eUJUDuxOSdOyMu5jg8vpGQ"
+                        },
+                        {
+                            "name": "Sesame",
+                            "icon": "fas fa-user-circle",
+                            "color": "text-info",
+                            "description": "Speaking practice: go to Preview, choose an avatar, and start talking with a lifelike voice companion.",
+                            "link": "https://www.sesame.com/"
+                        },
+                        {
                             "name": "Prompt copy",
                             "icon": "fas fa-copy",
                             "color": "text-secondary",
