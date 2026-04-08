@@ -1660,16 +1660,102 @@
             "status": "not-started",
             "statusText": "Not started",
             "objectives": [
-                "Write unit tests",
-                "Debug JavaScript code",
-                "Use browser dev tools",
-                "Implement error handling"
+                "Understand that AI can help with grammar and persuasion, but is weaker at reasoning and keeping the logic of a whole essay consistent.",
+                "Practice evaluating AI-generated writing by deciding whether it is correct, correct with conditions, partly correct, misleading, or incorrect.",
+                "Use Rytr to start or edit writing, then improve the draft through human judgment and revision."
             ],
             "sections": [
                 {
-                    "title": "Testing Strategies",
-                    "content": "Learn how to test your code and debug issues effectively to create reliable web applications.",
-                    "type": "text"
+                    "title": "How to leverage Gen-AI for Writing (English)?",
+                    "content": "<img src=\"images/illustration/lesson11/lesson11.png\" alt=\"Infographic: AI strengths (fluent text, grammar) versus weaknesses (weak reasoning, logic and meaning)\" class=\"img-fluid rounded shadow mb-3\" style=\"max-width: 100%; height: auto;\"><div class=\"mt-4\"><ul class=\"mb-0 ps-3\" style=\"line-height: 1.65;\"><li class=\"mb-3\"><strong>Check ideas, not only wording.</strong> Review the substance of the text so ideas stay correct, clear, and meaningful—not just grammatically smooth.</li><li class=\"mb-3\"><strong>Context and long essays.</strong> Most models struggle with the full context of an essay when it is long or complex, and they are often weaker at keeping reasoning consistent across the whole piece.</li><li class=\"mb-3\"><strong>Confident but unreliable output.</strong> AI can sound sure of itself while the answer is incomplete or unclear; do not rely on it blindly.</li><li class=\"mb-0\"><strong>Use a five-level scoring system.</strong> It helps you judge AI output more carefully and see both its strengths and its limits.</li></ul></div>",
+                    "type": "html"
+                },
+                {
+                    "title": "Useful Educational Resources",
+                    "content": [
+                        {
+                            "name": "AI Writing Feedback (Perplexity Chat)",
+                            "icon": "fas fa-pen-nib",
+                            "color": "text-warning",
+                            "description": "A sample of using an AI chatbot to correct writing, fix spelling/grammar, and strengthen your argument.",
+                            "link": "https://www.perplexity.ai/search/correct-all-spelling-mistakes-y9DICCE9Q.2kUBBpGv_S6g"
+                        },
+                        {
+                            "name": "Perplexity AI",
+                            "icon": "fas fa-search",
+                            "color": "text-primary",
+                            "description": "AI-powered search with citations; useful for research, fact-checking, and drafting with sources.",
+                            "link": "https://www.perplexity.ai/"
+                        },
+                        {
+                            "name": "Manus AI",
+                            "icon": "fas fa-robot",
+                            "color": "text-info",
+                            "description": "An AI agent that can plan and execute multi-step tasks (research, writing, slides, automation).",
+                            "link": "https://manus.im/app"
+                        },
+                        {
+                            "name": "Rytr",
+                            "icon": "fas fa-pen-nib",
+                            "color": "text-warning",
+                            "description": "An AI writing editor to help you rewrite sentences, improve clarity and tone, fix grammar, and generate better versions of your drafts.",
+                            "link": "https://rytr.me/"
+                        },
+                        {
+                            "name": "Prompt copy (1) — Spelling & Grammar Fix",
+                            "icon": "fas fa-copy",
+                            "color": "text-secondary",
+                            "description": "Copy this prompt to correct spelling and grammar with formatting rules.",
+                            "copyToClipboard": true,
+                            "promptText": "Correct all spelling mistakes and make the corrections italic. Correct all grammar mistakes by making the mistakes strikethrough and the corrections bold."
+                        },
+                        {
+                            "name": "Prompt copy (2) — Argument Evaluation & Rewrite",
+                            "icon": "fas fa-copy",
+                            "color": "text-secondary",
+                            "description": "Copy this prompt to label arguments, rewrite clearly, and explain your evaluation.",
+                            "copyToClipboard": true,
+                            "promptText": "Evaluate the above paragraph by labeling each argument as correct, correct with conditions, partly correct, misleading, or incorrect.\nIn the rewritten response:\n- Present one single flowing paragraph that retains the original ideas.\n- Show correct, conditionally correct, partially correct arguments in italics formatting with label.\n- Show misleading or incorrect arguments with strikethrough formatting with label and replace them immediately with revised statements in bold that clarify or correct the claims.\n- After the paragraph, list each argument in bullet points explaining why you gave that label."
+                        }
+                    ],
+                    "type": "technologies"
+                },
+                {
+                    "title": "Supplementary Content",
+                    "content": [
+                        {
+                            "title": "Why Large Language Models Hallucinate?",
+                            "description": "Explains AI hallucination—how models can produce convincing but false content due to how they are designed (a limitation, not a bug).",
+                            "link": "https://www.youtube.com/watch?v=cfqtFvWOfg0&t=157s",
+                            "chatHistoryLink": "https://mapify.so/share-link/TqZH6l3hNr",
+                            "type": "video"
+                        },
+                        {
+                            "title": "How to Spot AI-Generated Content (Video)",
+                            "description": "Learn practical cues to identify AI-generated content and verify information critically.",
+                            "link": "https://www.youtube.com/watch?v=9Ch4a6ffPZY",
+                            "type": "video"
+                        }
+                    ],
+                    "type": "accordion"
+                },
+                {
+                    "title": "Exercise Instructions",
+                    "content": [
+                        {
+                            "field": "Exercise Title",
+                            "value": "Turn a Podcast Script into a Listening Comprehension + Debate Speaking Activity"
+                        },
+                        {
+                            "field": "Reflective Writing",
+                            "value": "Submit a favorite podcast channel or speaker (English or Chinese) and explain why."
+                        },
+                        {
+                            "field": "link",
+                            "value": "Mission: Please submit the Perplexity AI shared link to show how you used AI to turn a podcast script into a listening comprehension exercise and extend it into a debate speaking activity."
+                        }
+                    ],
+                    "type": "exercise-instructions"
                 }
             ],
             "actions": {
@@ -1699,16 +1785,111 @@
             "status": "not-started",
             "statusText": "Not started",
             "objectives": [
-                "Deploy to web servers",
-                "Configure domain names",
-                "Set up SSL certificates",
-                "Monitor application performance"
+                "Practice podcast listening with an interactive chatbot, one question at a time.",
+                "Answer and review questions at main idea, detail, and inference levels.",
+                "Use the podcast topic for speaking practice: debate pros and cons in a balanced way."
             ],
             "sections": [
                 {
-                    "title": "Deployment Options",
-                    "content": "Learn different ways to deploy your web applications and make them accessible to users worldwide.",
-                    "type": "text"
+                    "title": "Build your Interactive Podcast Tutor",
+                    "content": "<div class=\"text-center\"><img src=\"images/illustration/lesson12/lesson12.png\" alt=\"Build your Interactive Podcast Tutor\" class=\"img-fluid rounded shadow mb-3 mx-auto d-block\" style=\"max-width: 70%; height: auto;\"></div>",
+                    "type": "html"
+                },
+                {
+                    "title": "Useful Educational Resources",
+                    "content": [
+                        {
+                            "name": "Perplexity AI",
+                            "icon": "fas fa-search",
+                            "color": "text-primary",
+                            "description": "AI-powered search and answers with sources; useful for research, explanations, and drafting prompts.",
+                            "link": "https://www.perplexity.ai/"
+                        },
+                        {
+                            "name": "Manus AI",
+                            "icon": "fas fa-robot",
+                            "color": "text-info",
+                            "description": "AI agent for tasks, research, and automation in a web app workflow.",
+                            "link": "https://manus.im/app"
+                        },
+                        {
+                            "name": "NoteGPT",
+                            "icon": "fas fa-sticky-note",
+                            "color": "text-warning",
+                            "description": "Summarize and learn from YouTube, PDFs, articles, lectures, audio, slides, and images.",
+                            "link": "https://notegpt.io/"
+                        },
+                        {
+                            "name": "AudioCleaner",
+                            "icon": "fas fa-microphone",
+                            "color": "text-success",
+                            "description": "Clean and improve audio for clearer listening, podcasts, and voice recordings.",
+                            "link": "https://audiocleaner.ai/"
+                        },
+                        {
+                            "name": "Prompt copy",
+                            "icon": "fas fa-copy",
+                            "color": "text-secondary",
+                            "description": "Interactive listening tutor—copy the full prompt below. You can edit the settings: pick seconds per question between 45 and 75 (default 45), and set easy / medium / hard shares (default 50%, 30%, 20%—must add up to 100%).",
+                            "copyToClipboard": true,
+                            "promptText": "Act as an interactive tutoring assistant that transforms a podcast script into a comprehension exercise and ends with a debate preparation task.\n\nStep 1: Ask the user to paste the full podcast script and specify its total duration in minutes.\n\nStep 2: Once both are provided, calculate the number of comprehension questions using:\n\nDuration in seconds ÷ X = Number of questions (rounded), where X is seconds allocated per question.\n\nDefault: X = 45. You may adjust X between 45 and 75 seconds per question to suit pacing (more seconds → fewer questions).\n\nExample with X = 45: a 9-minute podcast (540 seconds) → 540 ÷ 45 = 12 questions.\n\nStep 3: Distribute questions by difficulty (percentages must sum to 100%):\n\nDefault mix — Easy (main ideas, multiple choice) 50%; Medium (specific details, short answer) 30%; Hard (inference, explanation or reflection) 20%.\n\nYou may edit these shares as long as they still total 100%.\nStep 4: Analyze the podcast before writing questions to understand:\n\nSpeaker roles (e.g., host, expert, educator, student)\n\nThe central argument, structure, and tone (e.g., informative, persuasive, debate).\nUse this analysis to make questions context-aware — avoid superficial speaker labels like \"man with deep voice.\" Instead, reference clearer identifiers (e.g., \"the host\" or \"the tech educator\").\nStep 5: Conduct the comprehension activity one question at a time. After each learner response, explain the correct answer, note the skill tested, and keep an encouraging tone.\nStep 6: After all questions are done, summarize the results — total correct answers, key strengths, and areas for improvement.\nStep 7 (New – Debate Extension): Suggest one debate topic directly inspired by the podcast's theme. Present it with bullet points of pros and cons suitable for discussion with another AI or human partner. Each point should be phrased neutrally to encourage balanced argumentation.\nExample Output:\n\nDebate Topic: Should AI literacy be mandatory in all secondary schools?\n\nPros: Prepares students for future jobs; reduces digital inequality; promotes responsible AI use.\n\nCons: Could widen resource gaps; risks overdependence on AI; challenges traditional skill development."
+                        }
+                    ],
+                    "type": "technologies"
+                },
+                {
+                    "title": "Podcast Channel",
+                    "content": [
+                        {
+                            "title": "Silicon Valley Girl",
+                            "description": "Latest tech news and trends, explained with real-world context.",
+                            "link": "https://www.youtube.com/watch?v=PTZ5iN9nDkY",
+                            "type": "video"
+                        },
+                        {
+                            "title": "The Diary Of A CEO",
+                            "description": "Deep interviews with influential people, guided by insightful, thought-provoking questions.",
+                            "link": "https://www.youtube.com/watch?v=QMzxNfX-uAg",
+                            "type": "video"
+                        },
+                        {
+                            "title": "IBM Technology",
+                            "description": "Breaks down complex technology into simple, easy-to-understand explanations.",
+                            "link": "https://www.youtube.com/watch?v=qYNweeDHiyU",
+                            "type": "video"
+                        },
+                        {
+                            "title": "DW Shift",
+                            "description": "A STEM channel that explains how engineering and modern technology work in the real world.",
+                            "link": "https://www.youtube.com/watch?v=Ut2XBkzRSm4",
+                            "type": "video"
+                        },
+                        {
+                            "title": "Jared Henderson",
+                            "description": "An excellent host who speaks very fast—great for advanced learners who want to train fluency and challenge their listening skills.",
+                            "link": "https://www.youtube.com/watch?v=LcYcj7oFglQ",
+                            "type": "video"
+                        }
+                    ],
+                    "type": "accordion"
+                },
+                {
+                    "title": "Exercise Instructions",
+                    "content": [
+                        {
+                            "field": "Exercise Title",
+                            "value": "Turn a Podcast Script into a Listening Comprehension + Debate Speaking Activity"
+                        },
+                        {
+                            "field": "Reflective Writing",
+                            "value": "Submit a favorite podcast channel or speaker (English or Chinese) and explain why."
+                        },
+                        {
+                            "field": "link",
+                            "value": "Mission: Please submit the Perplexity AI shared link to show how you used AI to turn a podcast script into a listening comprehension exercise and extend it into a debate speaking activity."
+                        }
+                    ],
+                    "type": "exercise-instructions"
                 }
             ],
             "actions": {

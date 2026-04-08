@@ -655,9 +655,16 @@
                                                         <div class="ratio ratio-16x9 mb-3">
                                                             <iframe src="${getYouTubeEmbedUrl(item.link)}" title="${item.title}" allowfullscreen></iframe>
                                                         </div>
-                                                        <a href="${item.link}" target="_blank" class="btn btn-outline-primary btn-sm">
-                                                            <i class="fab fa-youtube me-1"></i>Watch on YouTube
-                                                        </a>
+                                                        <div class="d-flex gap-2 flex-wrap">
+                                                            <a href="${item.link}" target="_blank" class="btn btn-outline-primary btn-sm">
+                                                                <i class="fab fa-youtube me-1"></i>Watch on YouTube
+                                                            </a>
+                                                            ${item.chatHistoryLink ? `
+                                                                <a href="${item.chatHistoryLink}" target="_blank" class="btn btn-outline-primary btn-sm">
+                                                                    <i class="fas fa-project-diagram me-1"></i>Summary Map
+                                                                </a>
+                                                            ` : ''}
+                                                        </div>
                                                     ` : item.type === 'article' && item.link ? `
                                                         <div class="d-flex gap-2 flex-wrap">
                                                             <a href="${item.link}" target="_blank" class="btn btn-primary btn-sm">
@@ -1198,14 +1205,14 @@
             const textarea = document.createElement('textarea');
             textarea.innerHTML = textToCopy;
             textToCopy = textarea.value;
-            
+
             navigator.clipboard.writeText(textToCopy).then(() => {
                 // Visual feedback
                 const originalHTML = button.innerHTML;
                 button.innerHTML = '<i class="fas fa-check"></i>';
                 button.classList.remove('btn-outline-primary');
                 button.classList.add('btn-success');
-                
+
                 setTimeout(() => {
                     button.innerHTML = originalHTML;
                     button.classList.remove('btn-success');
