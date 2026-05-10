@@ -1925,7 +1925,469 @@
                     "text": "Submit Exercise",
                     "onclick": "startExerciseSubmission('lesson12')"
                 },
-                "home": {
+                "next": {
+                    "text": "Next Lesson",
+                    "href": "lesson.html?lesson=lesson13"
+                }
+            }
+        },
+        {
+            "id": "lesson13",
+            "title": "Introduction to Gen-AI Art — Images I",
+            "subtitle": "How are AI images created? Exploring different image generation tools.",
+            "progress": 0,
+            "status": "not-started",
+            "statusText": "Not started",
+            "objectives": [
+                "How are AI images created? Exploring different image generation tools.",
+                "Choose 2 of 5 AI image tools and generate one image in each tool using the same prompt, then submit your work."
+            ],
+            "sections": [
+                {
+                    "title": "Submission",
+                    "content": [
+                        {
+                            "field": "Exercise Title",
+                            "value": "Enter a short descriptive title that names this lesson and the two AI image tools you used (for example: Lesson 13 – Gen-AI art: Tool A and Tool B)."
+                        },
+                        {
+                            "field": "Image Submission",
+                            "value": "Upload your two generated images (one from each tool), or one combined image file that clearly shows both results."
+                        }
+                    ],
+                    "type": "exercise-instructions"
+                }
+            ],
+            "actions": {
+                "primary": {
+                    "text": "Start Lesson",
+                    "onclick": "markLessonComplete('lesson13')"
+                },
+                "exercise": {
+                    "text": "Submit Exercise",
+                    "onclick": "startExerciseSubmission('lesson13')"
+                },
+                "exerciseButtonOnly": true,
+                "next": {
+                    "text": "Next Lesson",
+                    "href": "lesson.html?lesson=lesson14"
+                }
+            }
+        },
+        {
+            "id": "lesson14",
+            "title": "Introduction to Gen-AI Art — Images II",
+            "subtitle": "Prompt basics, style concepts, and advanced features in image tools.",
+            "progress": 0,
+            "status": "not-started",
+            "statusText": "Not started",
+            "objectives": [
+                "Topics: basic elements of writing prompts; style and art concepts; advanced features of image generation tools.",
+                "Use the basic prompt structure to generate one image in Recraft AI, then submit it."
+            ],
+            "sections": [
+                {
+                    "title": "Submission",
+                    "content": [
+                        {
+                            "field": "Exercise Title",
+                            "value": "Enter a short descriptive title (for example: Lesson 14 – Recraft AI image using basic prompt structure)."
+                        },
+                        {
+                            "field": "Image Submission",
+                            "value": "Upload the image you created in Recraft AI using the basic prompt structure."
+                        }
+                    ],
+                    "type": "exercise-instructions"
+                }
+            ],
+            "actions": {
+                "primary": {
+                    "text": "Start Lesson",
+                    "onclick": "markLessonComplete('lesson14')"
+                },
+                "exercise": {
+                    "text": "Submit Exercise",
+                    "onclick": "startExerciseSubmission('lesson14')"
+                },
+                "exerciseButtonOnly": true,
+                "next": {
+                    "text": "Next Lesson",
+                    "href": "lesson.html?lesson=lesson15"
+                }
+            }
+        },
+        {
+            "id": "lesson15",
+            "title": "How to Use AI to Generate Posters? I",
+            "subtitle": "Poster ideas, Gen-AI background art, and finishing the poster.",
+            "progress": 0,
+            "status": "not-started",
+            "statusText": "Not started",
+            "objectives": [
+                "Deconstruct poster ideas; create a poster background with a Gen-AI tool; finish the poster.",
+                "Use Recraft AI to generate a poster background image with the topic School Open Day, then submit it."
+            ],
+            "sections": [
+                {
+                    "title": "Submission",
+                    "content": [
+                        {
+                            "field": "Exercise Title",
+                            "value": "Enter a short descriptive title (for example: Lesson 15 – School Open Day poster background in Recraft AI)."
+                        },
+                        {
+                            "field": "Image Submission",
+                            "value": "Upload your School Open Day poster background image from Recraft AI."
+                        }
+                    ],
+                    "type": "exercise-instructions"
+                }
+            ],
+            "actions": {
+                "primary": {
+                    "text": "Start Lesson",
+                    "onclick": "markLessonComplete('lesson15')"
+                },
+                "exercise": {
+                    "text": "Submit Exercise",
+                    "onclick": "startExerciseSubmission('lesson15')"
+                },
+                "exerciseButtonOnly": true,
+                "next": {
+                    "text": "Next Lesson",
+                    "href": "lesson.html?lesson=lesson16"
+                }
+            }
+        },
+        {
+            "id": "lesson16",
+            "title": "How to Use AI to Generate Posters? II",
+            "subtitle": "Advanced: photo style transfer and texture or material transfer.",
+            "progress": 0,
+            "status": "not-started",
+            "statusText": "Not started",
+            "objectives": [
+                "Advanced features: (1) photo style transfer (2) texture or material transfer.",
+                "In Recraft AI, use Nano Banana to create an image on School Open Day; title your artwork School Open Day, then submit it."
+            ],
+            "sections": [
+                {
+                    "title": "Submission",
+                    "content": [
+                        {
+                            "field": "Exercise Title",
+                            "value": "Enter a short descriptive title (for example: Lesson 16 – School Open Day with Nano Banana in Recraft AI)."
+                        },
+                        {
+                            "field": "Image Submission",
+                            "value": "Upload the image you created with Nano Banana (via Recraft AI) for School Open Day."
+                        }
+                    ],
+                    "type": "exercise-instructions"
+                }
+            ],
+            "actions": {
+                "primary": {
+                    "text": "Start Lesson",
+                    "onclick": "markLessonComplete('lesson16')"
+                },
+                "exercise": {
+                    "text": "Submit Exercise",
+                    "onclick": "startExerciseSubmission('lesson16')"
+                },
+                "exerciseButtonOnly": true,
+                "next": {
+                    "text": "Next Lesson",
+                    "href": "lesson.html?lesson=lesson17"
+                }
+            }
+        },
+        {
+            "id": "lesson17",
+            "title": "How to Publish a Storybook with AI? I",
+            "subtitle": "What a storybook is and how to create storybook content.",
+            "progress": 0,
+            "status": "not-started",
+            "statusText": "Not started",
+            "objectives": [
+                "Understand what a storybook is and how storybook content is structured.",
+                "Create a single topic sentence using the six Ws (who, what, when, where, why, how).",
+                "Use POE AI to write a story with introduction, development, turn, and conclusion, then submit your text."
+            ],
+            "sections": [
+                {
+                    "title": "Submission",
+                    "content": [
+                        {
+                            "field": "Exercise Title",
+                            "value": "Enter a short descriptive title (for example: Lesson 17 – Storybook plan and story title)."
+                        },
+                        {
+                            "field": "Text Submission",
+                            "value": "Paste your six-Ws topic sentence and your story content. You may label the four parts: Introduction, Development, Turn, and Conclusion."
+                        }
+                    ],
+                    "type": "exercise-instructions"
+                }
+            ],
+            "actions": {
+                "primary": {
+                    "text": "Start Lesson",
+                    "onclick": "markLessonComplete('lesson17')"
+                },
+                "exercise": {
+                    "text": "Submit Exercise",
+                    "onclick": "startExerciseSubmission('lesson17')"
+                },
+                "exerciseButtonOnly": true,
+                "next": {
+                    "text": "Next Lesson",
+                    "href": "lesson.html?lesson=lesson18"
+                }
+            }
+        },
+        {
+            "id": "lesson18",
+            "title": "How to Publish a Storybook with AI? II",
+            "subtitle": "Eight-page storybook theme, content, and inner-page backgrounds.",
+            "progress": 0,
+            "status": "not-started",
+            "statusText": "Not started",
+            "objectives": [
+                "Plan an 8-page storybook theme and content; design background art for each page.",
+                "Create six inner-page background images using Recraft AI, then submit exactly six image files in one exercise."
+            ],
+            "sections": [
+                {
+                    "title": "Submission",
+                    "content": [
+                        {
+                            "field": "Exercise Title",
+                            "value": "Enter a short descriptive title (for example: Lesson 18 – Six Recraft inner-page backgrounds)."
+                        },
+                        {
+                            "field": "Image Submission",
+                            "value": "Select exactly six image files in one go (inner-page backgrounds from Recraft AI). After you submit, you will see a preview of all six uploads."
+                        }
+                    ],
+                    "type": "exercise-instructions"
+                }
+            ],
+            "actions": {
+                "primary": {
+                    "text": "Start Lesson",
+                    "onclick": "markLessonComplete('lesson18')"
+                },
+                "exercise": {
+                    "text": "Submit Exercise",
+                    "onclick": "startExerciseSubmission('lesson18')"
+                },
+                "exerciseButtonOnly": true,
+                "next": {
+                    "text": "Next Lesson",
+                    "href": "lesson.html?lesson=lesson19"
+                }
+            }
+        },
+        {
+            "id": "lesson19",
+            "title": "How to Publish a Storybook with AI? III",
+            "subtitle": "Characters, consistency, and story content for an 8-page storybook.",
+            "progress": 0,
+            "status": "not-started",
+            "statusText": "Not started",
+            "objectives": [
+                "Create characters for an 8-page storybook; keep their look consistent across pages.",
+                "Add story content that fits your pages and tone.",
+                "Create related characters using Recraft AI My Style, then submit one or more character images."
+            ],
+            "sections": [
+                {
+                    "title": "Submission",
+                    "content": [
+                        {
+                            "field": "Exercise Title",
+                            "value": "Enter a short descriptive title (for example: Lesson 19 – Recraft My Style characters)."
+                        },
+                        {
+                            "field": "Image Submission",
+                            "value": "Upload one or more character images (Recraft AI My Style). Hold Ctrl (Windows) or Command (Mac) to select multiple files."
+                        }
+                    ],
+                    "type": "exercise-instructions"
+                }
+            ],
+            "actions": {
+                "primary": {
+                    "text": "Start Lesson",
+                    "onclick": "markLessonComplete('lesson19')"
+                },
+                "exercise": {
+                    "text": "Submit Exercise",
+                    "onclick": "startExerciseSubmission('lesson19')"
+                },
+                "exerciseButtonOnly": true,
+                "next": {
+                    "text": "Next Lesson",
+                    "href": "lesson.html?lesson=lesson20"
+                }
+            }
+        },
+        {
+            "id": "lesson20",
+            "title": "How to Publish a Storybook with AI? IV",
+            "subtitle": "Consistent character poses, cover and closing pages, and layout tips.",
+            "progress": 0,
+            "status": "not-started",
+            "statusText": "Not started",
+            "objectives": [
+                "Use advanced techniques to keep character poses and style consistent.",
+                "Design the cover and last pages of your storybook; apply basic layout techniques.",
+                "Finish your storybook in Canva and submit a shareable link to your design."
+            ],
+            "sections": [
+                {
+                    "title": "Submission",
+                    "content": [
+                        {
+                            "field": "Exercise Title",
+                            "value": "Enter a short descriptive title (for example: Lesson 20 – Canva storybook link)."
+                        },
+                        {
+                            "field": "link",
+                            "value": "Paste a working link to your finished storybook in Canva (view or edit link, whichever your teacher accepts)."
+                        }
+                    ],
+                    "type": "exercise-instructions"
+                }
+            ],
+            "actions": {
+                "primary": {
+                    "text": "Start Lesson",
+                    "onclick": "markLessonComplete('lesson20')"
+                },
+                "exercise": {
+                    "text": "Submit Exercise",
+                    "onclick": "startExerciseSubmission('lesson20')"
+                },
+                "exerciseButtonOnly": true,
+                "next": {
+                    "text": "Next Lesson",
+                    "href": "lesson.html?lesson=lesson21"
+                }
+            }
+        },
+        {
+            "id": "lesson21",
+            "title": "How to source \"text-to-image AI tool\"?",
+            "subtitle": "Define the decision problem, then move from framework to real tools.",
+            "progress": 0,
+            "status": "not-started",
+            "statusText": "Not started",
+            "objectives": [
+                "Define the decision problem you need to solve when choosing a text-to-image tool.",
+                "Apply a structured framework from your goals and constraints through to concrete tool choices."
+            ],
+            "sections": [],
+            "actions": {
+                "readOnlyComplete": true,
+                "primary": {
+                    "text": "Mark as Done",
+                    "onclick": "markLessonComplete('lesson21')"
+                },
+                "next": {
+                    "text": "Next Lesson",
+                    "href": "lesson.html?lesson=lesson22"
+                }
+            }
+        },
+        {
+            "id": "lesson22",
+            "title": "Introduction to Gen-AI Art - Video I",
+            "subtitle": "Content purpose, production style, distribution, and image-to-video.",
+            "progress": 0,
+            "status": "not-started",
+            "statusText": "Not started",
+            "objectives": [
+                "Explain content purpose: why you are creating the video.",
+                "Describe production style: how the visuals are made.",
+                "Describe distribution format: where the video is watched and who the audience is.",
+                "Understand image-to-video: turn a still image into a short motion clip using a Gen-AI video tool.",
+                "Task: Create a 6-second video using an image-to-video method."
+            ],
+            "sections": [
+                {
+                    "title": "Task — submit your work",
+                    "content": [
+                        {
+                            "field": "Exercise Title",
+                            "value": "Enter a short title (for example: Lesson 22 – 6s image-to-video)."
+                        },
+                        {
+                            "field": "link",
+                            "value": "Paste a link to your about 6-second image-to-video clip (YouTube / Google Drive Link)."
+                        }
+                    ],
+                    "type": "exercise-instructions"
+                }
+            ],
+            "actions": {
+                "primary": {
+                    "text": "Start Lesson",
+                    "onclick": "markLessonComplete('lesson22')"
+                },
+                "exercise": {
+                    "text": "Submit Exercise",
+                    "onclick": "startExerciseSubmission('lesson22')"
+                },
+                "exerciseButtonOnly": true,
+                "next": {
+                    "text": "Next Lesson",
+                    "href": "lesson.html?lesson=lesson23"
+                }
+            }
+        },
+        {
+            "id": "lesson23",
+            "title": "Introduction to Gen-AI Art - Video II",
+            "subtitle": "AI self-introduction and HeyGen avatar video.",
+            "progress": 0,
+            "status": "not-started",
+            "statusText": "Not started",
+            "objectives": [
+                "Understand how AI can support creating a personal self-introduction.",
+                "Use HeyGen to create an AI-generated virtual avatar video that introduces you.",
+                "Plan what to say, choose an avatar and voice, then export or share the video from HeyGen.",
+                "Task: Submit a link to your HeyGen self-introduction avatar video."
+            ],
+            "sections": [
+                {
+                    "title": "Task — submit your work",
+                    "content": [
+                        {
+                            "field": "Exercise Title",
+                            "value": "Enter a short title (for example: Lesson 23 – HeyGen self introduction)."
+                        },
+                        {
+                            "field": "link",
+                            "value": "Paste a link to your HeyGen AI avatar self-introduction video (share URL from HeyGen or upload to YouTube / Google Drive"}
+
+                    ],
+                    "type": "exercise-instructions"
+                }
+            ],
+            "actions": {
+                "primary": {
+                    "text": "Start Lesson",
+                    "onclick": "markLessonComplete('lesson23')"
+                },
+                "exercise": {
+                    "text": "Submit Exercise",
+                    "onclick": "startExerciseSubmission('lesson23')"
+                },
+                "exerciseButtonOnly": true,
+                "next": {
                     "text": "Back to Home",
                     "href": "index.html"
                 }

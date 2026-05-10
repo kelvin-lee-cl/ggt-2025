@@ -657,8 +657,23 @@
                 `;
             }
 
-            // Handle image submissions
-            if (exercise.imageUrl) {
+            // Handle multiple image submissions (e.g. lesson18 six images, lesson19 multi)
+            if (exercise.imageUrls && Array.isArray(exercise.imageUrls) && exercise.imageUrls.length > 0) {
+                const countLabel = exercise.imageCount != null ? exercise.imageCount : exercise.imageUrls.length;
+                content += `
+                    <div class="mb-3">
+                        <strong>Image Submission (${countLabel}):</strong>
+                        <div class="mt-2 row g-2">
+                            ${exercise.imageUrls.map((u, idx) => `
+                                <div class="col-6 col-md-4">
+                                    <div class="small text-muted mb-1">Image ${idx + 1}</div>
+                                    <img src="${String(u).replace(/"/g, '&quot;')}" alt="" class="img-fluid rounded border" style="max-height: 180px; object-fit: contain; width: 100%;">
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            } else if (exercise.imageUrl) {
                 content += `
                     <div class="mb-3">
                         <strong>Image Submission:</strong>

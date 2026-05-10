@@ -664,6 +664,8 @@ function setupEventListeners() {
     guardLink('a[href="image-generator.html"]');
     guardLink('a[href="text-generator.html"]');
     guardLink('a[href="upload.html"]');
+    guardLink('a[href="capstone-1-submit.html"]');
+    guardLink('a[href="capstone-2-submit.html"]');
     guardLink('a[href^="quiz.html"]');
     guardLink('a[href^="lesson.html"]');
     guardLink('a[href="profile.html"]');
@@ -966,7 +968,7 @@ function updateStudentProgress(activity, data = {}) {
             break;
         case 'assignment_submitted':
             studentProgress[userEmail].assignmentsSubmitted.push({
-                id: Date.now(),
+                id: data.assignmentId != null ? data.assignmentId : Date.now(),
                 title: data.title,
                 type: data.type,
                 timestamp: new Date().toISOString()

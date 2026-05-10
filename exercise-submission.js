@@ -88,11 +88,147 @@ class ExerciseSubmission {
         }
     }
 
+    getSubmissionMode(lessonId) {
+        if (lessonId === 'lesson13' || lessonId === 'lesson14' || lessonId === 'lesson15' || lessonId === 'lesson16') {
+            return 'imageSingle';
+        }
+        if (lessonId === 'lesson17') return 'textOnly';
+        if (lessonId === 'lesson18') return 'imageSix';
+        if (lessonId === 'lesson19') return 'imageMulti';
+        if (lessonId === 'lesson20' || lessonId === 'lesson22' || lessonId === 'lesson23') return 'linkOnly';
+        return 'default';
+    }
+
+    escapeHtml(s) {
+        if (!s) return '';
+        return String(s)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    /** Windows / some browsers omit File.type; still allow common raster previews */
+    isLikelyImageFile(f) {
+        if (!f) return false;
+        if (f.type && f.type.startsWith('image/')) return true;
+        const name = (f.name || '').toLowerCase();
+        return /\.(png|jpe?g|gif|webp|bmp|ico|avif)$/i.test(name);
+    }
+
+    clearImagePreviewRow(rowEl) {
+        if (!rowEl) return;
+        rowEl.querySelectorAll('img[data-preview-blob]').forEach((img) => {
+            const u = img.getAttribute('data-preview-blob');
+            if (u) {
+                try {
+                    URL.revokeObjectURL(u);
+                } catch (e) { /* ignore */ }
+            }
+        });
+        rowEl.innerHTML = '';
+    }
+
+    fillImagePreviewRow(rowEl, files) {
+        this.clearImagePreviewRow(rowEl);
+        const panel = rowEl && rowEl.closest('.image-preview-panel');
+        if (!rowEl) return;
+        if (!files || !files.length) {
+            if (panel) panel.style.display = 'none';
+            return;
+        }
+        const list = files.length !== undefined ? Array.from(files) : files;
+        for (let i = 0; i < list.length; i++) {
+            const f = list[i];
+            if (!this.isLikelyImageFile(f)) continue;
+            const url = URL.createObjectURL(f);
+            const box = document.createElement('div');
+            box.className = 'text-center';
+            const cap = document.createElement('div');
+            cap.className = 'small text-muted text-truncate';
+            cap.style.maxWidth = '180px';
+            cap.textContent = f.name || `Image ${i + 1}`;
+            const img = document.createElement('img');
+            img.src = url;
+            img.setAttribute('data-preview-blob', url);
+            img.className = 'img-fluid rounded border';
+            img.style.maxHeight = '180px';
+            img.style.maxWidth = '100%';
+            img.style.objectFit = 'contain';
+            img.alt = 'Preview';
+            box.appendChild(cap);
+            box.appendChild(img);
+            rowEl.appendChild(box);
+        }
+        if (panel) panel.style.display = rowEl.children.length > 0 ? 'block' : 'none';
+    }
+
+    revokeAllPreviewsInModal() {
+        const modal = document.getElementById('exerciseModal');
+        if (!modal) return;
+        modal.querySelectorAll('img[data-preview-blob]').forEach((img) => {
+            const u = img.getAttribute('data-preview-blob');
+            if (u) {
+                try {
+                    URL.revokeObjectURL(u);
+                } catch (e) { /* ignore */ }
+            }
+        });
+    }
+
+    async loadLessonSubmissionHints(lessonId) {
+        try {
+            const response = await fetch('lessons.json');
+            const data = await response.json();
+            const lesson = data.lessons.find((l) => l.id === lessonId);
+            const sub = lesson && lesson.sections && lesson.sections.find((s) => s.type === 'exercise-instructions');
+            const rows = (sub && sub.content) || [];
+            const titleRow = rows.find((r) => r.field === 'Exercise Title');
+            const imgRow = rows.find((r) => r.field === 'Image Submission');
+            const textRow = rows.find((r) => r.field === 'Text Submission');
+            const linkRow = rows.find((r) => r.field === 'link');
+            return {
+                titleHint: titleRow ? titleRow.value : '',
+                imageHint: imgRow ? imgRow.value : '',
+                textHint: textRow ? textRow.value : '',
+                linkHint: linkRow ? linkRow.value : ''
+            };
+        } catch (e) {
+            console.warn('Could not load lesson hints', e);
+            return { titleHint: '', imageHint: '', textHint: '', linkHint: '' };
+        }
+    }
+
+    showPostSubmitImageGallery(imageUrls, heading) {
+        const modal = document.getElementById('exerciseModal');
+        if (!modal) return;
+        this.revokeAllPreviewsInModal();
+        const safeHeading = this.escapeHtml(heading || 'Uploaded images');
+        const imgs = (imageUrls || []).map((url, i) => {
+            const u = this.escapeHtml(url);
+            return `<div class="col-6 col-md-4 mb-2"><div class="small text-muted mb-1">Image ${i + 1}</div><img src="${u}" alt="" class="img-fluid rounded border" style="max-height: 140px; object-fit: contain; width: 100%;"></div>`;
+        }).join('');
+        const body = modal.querySelector('.modal-body');
+        const footer = modal.querySelector('.modal-footer');
+        if (body) {
+            body.innerHTML = `
+                <div class="alert alert-success mb-3"><i class="fas fa-check-circle me-2"></i>Submission saved.</div>
+                <h6 class="mb-3">${safeHeading}</h6>
+                <div class="row">${imgs}</div>
+                <p class="text-muted small mt-3 mb-0">Total: ${imageUrls.length} image(s).</p>
+            `;
+        }
+        if (footer) {
+            footer.innerHTML = `
+                <button type="button" class="btn btn-primary" onclick="exerciseSubmission.closeModal()">Close</button>
+            `;
+        }
+    }
+
     // Show exercise submission modal
-    showExerciseModal(lessonId) {
+    async showExerciseModal(lessonId) {
         console.log('Showing exercise modal for lesson:', lessonId);
 
-        // Remove any existing exercise modal
         const existingModal = document.getElementById('exerciseModal');
         const existingBackdrop = document.getElementById('exerciseBackdrop');
         if (existingModal) {
@@ -100,6 +236,71 @@ class ExerciseSubmission {
         }
         if (existingBackdrop) {
             existingBackdrop.remove();
+        }
+
+        const mode = this.getSubmissionMode(lessonId);
+        const needsHints = mode !== 'default';
+        let titleHint = '';
+        let imageHint = '';
+        let textHint = '';
+        let linkHint = '';
+        if (needsHints) {
+            const hints = await this.loadLessonSubmissionHints(lessonId);
+            titleHint = hints.titleHint;
+            imageHint = hints.imageHint;
+            textHint = hints.textHint;
+            linkHint = hints.linkHint;
+        }
+
+        let submissionBlock = '';
+        let submissionContentStyle = 'display: none;';
+        let includeDefaultFields = mode === 'default';
+
+        if (mode === 'imageSingle') {
+            submissionContentStyle = 'display: block;';
+            submissionBlock = `
+                <label for="imageFile" class="form-label">Image Submission</label>
+                ${imageHint ? `<div class="form-text mb-2">${this.escapeHtml(imageHint)}</div>` : ''}
+                <input type="file" class="form-control" id="imageFile" accept="image/*">
+                <div class="form-text">Upload an image file (JPG, PNG, GIF supported)</div>
+                <div class="image-preview-panel mt-3 border rounded p-2 bg-light" style="display: none;">
+                    <div class="fw-semibold small mb-2">Preview</div>
+                    <div id="imagePreviewRowSingle" class="d-flex flex-wrap gap-3 justify-content-start align-items-start"></div>
+                </div>`;
+        } else if (mode === 'textOnly') {
+            submissionContentStyle = 'display: block;';
+            submissionBlock = `
+                <label for="textContent" class="form-label">Text Submission</label>
+                ${textHint ? `<div class="form-text mb-2">${this.escapeHtml(textHint)}</div>` : ''}
+                <textarea class="form-control" id="textContent" rows="12" placeholder="Paste your topic sentence and story here..."></textarea>`;
+        } else if (mode === 'imageSix') {
+            submissionContentStyle = 'display: block;';
+            submissionBlock = `
+                <label for="imageFiles" class="form-label">Image Submission (exactly 6)</label>
+                ${imageHint ? `<div class="form-text mb-2">${this.escapeHtml(imageHint)}</div>` : ''}
+                <input type="file" class="form-control" id="imageFiles" accept="image/*" multiple>
+                <p class="form-text mt-2 mb-0" id="imageSixCount">Selected: 0 / 6 images (choose all six in one selection)</p>
+                <div class="image-preview-panel mt-3 border rounded p-2 bg-light" style="display: none;">
+                    <div class="fw-semibold small mb-2">Preview</div>
+                    <div id="imagePreviewRowSix" class="d-flex flex-wrap gap-3 justify-content-start align-items-start"></div>
+                </div>`;
+        } else if (mode === 'imageMulti') {
+            submissionContentStyle = 'display: block;';
+            submissionBlock = `
+                <label for="imageFilesMulti" class="form-label">Image Submission</label>
+                ${imageHint ? `<div class="form-text mb-2">${this.escapeHtml(imageHint)}</div>` : ''}
+                <input type="file" class="form-control" id="imageFilesMulti" accept="image/*" multiple>
+                <p class="form-text mt-2 mb-0" id="imageMultiCount">Selected: 0 image(s)</p>
+                <div class="image-preview-panel mt-3 border rounded p-2 bg-light" style="display: none;">
+                    <div class="fw-semibold small mb-2">Preview</div>
+                    <div id="imagePreviewRowMulti" class="d-flex flex-wrap gap-3 justify-content-start align-items-start"></div>
+                </div>`;
+        } else if (mode === 'linkOnly') {
+            submissionContentStyle = 'display: block;';
+            submissionBlock = `
+                <label for="linkUrl" class="form-label">URL / Link</label>
+                ${linkHint ? `<div class="form-text mb-2">${this.escapeHtml(linkHint)}</div>` : ''}
+                <input type="text" class="form-control" id="linkUrl" placeholder="https://...">`;
         }
 
         const modal = document.createElement('div');
@@ -121,15 +322,16 @@ class ExerciseSubmission {
                         <form id="exerciseForm">
                             <div class="mb-3">
                                 <label for="exerciseTitle" class="form-label">Exercise Title</label>
+                                ${titleHint ? `<div class="form-text mb-2">${this.escapeHtml(titleHint)}</div>` : ''}
                                 <input type="text" class="form-control" id="exerciseTitle" placeholder="Enter exercise title" required>
                             </div>
-                            
+                            ${includeDefaultFields ? `
                             <div class="mb-3">
                                 <label for="exerciseDescription" class="form-label">Reflective Writing</label>
                                 <textarea class="form-control" id="exerciseDescription" rows="3" placeholder="Write your reflection here"></textarea>
                             </div>
 
-                            <div class="mb-3">
+                            <div class="mb-3" id="submissionTypeRow">
                                 <label class="form-label">Submission Type</label>
                                 <div class="row">
                                     <div class="col-md-4">
@@ -161,9 +363,10 @@ class ExerciseSubmission {
                                     </div>
                                 </div>
                             </div>
+                            ` : ''}
 
-                            <div id="submissionContent" class="mb-3" style="display: none;">
-                                <!-- Dynamic content based on submission type -->
+                            <div id="submissionContent" class="mb-3" style="${submissionContentStyle}">
+                                ${submissionBlock || '<!-- Dynamic content based on submission type -->'}
                             </div>
 
                         </form>
@@ -176,30 +379,95 @@ class ExerciseSubmission {
             </div>
         `;
 
-        // Add backdrop with darker overlay
         const backdrop = document.createElement('div');
         backdrop.className = 'modal-backdrop fade show';
         backdrop.id = 'exerciseBackdrop';
-        backdrop.style.backgroundColor = 'rgba(0, 0, 0, 0.8)'; // Darker backdrop
+        backdrop.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
         document.body.appendChild(backdrop);
 
         document.body.appendChild(modal);
 
-        // Add body class to prevent scrolling
         document.body.classList.add('modal-open');
 
-        // Add event listeners for submission type selection
-        document.querySelectorAll('.submission-type-card').forEach(card => {
-            card.addEventListener('click', () => {
-                document.querySelectorAll('.submission-type-card').forEach(c => c.classList.remove('border-primary'));
-                card.classList.add('border-primary');
-                this.showSubmissionContent(card.dataset.type);
+        const submitBtn = document.getElementById('submitBtn');
+        const titleInput = document.getElementById('exerciseTitle');
+
+        if (mode === 'imageSingle') {
+            submitBtn.dataset.type = 'image';
+            const imageInput = document.getElementById('imageFile');
+            const previewRow = document.getElementById('imagePreviewRowSingle');
+            const update = () => {
+                submitBtn.disabled = !(titleInput.value.trim() && imageInput.files && imageInput.files.length > 0);
+            };
+            titleInput.addEventListener('input', update);
+            imageInput.addEventListener('change', () => {
+                this.fillImagePreviewRow(previewRow, imageInput.files);
+                update();
             });
-        });
+        } else if (mode === 'textOnly') {
+            submitBtn.dataset.type = 'text';
+            const textEl = document.getElementById('textContent');
+            const update = () => {
+                submitBtn.disabled = !(titleInput.value.trim() && textEl.value.trim());
+            };
+            titleInput.addEventListener('input', update);
+            textEl.addEventListener('input', update);
+        } else if (mode === 'imageSix') {
+            submitBtn.dataset.type = 'image';
+            const imageInput = document.getElementById('imageFiles');
+            const countEl = document.getElementById('imageSixCount');
+            const previewRow = document.getElementById('imagePreviewRowSix');
+            const update = () => {
+                const n = imageInput.files ? imageInput.files.length : 0;
+                if (countEl) {
+                    countEl.textContent = `Selected: ${n} / 6 images (choose all six in one selection)`;
+                }
+                submitBtn.disabled = !(titleInput.value.trim() && n === 6);
+            };
+            titleInput.addEventListener('input', update);
+            imageInput.addEventListener('change', () => {
+                this.fillImagePreviewRow(previewRow, imageInput.files);
+                update();
+            });
+        } else if (mode === 'imageMulti') {
+            submitBtn.dataset.type = 'image';
+            const imageInput = document.getElementById('imageFilesMulti');
+            const countEl = document.getElementById('imageMultiCount');
+            const previewRow = document.getElementById('imagePreviewRowMulti');
+            const update = () => {
+                const n = imageInput.files ? imageInput.files.length : 0;
+                if (countEl) {
+                    countEl.textContent = `Selected: ${n} image(s)`;
+                }
+                submitBtn.disabled = !(titleInput.value.trim() && n >= 1);
+            };
+            titleInput.addEventListener('input', update);
+            imageInput.addEventListener('change', () => {
+                this.fillImagePreviewRow(previewRow, imageInput.files);
+                update();
+            });
+        } else if (mode === 'linkOnly') {
+            submitBtn.dataset.type = 'link';
+            const linkEl = document.getElementById('linkUrl');
+            const update = () => {
+                submitBtn.disabled = !(titleInput.value.trim() && linkEl.value.trim());
+            };
+            titleInput.addEventListener('input', update);
+            linkEl.addEventListener('input', update);
+        } else {
+            document.querySelectorAll('.submission-type-card').forEach((card) => {
+                card.addEventListener('click', () => {
+                    document.querySelectorAll('.submission-type-card').forEach((c) => c.classList.remove('border-primary'));
+                    card.classList.add('border-primary');
+                    this.showSubmissionContent(card.dataset.type);
+                });
+            });
+        }
     }
 
     // Show submission content based on type
     showSubmissionContent(type) {
+        this.revokeAllPreviewsInModal();
         const contentDiv = document.getElementById('submissionContent');
         const submitBtn = document.getElementById('submitBtn');
 
@@ -224,6 +492,10 @@ class ExerciseSubmission {
                     <label for="imageFile" class="form-label">Image File</label>
                     <input type="file" class="form-control" id="imageFile" accept="image/*">
                     <div class="form-text">Upload an image file (JPG, PNG, GIF supported)</div>
+                    <div class="image-preview-panel mt-3 border rounded p-2 bg-light" style="display: none;">
+                        <div class="fw-semibold small mb-2">Preview</div>
+                        <div id="imagePreviewRowDefault" class="d-flex flex-wrap gap-3 justify-content-start align-items-start"></div>
+                    </div>
                 `;
                 break;
         }
@@ -232,11 +504,22 @@ class ExerciseSubmission {
         contentDiv.style.display = 'block';
         submitBtn.disabled = false;
         submitBtn.dataset.type = type;
+
+        if (type === 'image') {
+            const imageInput = document.getElementById('imageFile');
+            const previewRow = document.getElementById('imagePreviewRowDefault');
+            if (imageInput && previewRow) {
+                imageInput.addEventListener('change', () => {
+                    this.fillImagePreviewRow(previewRow, imageInput.files);
+                });
+            }
+        }
     }
 
     // Submit exercise
     async submitExercise(lessonId) {
         const submitBtn = document.getElementById('submitBtn');
+        if (!submitBtn) return;
         const type = submitBtn.dataset.type;
 
         if (!type) {
@@ -245,7 +528,8 @@ class ExerciseSubmission {
         }
 
         const title = document.getElementById('exerciseTitle').value;
-        const description = document.getElementById('exerciseDescription').value;
+        const descEl = document.getElementById('exerciseDescription');
+        const description = descEl ? descEl.value : '';
 
         if (!title.trim()) {
             showAlert('Please enter an exercise title', 'warning');
@@ -266,18 +550,19 @@ class ExerciseSubmission {
                 userEmail: this.auth.currentUser.email
             };
 
-            // Handle different submission types
             switch (type) {
-                case 'text':
-                    const textContent = document.getElementById('textContent').value;
+                case 'text': {
+                    const textEl = document.getElementById('textContent');
+                    const textContent = textEl ? textEl.value : '';
                     if (!textContent.trim()) {
                         showAlert('Please enter text content', 'warning');
                         return;
                     }
                     submissionData.content = textContent;
                     break;
+                }
 
-                case 'link':
+                case 'link': {
                     const linkUrl = document.getElementById('linkUrl').value;
                     if (!linkUrl.trim()) {
                         showAlert('Please enter a URL', 'warning');
@@ -285,42 +570,84 @@ class ExerciseSubmission {
                     }
                     submissionData.url = linkUrl;
                     break;
+                }
 
-                case 'image':
-                    const imageFile = document.getElementById('imageFile').files[0];
+                case 'image': {
+                    if (lessonId === 'lesson18') {
+                        const input = document.getElementById('imageFiles');
+                        const files = input && input.files ? input.files : null;
+                        if (!files || files.length !== 6) {
+                            showAlert('Please select exactly 6 image files in one selection.', 'warning');
+                            return;
+                        }
+                        const imageUrls = [];
+                        for (let i = 0; i < 6; i++) {
+                            imageUrls.push(await this.uploadImage(files[i], `_${i}`));
+                        }
+                        submissionData.imageUrls = imageUrls;
+                        submissionData.imageCount = 6;
+                        submissionData.multiImage = true;
+                        submissionData.fileName = `${files.length} images`;
+                        break;
+                    }
+                    if (lessonId === 'lesson19') {
+                        const input = document.getElementById('imageFilesMulti');
+                        const files = input && input.files ? Array.from(input.files) : [];
+                        if (files.length < 1) {
+                            showAlert('Please select at least one image.', 'warning');
+                            return;
+                        }
+                        const imageUrls = [];
+                        for (let i = 0; i < files.length; i++) {
+                            imageUrls.push(await this.uploadImage(files[i], `_${i}`));
+                        }
+                        submissionData.imageUrls = imageUrls;
+                        submissionData.imageCount = imageUrls.length;
+                        submissionData.multiImage = true;
+                        submissionData.fileName = `${files.length} images`;
+                        break;
+                    }
+                    const imageInput = document.getElementById('imageFile');
+                    const imageFile = imageInput && imageInput.files ? imageInput.files[0] : null;
                     if (!imageFile) {
                         showAlert('Please select an image file', 'warning');
                         return;
                     }
-
-                    // Upload image to Firebase Storage
                     const imageUrl = await this.uploadImage(imageFile);
                     submissionData.imageUrl = imageUrl;
                     submissionData.fileName = imageFile.name;
                     submissionData.fileSize = imageFile.size;
                     break;
+                }
             }
 
-            // Save to Firebase
             await this.saveSubmission(submissionData);
 
-            // Record exercise submission for completion logic
             try { if (typeof window.recordExerciseSubmission === 'function') window.recordExerciseSubmission(lessonId); } catch (e) { }
-            showAlert('Exercise submitted successfully!', 'success');
-            this.closeModal();
 
+            if (lessonId === 'lesson18' && submissionData.imageUrls && submissionData.imageUrls.length === 6) {
+                this.showPostSubmitImageGallery(submissionData.imageUrls, 'Your 6 submitted images');
+            } else if (lessonId === 'lesson19' && submissionData.imageUrls && submissionData.imageUrls.length > 0) {
+                this.showPostSubmitImageGallery(submissionData.imageUrls, 'Your submitted images');
+            } else {
+                showAlert('Exercise submitted successfully!', 'success');
+                this.closeModal();
+            }
         } catch (error) {
             console.error('Error submitting exercise:', error);
             showAlert('Error submitting exercise. Please try again.', 'danger');
         } finally {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = 'Submit Exercise';
+            const sb = document.getElementById('submitBtn');
+            if (sb) {
+                sb.disabled = false;
+                sb.innerHTML = 'Submit Exercise';
+            }
         }
     }
 
     // Upload image to Firebase Storage
-    async uploadImage(file) {
-        const fileName = `exercises/${Date.now()}_${file.name}`;
+    async uploadImage(file, uniqueSuffix = '') {
+        const fileName = `exercises/${Date.now()}${uniqueSuffix}_${file.name}`;
         const storageRef = this.storage.ref(fileName);
         const snapshot = await storageRef.put(file);
         return await snapshot.ref.getDownloadURL();
@@ -377,6 +704,7 @@ class ExerciseSubmission {
 
     // Close modal
     closeModal() {
+        this.revokeAllPreviewsInModal();
         const modal = document.getElementById('exerciseModal');
         const backdrop = document.getElementById('exerciseBackdrop');
 
@@ -406,7 +734,12 @@ function startExerciseSubmission(lessonId) {
     console.log('startExerciseSubmission called with lessonId:', lessonId);
     try {
         const inst = getExerciseSubmissionInstance();
-        inst.showExerciseModal(lessonId);
+        inst.showExerciseModal(lessonId).catch((e) => {
+            console.error('showExerciseModal failed', e);
+            if (typeof showAlert === 'function') {
+                showAlert('Could not open the submission form. Please try again.', 'danger');
+            }
+        });
     } catch (e) {
         console.error('exerciseSubmission not initialized', e);
     }
