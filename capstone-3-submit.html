@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%92%8E%3C/text%3E%3C/svg%3E">
+    <title>Submit Capstone 3 — 60 sec AI Avatar</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/fa/css/all.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+
+<body>
+    <div id="navbar-root"></div>
+
+    <div class="container mt-5 pt-5 pb-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <p class="text-muted mb-1"><span class="badge bg-info text-dark">Capstone 3</span></p>
+                <h1 class="mb-3">Submit your avatar video</h1>
+                <p class="lead text-muted">Paste a public link where teachers can view your ~60&nbsp;second clip—<strong>HeyGen</strong>, <strong>YouTube</strong>, or <strong>Google Drive</strong> (use “Anyone with the link” for Drive). Add a short <strong>making-of</strong> note with credits for tools and sources.</p>
+
+                <div class="card shadow-soft mb-4">
+                    <div class="card-body">
+                        <form id="capstone3LinkForm">
+                            <div class="mb-4">
+                                <label for="videoUrl" class="form-label">Video link</label>
+                                <input type="url" class="form-control" id="videoUrl" name="videoUrl"
+                                    placeholder="https://www.youtube.com/watch?v=… or HeyGen / Drive share URL" required autocomplete="url" inputmode="url">
+                                <div class="form-text">Must be <code>https://</code> (or <code>http://</code>) from HeyGen, YouTube, or Google Drive.</div>
+                            </div>
+                            <div class="mb-4">
+                                <label for="makingOfNotes" class="form-label">Making-of &amp; credits</label>
+                                <textarea class="form-control" id="makingOfNotes" name="makingOfNotes" rows="6"
+                                    placeholder="Briefly describe your script, avatar tools, editing, and credit any voices, images, or music."
+                                    required minlength="40" maxlength="4000"></textarea>
+                                <div class="form-text">At least 40 characters. Include how you used AI and what you learned.</div>
+                            </div>
+                            <div class="d-grid gap-2 d-md-flex">
+                                <button type="submit" class="btn btn-success btn-lg" id="capstone3SubmitBtn">
+                                    <i class="fas fa-paper-plane me-2"></i>Submit
+                                </button>
+                                <a href="capstone-3-ai-avatar-60s.html" class="btn btn-outline-secondary btn-lg">
+                                    <i class="fas fa-arrow-left me-1"></i>Back to brief
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card shadow-soft">
+                    <div class="card-header">
+                        <h5 class="mb-0">Your submissions for Capstone 3</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="capstone3RecentSubmissions">
+                            <p class="text-muted mb-0">No submissions yet.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="navbar.js"></script>
+    <script src="script.js"></script>
+    <script src="capstone-3-submit.js"></script>
+</body>
+
+</html>

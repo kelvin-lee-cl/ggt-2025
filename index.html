@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%92%8E%3C/text%3E%3C/svg%3E">
+    <title>Girls Go Tech AI Application - Learning Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/fa/css/all.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+
+<body>
+    <div id="live-diag"
+        style="display:none;position:fixed;bottom:10px;left:10px;z-index:99999;background:rgba(0,0,0,0.8);color:#0f0;font:12px/1.4 monospace;padding:6px 8px;border:1px solid #0f0;border-radius:4px;pointer-events:none">
+        diag…</div>
+    <script>
+        (function liveDiag() {
+            const el = document.getElementById('live-diag');
+            if (!el) return;
+            function tick() {
+                try {
+                    var fg = (typeof firebase !== 'undefined');
+                    var fc = (typeof firebaseConfig !== 'undefined');
+                    var ac = fg && firebase.apps && firebase.apps.length || 0;
+                    var fa = !!window.firebaseAuth;
+                    var fd = !!window.firebaseDb;
+                    el.textContent = 'URL:' + location.hostname + ' | DOM:' + document.readyState + ' | FG:' + fg + ' | FC:' + fc + ' | Apps:' + ac + ' | Auth:' + fa + ' | DB:' + fd;
+                } catch (e) { el.textContent = 'diag error: ' + (e && e.message); }
+                setTimeout(tick, 1000);
+            }
+            tick();
+        })();
+    </script>
+    <!-- Shared Navbar -->
+    <div id="navbar-root"></div>
+
+
+    <!-- Admin-manageable Slider (Carousel) -->
+    <section id="hero-slider" class="pt-5">
+        <div id="homepageCarousel" class="carousel slide homepage-carousel" data-bs-ride="carousel">
+            <div class="carousel-indicators" id="carouselIndicators"></div>
+            <div class="carousel-inner" id="carouselInner">
+                <!-- Slides injected dynamically -->
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#homepageCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#homepageCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </section>
+    <!-- Login Gate (shown when not authenticated) -->
+
+    <!-- App Content (hidden until authenticated) -->
+    <div id="appContent" style="display: none;">
+
+        <!-- Lessons Section -->
+        <!--  <section id="lessons" class="py-5">
+            <div class="container">
+                <div class="d-flex justify-content-end align-items-center mt-5 mb-3">
+                    <button id="manageSliderBtn" class="btn btn-outline-primary btn-sm" style="display:none">
+                        <i class="fas fa-sliders-h me-1"></i>Manage Slider
+                    </button>
+                </div>
+                <h2 class="text-center mt-5 mb-5" data-en="Lessons" data-zh-tw="課程" data-zh-cn="课程">
+                    Lessons</h2>
+
+                <div class="row" id="lessonsContainer">
+                </div>
+            </div>
+        </section> -->
+
+        <!-- AI Tools Section -->
+        <section id="tools" class="py-5 bg-light">
+            <div class="container">
+                <h2 class="text-center mb-5 mt-5" data-en="AI-Powered Learning Tools" data-zh-tw="AI驅動的學習工具"
+                    data-zh-cn="AI驱动的学习工具">AI-Powered
+                    Learning
+                    Tools</h2>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 tool-card">
+                            <div class="card-body text-center">
+                                <i class="fas fa-image fa-3x text-primary mb-3"></i>
+                                <h5 class="card-title" data-en="Image Generator" data-zh-tw="圖像生成器" data-zh-cn="图像生成器">
+                                    Image
+                                    Generator</h5>
+                                <p class="card-text"
+                                    data-en="Create custom images using AI to visualize your ideas and concepts."
+                                    data-zh-tw="使用AI創建自定義圖像來可視化您的想法和概念。" data-zh-cn="使用AI创建自定义图像来可视化您的想法和概念。">Create
+                                    custom
+                                    images using AI to visualize your ideas
+                                    and concepts.</p>
+                                <a href="image-generator.html" class="btn btn-primary" data-en="Generate Images"
+                                    data-zh-tw="生成圖像" data-zh-cn="生成图像">Generate Images</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 tool-card">
+                            <div class="card-body text-center">
+                                <i class="fas fa-edit fa-3x text-primary mb-3"></i>
+                                <h5 class="card-title" data-en="Text Generator" data-zh-tw="文本生成器" data-zh-cn="文本生成器">
+                                    Text
+                                    Generator</h5>
+                                <p class="card-text"
+                                    data-en="Generate essays, summaries, and creative content with AI assistance."
+                                    data-zh-tw="使用AI輔助生成文章、摘要和創意內容。" data-zh-cn="使用AI辅助生成文章、摘要和创意内容。">
+                                </p>
+                                <a href="text-generator.html" class="btn btn-primary" data-en="Generate Text"
+                                    data-zh-tw="生成文本" data-zh-cn="生成文本">Generate Text</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- More AI Tools (collapsible card that loads aitools.html content) -->
+                <div class="row">
+                    <div class="col-12 mb-4">
+                        <div class="card h-100 tool-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5 class="card-title mb-1" data-en="More AI Tools" data-zh-tw="更多AI工具"
+                                            data-zh-cn="更多AI工具">More AI Tools</h5>
+                                        <small class="text-muted"
+                                            data-en="Explore additional AI tools for research, writing, visualization, and media."
+                                            data-zh-tw="探索更多研究、寫作、視覺化與多媒體AI工具。"
+                                            data-zh-cn="探索更多研究、写作、可视化与多媒体AI工具。">Explore additional AI tools for
+                                            research, writing, visualization, and media.</small>
+                                    </div>
+                                    <button id="moreAiToolsBtn" class="btn btn-outline-primary" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#moreAiToolsCollapse"
+                                        aria-expanded="false" aria-controls="moreAiToolsCollapse">
+                                        <i class="fas fa-chevron-down me-1"></i><span data-en="Show" data-zh-tw="顯示"
+                                            data-zh-cn="显示">Show</span>
+                                    </button>
+                                </div>
+                                <div class="collapse mt-3" id="moreAiToolsCollapse">
+                                    <div id="moreAiToolsContent" class="pt-2">
+                                        <div class="text-center text-muted py-4" id="moreAiToolsLoading"
+                                            style="display:none;">
+                                            <div class="spinner-border text-primary" role="status"><span
+                                                    class="visually-hidden">Loading...</span></div>
+                                            <div class="mt-2" data-en="Loading more AI tools..."
+                                                data-zh-tw="正在載入更多AI工具..." data-zh-cn="正在载入更多AI工具...">Loading more AI
+                                                tools...</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Classwork Section -->
+        <section id="classwork" class="py-5 mt-5">
+            <div class="container">
+                <h2 class="text-center mb-5 mt-5" data-en="Submit Your Milestone Projects" data-zh-tw="提交您的里程碑項目"
+                    data-zh-cn="提交您的里程碑项目">Submit Your
+                    Milestone Projects</h2>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-upload fa-3x text-success mb-3"></i>
+                                <h5 class="card-title" data-en="Upload Assignments" data-zh-tw="上傳作業" data-zh-cn="上传作业">
+                                    Upload Assignments</h5>
+                                <p class="card-text" data-en="Submit your completed assignments and projects."
+                                    data-zh-tw="提交您完成的作業和項目。" data-zh-cn="提交您完成的作业和项目。">Submit your completed
+                                    assignments
+                                    and projects.</p>
+                                <a href="upload.html" class="btn btn-success" data-en="Upload Work" data-zh-tw="上傳作業"
+                                    data-zh-cn="上传作业">Upload
+                                    Work</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-question-circle fa-3x text-info mb-3"></i>
+                                <h5 class="card-title" data-en="Q&A Assessment" data-zh-tw="問答評估" data-zh-cn="问答评估">Q&A
+                                    Assessment</h5>
+                                <p class="card-text" data-en="Test your understanding with interactive quizzes."
+                                    data-zh-tw="通過互動測驗測試您的理解。" data-zh-cn="通过互动测验测试您的理解。">Test your understanding with
+                                    interactive quizzes.</p>
+                                <a href="quiz.html" class="btn btn-info" data-en="Take Quiz" data-zh-tw="參加測驗"
+                                    data-zh-cn="参加测验">Take Quiz</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="text-center mb-4 mt-5 h5" data-en="Capstone milestones" data-zh-tw="專題里程碑"
+                    data-zh-cn="专题里程碑">Capstone milestones</h3>
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body text-center d-flex flex-column">
+                                <i class="fas fa-pen-fancy fa-3x text-primary mb-3"></i>
+                                <h5 class="card-title" data-en="Capstone 1: AI writing tutor" data-zh-tw="專題一：AI寫作導師"
+                                    data-zh-cn="专题一：AI写作导师">Capstone 1: AI writing tutor</h5>
+                                <p class="card-text flex-grow-1 small text-muted"
+                                    data-en="Guide an AI to coach writing for a topic you choose."
+                                    data-zh-tw="引導 AI 為你選的主題提供寫作輔導。" data-zh-cn="引导 AI 为你选的主题提供写作辅导。">Guide an AI to coach
+                                    writing for a topic you choose.</p>
+                                <a href="capstone-1-ai-writing-tutor.html" class="btn btn-outline-primary mt-2"
+                                    data-en="Open brief" data-zh-tw="查看簡介" data-zh-cn="查看简介">Open brief</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body text-center d-flex flex-column">
+                                <i class="fas fa-sticky-note fa-3x text-success mb-3"></i>
+                                <h5 class="card-title" data-en="Capstone 2: Stickers &amp; memes" data-zh-tw="專題二：貼圖與梗圖"
+                                    data-zh-cn="专题二：贴纸与梗图">Capstone 2: Stickers &amp; memes</h5>
+                                <p class="card-text flex-grow-1 small text-muted"
+                                    data-en="WhatsApp stickers, memes, and optional GIF with AI help."
+                                    data-zh-tw="使用 AI 製作 WhatsApp 貼圖、梗圖與選做的 GIF。"
+                                    data-zh-cn="使用 AI 制作 WhatsApp 贴纸、梗图与选做的 GIF。">WhatsApp stickers, memes, and optional GIF
+                                    with AI help.</p>
+                                <a href="capstone-2-stickers-memes-gif.html" class="btn btn-outline-success mt-2"
+                                    data-en="Open brief" data-zh-tw="查看簡介" data-zh-cn="查看简介">Open brief</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body text-center d-flex flex-column">
+                                <i class="fas fa-user-circle fa-3x text-info mb-3"></i>
+                                <h5 class="card-title" data-en="Capstone 3: 60s AI avatar" data-zh-tw="專題三：60 秒 AI 頭像影片"
+                                    data-zh-cn="专题三：60 秒 AI 头像视频">Capstone 3: 60s AI avatar</h5>
+                                <p class="card-text flex-grow-1 small text-muted"
+                                    data-en="A short avatar video introducing you or one idea."
+                                    data-zh-tw="用 AI 頭像製作約一分鐘短片，介紹你或一個想法。"
+                                    data-zh-cn="用 AI 头像制作约一分钟短片，介绍你或一个想法。">A short avatar video introducing you or one
+                                    idea.</p>
+                                <a href="capstone-3-ai-avatar-60s.html" class="btn btn-outline-info mt-2"
+                                    data-en="Open brief" data-zh-tw="查看簡介" data-zh-cn="查看简介">Open brief</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-dark text-white py-4">
+            <div class="container" style="height: 500px;">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 data-en="Girls Go Tech AI Application" data-zh-tw="Girls Go Tech AI Application"
+                            data-zh-cn="Girls Go Tech AI Application">Girls Go
+                            Tech AI Application</h5>
+                        <p data-en="Empowering students with interactive learning tools and AI assistance."
+                            data-zh-tw="通過互動學習工具和AI輔助賦能學生。" data-zh-cn="通过互动学习工具和AI辅助赋能学生。">Empowering students with
+                            interactive learning tools and AI
+                            assistance.</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <p data-en="&copy; 2024 Girls Go Tech AI Application. All rights reserved."
+                            data-zh-tw="&copy; 2024 Girls Go Tech AI Application. All rights reserved."
+                            data-zh-cn="&copy; 2024 Girls Go Tech AI Application. All rights reserved.">
+                            &copy; 2024 Girls Go Tech AI Application. All rights reserved.</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Slider Manager Modal (Admin only) -->
+    <div class="modal fade" id="sliderManagerModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-sliders-h me-2"></i>Manage Homepage Slider</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="sliderForm" class="mb-4">
+                        <input type="hidden" id="slideId">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Image URL</label>
+                                <input type="url" id="imageUrl" class="form-control" placeholder="https://...">
+                                <div class="form-text">Or upload an image below (will fill this field).</div>
+                                <div class="mt-2 d-flex align-items-center gap-2">
+                                    <input type="file" id="imageFile" accept="image/*" class="form-control">
+                                    <button type="button" id="uploadImageBtn"
+                                        class="btn btn-outline-primary">Upload</button>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Link URL</label>
+                                <input type="url" id="linkUrl" class="form-control"
+                                    placeholder="https:// or /relative.html">
+                                <label class="form-label mt-3">Order</label>
+                                <input type="number" id="order" class="form-control" value="1" min="0">
+                            </div>
+                        </div>
+                        <div class="mt-3 d-flex gap-2">
+                            <button type="submit" class="btn btn-primary" id="saveSlideBtn"><i
+                                    class="fas fa-save me-1"></i>Save</button>
+                            <button type="button" class="btn btn-secondary" id="resetSlideBtn"><i
+                                    class="fas fa-undo me-1"></i>Reset</button>
+                        </div>
+                    </form>
+                    <div class="table-responsive">
+                        <table class="table align-middle">
+                            <thead>
+                                <tr>
+                                    <th style="width:120px;">Preview</th>
+                                    <th>Link</th>
+                                    <th>Order</th>
+                                    <th style="width:140px;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="slidesTableBody">
+                                <tr>
+                                    <td colspan="5" class="text-muted">Loading...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Netlify Identity Widget -->
+    <div id="netlify-identity-widget"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Netlify Identity removed: using Firebase Auth only -->
+    <!-- Firebase SDK for Google login (must load BEFORE script.js) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    <script>
+        // Fallback loader if Firebase CDN is blocked; tries alternate CDN sources
+        (function ensureFirebaseLoaded() {
+            function logDiag(msg) {
+                try {
+                    window.__recentErrors = window.__recentErrors || [];
+                    window.__recentErrors.push({ type: 'diagnostic', message: msg, time: new Date().toISOString() });
+                    if (window.__recentErrors.length > 10) window.__recentErrors.shift();
+                    if (typeof updateDebugPanel === 'function') setTimeout(updateDebugPanel, 100);
+                } catch (_) { }
+            }
+
+            function loadScript(src, onloadName) {
+                return new Promise((resolve, reject) => {
+                    const s = document.createElement('script');
+                    s.src = src;
+                    s.async = true;
+                    s.onload = () => { logDiag(onloadName + ' loaded'); resolve(); };
+                    s.onerror = () => { logDiag('Failed to load ' + src); reject(new Error('load fail: ' + src)); };
+                    document.head.appendChild(s);
+                });
+            }
+
+            // After a short delay, if firebase is still missing, try alternate CDN
+            setTimeout(async () => {
+                if (typeof firebase !== 'undefined') { logDiag('Primary Firebase CDN available'); return; }
+                logDiag('Firebase not detected; attempting alternate CDN');
+                try {
+                    // jsDelivr compat bundle paths
+                    await loadScript('https://cdn.jsdelivr.net/npm/firebase@9.22.0/compat/app/firebase-app-compat.js', 'firebase-app-compat');
+                } catch (_) { /* ignore */ }
+                try { await loadScript('https://cdn.jsdelivr.net/npm/firebase@9.22.0/compat/auth/firebase-auth-compat.js', 'firebase-auth-compat'); } catch (_) { }
+                try { await loadScript('https://cdn.jsdelivr.net/npm/firebase@9.22.0/compat/firestore/firebase-firestore-compat.js', 'firebase-firestore-compat'); } catch (_) { }
+                try { await loadScript('https://cdn.jsdelivr.net/npm/firebase@9.22.0/compat/storage/firebase-storage-compat.js', 'firebase-storage-compat'); } catch (_) { }
+                setTimeout(() => {
+                    if (typeof firebase === 'undefined') {
+                        logDiag('Firebase still undefined after fallback');
+                    } else {
+                        logDiag('Firebase available after fallback');
+                        try { if (typeof initializeFirebaseAuth === 'function') initializeFirebaseAuth(); } catch (_) { }
+                    }
+                }, 200);
+            }, 700);
+        })();
+    </script>
+    <script src="firebase-config.js?v=1"></script>
+    <script src="script.js?v=2.0.4"></script>
+    <script src="navbar.js?v=1"></script>
+    <script>
+        // Ensure slider loads once app is ready
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof loadHomepageSlider === 'function') {
+                setTimeout(loadHomepageSlider, 300);
+                setTimeout(loadHomepageSlider, 1500);
+            }
+        });
+
+        // Localhost: enable Google sign-in using Firebase Auth
+        (function () {
+            const isLocalhost = window.location.hostname === 'localhost' ||
+                window.location.hostname === '127.0.0.1' ||
+                window.location.hostname === '0.0.0.0' ||
+                window.location.hostname.includes('localhost');
+
+            if (!isLocalhost) return;
+
+            try {
+                if (!firebase.apps?.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+                const auth = firebase.auth();
+                const provider = new firebase.auth.GoogleAuthProvider();
+
+                const gateBtn = document.getElementById('loginGateLoginBtn');
+                if (gateBtn) {
+                    gateBtn.addEventListener('click', async function (e) {
+                        e.preventDefault();
+                        try {
+                            const result = await auth.signInWithPopup(provider);
+                            // Create a Netlify-Identity-like user object for UI reuse
+                            window.currentUser = {
+                                id: result.user.uid,
+                                email: result.user.email,
+                                user_metadata: { full_name: result.user.displayName }
+                            };
+                            // Notify existing UI to update
+                            if (typeof updateAuthUI === 'function') {
+                                // Also set global currentUser used by script.js
+                                if (typeof window !== 'undefined') {
+                                    window.currentUser = window.currentUser;
+                                }
+                                // Force UI refresh
+                                updateAuthUI();
+                            }
+                        } catch (err) {
+                            console.error('Google sign-in failed:', err);
+                            if (typeof showAlert === 'function') {
+                                showAlert('Google sign-in failed. Please try again.', 'danger');
+                            }
+                        }
+                    });
+                }
+            } catch (e) {
+                console.warn('Firebase local auth init skipped:', e);
+            }
+        })();
+    </script>
+    <script>
+        // Load aitools.html into the collapse on first expand and toggle button text/icon
+        document.addEventListener('DOMContentLoaded', function () {
+            var collapseEl = document.getElementById('moreAiToolsCollapse');
+            var contentEl = document.getElementById('moreAiToolsContent');
+            var loadingEl = document.getElementById('moreAiToolsLoading');
+            var btn = document.getElementById('moreAiToolsBtn');
+            if (!collapseEl || !contentEl || !btn) return;
+
+            var hasLoaded = false;
+            function setButtonState(expanded) {
+                var icon = btn.querySelector('i');
+                var label = btn.querySelector('span');
+                if (icon) icon.className = expanded ? 'fas fa-chevron-up me-1' : 'fas fa-chevron-down me-1';
+                if (label) {
+                    // default to English labels; page translation can overwrite later
+                    label.textContent = expanded ? 'Hide' : 'Show';
+                }
+            }
+
+            // Bootstrap collapse events (works with BS5 as CustomEvent names)
+            collapseEl.addEventListener('show.bs.collapse', function () {
+                setButtonState(true);
+                if (hasLoaded) return;
+                if (loadingEl) loadingEl.style.display = '';
+                fetch('aitools.html', { cache: 'no-store' })
+                    .then(function (res) { return res.text(); })
+                    .then(function (html) {
+                        // Extract only the <main> content if present, else inject full HTML safely
+                        var trimmed = html;
+                        try {
+                            var tmp = document.createElement('div');
+                            tmp.innerHTML = html;
+                            var main = tmp.querySelector('main');
+                            trimmed = main ? main.innerHTML : html;
+                        } catch (_) { /* fallback to raw html */ }
+                        contentEl.innerHTML = trimmed;
+                        hasLoaded = true;
+                    })
+                    .catch(function (err) {
+                        contentEl.innerHTML = '<div class="alert alert-danger">Failed to load AI tools. Please try again later.</div>';
+                        // eslint-disable-next-line no-console
+                        console.error('Failed to load aitools.html', err);
+                    })
+                    .finally(function () {
+                        if (loadingEl) loadingEl.style.display = 'none';
+                    });
+            });
+            collapseEl.addEventListener('hide.bs.collapse', function () {
+                setButtonState(false);
+            });
+        });
+    </script>
+    <script>
+        // Load and display all lessons dynamically
+        async function loadLessons() {
+            try {
+                const response = await fetch('lessons.json');
+                const data = await response.json();
+                const lessonsContainer = document.getElementById('lessonsContainer');
+
+                let lessonsHTML = '';
+
+                data.lessons.forEach(lesson => {
+                    const lessonId = lesson.id;
+
+                    // Use consistent status for all lessons
+                    const baseStatus = lesson.status || 'not-started';
+                    const baseStatusText = lesson.statusText || 'Not Started';
+                    const statusClass = getStatusClass(baseStatus);
+                    const statusIcon = getStatusIcon(baseStatus);
+
+                    lessonsHTML += `
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100 lesson-card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h5 class="card-title">${lesson.title}</h5>
+                                        <span class="badge ${statusClass}" id="statusBadge-${lessonId}">${statusIcon}</span>
+                                    </div>
+                                    <p class="card-text">${lesson.subtitle}</p>
+                                    <small class="text-muted" id="statusText-${lessonId}">${baseStatusText}</small>
+                                    <div class="mt-3">
+                                        <a href="lesson.html?lesson=${lesson.id}" class="btn btn-primary">
+                                            <i class="fas fa-play me-2"></i>
+                                            View Lesson
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                lessonsContainer.innerHTML = lessonsHTML;
+                // After rendering, try to overlay per-user statuses from Firebase
+                setTimeout(updateUserLessonStatuses, 300);
+                setTimeout(updateUserLessonStatuses, 2000);
+            } catch (error) {
+                console.error('Error loading lessons:', error);
+                document.getElementById('lessonsContainer').innerHTML =
+                    '<div class="col-12"><div class="alert alert-danger">Error loading lessons. Please try again later.</div></div>';
+            }
+        }
+
+        // Get status class for badge
+        function getStatusClass(status) {
+            switch (status) {
+                case 'completed': return 'bg-success';
+                case 'in-progress': return 'bg-warning';
+                default: return 'bg-secondary';
+            }
+        }
+
+        // Get status icon
+        function getStatusIcon(status) {
+            switch (status) {
+                case 'completed': return '✓';
+                case 'in-progress': return '⏳';
+                default: return '○';
+            }
+        }
+
+        // Get status badge class
+        function getStatusBadgeClass(status) {
+            switch (status) {
+                case 'completed': return 'bg-success';
+                case 'in-progress': return 'bg-warning';
+                default: return 'bg-secondary';
+            }
+        }
+
+        // Load lessons when page loads
+        document.addEventListener('DOMContentLoaded', loadLessons);
+
+        // Overlay per-user status from Firestore
+        async function updateUserLessonStatuses() {
+            try {
+                if (!window.firebaseDb || !window.firebaseAuth) return;
+                const auth = window.firebaseAuth;
+                const db = window.firebaseDb;
+                const user = auth.currentUser;
+                if (!user) return;
+                const snap = await db.collection('userProgress').doc(user.uid).get();
+                if (!snap.exists) return;
+                const lessons = (snap.data() && snap.data().lessons) || {};
+                Object.keys(lessons).forEach(lessonId => {
+                    const info = lessons[lessonId] || {};
+                    // Rule: Exercise submission counts as completed
+                    const status = (info.status === 'completed' || (info.exercise && info.exercise.submitted)) ? 'completed' : 'not-started';
+                    const text = status === 'completed' ? 'Completed' : 'Not Started';
+                    const badgeEl = document.getElementById(`statusBadge-${lessonId}`);
+                    const textEl = document.getElementById(`statusText-${lessonId}`);
+                    if (badgeEl) {
+                        badgeEl.className = `badge ${getStatusClass(status)}`;
+                        badgeEl.textContent = getStatusIcon(status);
+                    }
+                    if (textEl) {
+                        textEl.textContent = text;
+                    }
+                });
+            } catch (e) {
+                // non-fatal
+            }
+        }
+    </script>
+</body>
+
+</html>

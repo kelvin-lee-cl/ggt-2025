@@ -1,0 +1,11 @@
+# Local Netlify folder
+.netlify
+
+# macOS
+.DS_Store
+
+# Node
+node_modules
+
+# Netlify dev logs
+.netlify-dev.log

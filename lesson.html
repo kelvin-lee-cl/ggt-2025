@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%92%8E%3C/text%3E%3C/svg%3E">
+    <title id="pageTitle">Lesson - Educational Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/fa/css/all.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+    <style>
+        /* Dark mode: Force white text for all lesson content */
+        [data-theme="dark"] .container,
+        [data-theme="dark"] .container * {
+            color: white !important;
+        }
+
+        [data-theme="dark"] .text-muted {
+            color: rgba(255, 255, 255, 0.7) !important;
+        }
+
+        [data-theme="dark"] .text-primary {
+            color: #64d2e2 !important;
+        }
+
+        [data-theme="dark"] .text-success {
+            color: #28a745 !important;
+        }
+
+        [data-theme="dark"] .text-warning {
+            color: #ffc107 !important;
+        }
+
+        [data-theme="dark"] .text-info {
+            color: #17a2b8 !important;
+        }
+
+        [data-theme="dark"] .card {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        }
+
+        [data-theme="dark"] .accordion-item {
+            background-color: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+
+        [data-theme="dark"] .accordion-button {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            color: white !important;
+        }
+
+        [data-theme="dark"] .accordion-button:not(.collapsed) {
+            background-color: rgba(100, 210, 226, 0.2) !important;
+            color: white !important;
+        }
+
+        [data-theme="dark"] pre {
+            background-color: rgba(0, 0, 0, 0.3) !important;
+            color: white !important;
+        }
+
+        [data-theme="dark"] .border {
+            border-color: rgba(255, 255, 255, 0.2) !important;
+        }
+
+        [data-theme="dark"] .btn {
+            color: white !important;
+        }
+
+        [data-theme="dark"] .btn-outline-primary {
+            color: #64d2e2 !important;
+            border-color: #64d2e2 !important;
+        }
+
+        [data-theme="dark"] .btn-outline-primary:hover {
+            background-color: #64d2e2 !important;
+            color: white !important;
+        }
+
+        [data-theme="dark"] .btn-outline-info {
+            color: #17a2b8 !important;
+            border-color: #17a2b8 !important;
+        }
+
+        [data-theme="dark"] .btn-outline-info:hover {
+            background-color: #17a2b8 !important;
+            color: white !important;
+        }
+
+        [data-theme="dark"] .btn-outline-success {
+            color: #28a745 !important;
+            border-color: #28a745 !important;
+        }
+
+        [data-theme="dark"] .btn-outline-success:hover {
+            background-color: #28a745 !important;
+            color: white !important;
+        }
+
+        [data-theme="dark"] .btn-outline-secondary {
+            color: #6c757d !important;
+            border-color: #6c757d !important;
+        }
+
+        [data-theme="dark"] .btn-outline-secondary:hover {
+            background-color: #6c757d !important;
+            color: white !important;
+        }
+
+        /* Prompt preview styles */
+        .prompt-preview {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.5;
+            min-height: 4.5em;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .prompt-card {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .prompt-card:hover .prompt-preview {
+            display: block;
+            -webkit-line-clamp: unset;
+            overflow: visible;
+            white-space: normal;
+            min-height: auto;
+        }
+
+        .prompt-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            z-index: 5;
+        }
+
+        .copy-btn-prompt {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+            opacity: 1;
+            transition: opacity 0.2s ease;
+            background-color: white !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .copy-btn-prompt:hover {
+            opacity: 1;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Dark mode styles for Exercise Instructions table */
+        [data-theme="dark"] .table {
+            color: white !important;
+            border-color: rgba(255, 255, 255, 0.2) !important;
+        }
+
+        [data-theme="dark"] .table thead.table-light {
+            background-color: rgba(100, 210, 226, 0.2) !important;
+            color: white !important;
+            border-color: rgba(255, 255, 255, 0.2) !important;
+        }
+
+        [data-theme="dark"] .table thead.table-light th {
+            background-color: rgba(100, 210, 226, 0.2) !important;
+            color: white !important;
+            border-color: rgba(255, 255, 255, 0.2) !important;
+        }
+
+        [data-theme="dark"] .table thead th {
+            background-color: rgba(100, 210, 226, 0.2) !important;
+            color: white !important;
+            border-color: rgba(255, 255, 255, 0.2) !important;
+        }
+
+        [data-theme="dark"] .table thead th i {
+            color: white !important;
+        }
+
+        [data-theme="dark"] .table tbody td {
+            color: white !important;
+            border-color: rgba(255, 255, 255, 0.2) !important;
+            background-color: rgba(255, 255, 255, 0.05) !important;
+        }
+
+        [data-theme="dark"] .table tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        [data-theme="dark"] .table tbody td.fw-bold.text-primary {
+            color: #64d2e2 !important;
+        }
+
+        [data-theme="dark"] .table-bordered {
+            border-color: rgba(255, 255, 255, 0.2) !important;
+        }
+
+        [data-theme="dark"] .table-bordered th,
+        [data-theme="dark"] .table-bordered td {
+            border-color: rgba(255, 255, 255, 0.2) !important;
+        }
+
+        /* Hover effects for Continue Your Learning Journey buttons */
+        .btn-outline-primary:hover,
+        .btn-outline-success:hover {
+            color: white !important;
+        }
+
+        .btn-outline-primary:hover h6,
+        .btn-outline-success:hover h6 {
+            color: white !important;
+        }
+
+        .btn-outline-primary:hover small,
+        .btn-outline-success:hover small {
+            color: rgba(255, 255, 255, 0.8) !important;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Shared Navbar -->
+    <div id="navbar-root"></div>
+
+    <!-- Main Content -->
+    <div class="container mt-5 pt-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <!-- Lesson Header -->
+                <div class="text-center mb-5">
+                    <h1 class="display-6 fw-bold text-primary" id="lessonTitle">Loading...</h1>
+                    <p class="lead text-muted" id="lessonSubtitle">Loading...</p>
+                    <div class="mb-3">
+                        <span class="badge" id="lessonStatusBadge">Loading...</span>
+                    </div>
+                </div>
+
+                <!-- Lesson Content -->
+                <div id="lessonContent">
+                    <!-- Content will be loaded here -->
+                </div>
+
+                <!-- Lesson Actions -->
+                <div class="card shadow-soft" id="lessonActionsCard">
+                    <div class="card-body text-center">
+                        <h5 class="mb-3" id="actionTitle">Loading...</h5>
+                        <p class="text-muted mb-4" id="actionDescription">Loading...</p>
+                        <div class="d-flex justify-content-center gap-3 flex-wrap" id="actionButtons">
+                            <!-- Action buttons will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Tools and Milestone Project Options -->
+                <div class="card shadow-soft mt-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-rocket me-2"></i>Continue Your Learning Journey
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <div class="d-grid">
+                                    <button type="button" id="aiToolsBtn" class="btn btn-outline-primary btn-lg"
+                                        data-bs-toggle="collapse" data-bs-target="#aiToolsCollapse"
+                                        aria-expanded="false" aria-controls="aiToolsCollapse">
+                                        <i class="fas fa-brain fa-2x mb-2"></i>
+                                        <h6 class="mb-1">AI-powered Learning Tools</h6>
+                                        <small class="text-muted">Access text generator, image creator, and more</small>
+                                        <i class="fas fa-chevron-down ms-2" id="aiToolsChevron"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3 d-none">
+                                <div class="d-grid">
+                                    <button type="button" id="milestoneBtn" class="btn btn-outline-success btn-lg"
+                                        data-bs-toggle="collapse" data-bs-target="#milestoneCollapse"
+                                        aria-expanded="false" aria-controls="milestoneCollapse">
+                                        <i class="fas fa-trophy fa-2x mb-2"></i>
+                                        <h6 class="mb-1">Submit Your Milestone Projects</h6>
+                                        <small class="text-muted">Share your completed work and achievements</small>
+                                        <i class="fas fa-chevron-down ms-2" id="milestoneChevron"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Tools Collapsible Section -->
+        <div class="collapse mt-4" id="aiToolsCollapse">
+            <div class="card shadow-soft">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-robot me-2"></i>AI Learning Tools
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Text Generator -->
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-edit fa-3x text-primary mb-3"></i>
+                                    <h5 class="card-title">Text Generator</h5>
+                                    <p class="card-text">Generate essays, summaries, and creative content with AI
+                                        assistance.</p>
+                                    <a href="text-generator.html" target="_blank" class="btn btn-primary">
+                                        <i class="fas fa-play me-1"></i>Generate Text
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Image Generator -->
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-image fa-3x text-success mb-3"></i>
+                                    <h5 class="card-title">Image Generator</h5>
+                                    <p class="card-text">Create custom images using AI to visualize your ideas and
+                                        concepts.</p>
+                                    <a href="image-generator.html" target="_blank" class="btn btn-success">
+                                        <i class="fas fa-magic me-1"></i>Generate Images
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- AI Animation -->
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-film fa-3x text-info mb-3"></i>
+                                    <h5 class="card-title">AI Animation</h5>
+                                    <p class="card-text">Learn how AI art works through interactive animations and
+                                        visualizations.</p>
+                                    <a href="ai_animation.html" target="_blank" class="btn btn-info">
+                                        <i class="fas fa-play-circle me-1"></i>View Animation
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- All AI Tools -->
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-tools fa-3x text-warning mb-3"></i>
+                                    <h5 class="card-title">All AI Tools</h5>
+                                    <p class="card-text">Access the complete suite of AI tools for research, writing,
+                                        and visualization.</p>
+                                    <a href="https://ggt-ai-2025.netlify.app/aitools.html" target="_blank"
+                                        class="btn btn-warning">
+                                        <i class="fas fa-external-link-alt me-1"></i>View All Tools
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Milestone Projects Collapsible Section -->
+        <div class="collapse mt-4" id="milestoneCollapse">
+            <div class="card shadow-soft">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-trophy me-2"></i>Milestone Projects & Assessment
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Project Submission -->
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-upload fa-3x text-success mb-3"></i>
+                                    <h5 class="card-title">Submit Your Project</h5>
+                                    <p class="card-text">Upload your completed milestone project with images, documents,
+                                        and descriptions.</p>
+                                    <button type="button" class="btn btn-success"
+                                        onclick="showProjectSubmissionModal()">
+                                        <i class="fas fa-paper-plane me-1"></i>Submit Project
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quiz Assessment -->
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-question-circle fa-3x text-warning mb-3"></i>
+                                    <h5 class="card-title">Take Quiz</h5>
+                                    <p class="card-text">Test your knowledge with interactive quizzes related to this
+                                        lesson.</p>
+                                    <button type="button" class="btn btn-warning" onclick="showQuizModal()">
+                                        <i class="fas fa-play me-1"></i>Start Quiz
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    <script src="navbar.js"></script>
+    <script src="script.js"></script>
+    <script src="quiz-popup.js"></script>
+    <script src="exercise-submission.js"></script>
+    <script>
+        let lessonsData = null;
+        let currentLesson = null;
+
+        // Convert YouTube URL to embed format
+        function getYouTubeEmbedUrl(url) {
+            if (!url) return '';
+
+            // Handle different YouTube URL formats
+            let videoId = '';
+            if (url.includes('youtu.be/')) {
+                videoId = url.split('youtu.be/')[1].split('?')[0];
+            } else if (url.includes('youtube.com/watch?v=')) {
+                videoId = url.split('v=')[1].split('&')[0];
+            } else if (url.includes('youtube.com/embed/')) {
+                return url; // Already an embed URL
+            }
+
+            if (videoId) {
+                return `https://www.youtube.com/embed/${videoId}`;
+            }
+
+            return url; // Return original if can't parse
+        }
+
+        function initUserInsertedVideoPanel(lessonId) {
+            const key = 'ggt_lesson_user_video_' + lessonId;
+            const input = document.getElementById('userInsertedVideoUrl');
+            const saveBtn = document.getElementById('userInsertedVideoSaveBtn');
+            const clearBtn = document.getElementById('userInsertedVideoClearBtn');
+            const host = document.getElementById('userInsertedVideoEmbedHost');
+            if (!input || !saveBtn || !host) return;
+
+            function showEmbed(url, silent) {
+                const trimmed = (url || '').trim();
+                if (!trimmed) return false;
+                const embed = getYouTubeEmbedUrl(trimmed);
+                const isYt = /youtube\.com|youtu\.be/i.test(trimmed);
+                const ok = isYt && embed.indexOf('https://www.youtube.com/embed/') === 0;
+                if (!ok) {
+                    if (!silent && typeof showAlert === 'function') {
+                        showAlert('Please paste a valid YouTube watch or youtu.be URL.', 'warning');
+                    }
+                    return false;
+                }
+                host.innerHTML = '<div class="ratio ratio-16x9 rounded overflow-hidden shadow-sm"><iframe src="' + embed + '" title="Your embedded video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+                if (clearBtn) clearBtn.style.display = '';
+                return true;
+            }
+
+            const saved = localStorage.getItem(key);
+            if (saved) {
+                input.value = saved;
+                showEmbed(saved, true);
+            }
+
+            saveBtn.addEventListener('click', function () {
+                const url = input.value.trim();
+                if (!url) {
+                    if (typeof showAlert === 'function') showAlert('Paste a YouTube URL first.', 'info');
+                    return;
+                }
+                if (showEmbed(url, false)) {
+                    try {
+                        localStorage.setItem(key, url);
+                    } catch (e) {
+                        console.warn('Could not save video URL', e);
+                    }
+                }
+            });
+            if (clearBtn) {
+                clearBtn.addEventListener('click', function () {
+                    try {
+                        localStorage.removeItem(key);
+                    } catch (e) { /* ignore */ }
+                    input.value = '';
+                    host.innerHTML = '';
+                    clearBtn.style.display = 'none';
+                });
+            }
+        }
+
+        // Load lessons data
+        async function loadLessonsData() {
+            try {
+                const response = await fetch('lessons.json');
+                lessonsData = await response.json();
+                return lessonsData;
+            } catch (error) {
+                console.error('Error loading lessons data:', error);
+                return null;
+            }
+        }
+
+        // Get lesson from URL parameter
+        function getLessonFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('lesson') || 'lesson1';
+        }
+
+        // Find lesson by ID
+        function findLessonById(lessonId) {
+            if (!lessonsData) return null;
+            return lessonsData.lessons.find(lesson => lesson.id === lessonId);
+        }
+
+        // Render lesson content
+        function renderLesson(lesson) {
+            if (!lesson) {
+                document.getElementById('lessonContent').innerHTML = '<div class="alert alert-danger">Lesson not found!</div>';
+                return;
+            }
+
+            // Update page title
+            const pageTitle = document.getElementById('pageTitle');
+            const lessonTitle = document.getElementById('lessonTitle');
+            const lessonSubtitle = document.getElementById('lessonSubtitle');
+            const lessonStatus = document.getElementById('lessonStatus');
+            const statusBadge = document.getElementById('lessonStatusBadge');
+
+            if (pageTitle) pageTitle.textContent = `${lesson.title} - Educational Hub`;
+            if (lessonTitle) lessonTitle.textContent = lesson.title;
+            if (lessonSubtitle) lessonSubtitle.textContent = lesson.subtitle;
+            if (lessonStatus) lessonStatus.textContent = lesson.statusText;
+
+            // Update status badge
+            if (statusBadge) {
+                statusBadge.textContent = lesson.statusText;
+                statusBadge.className = `badge ${getStatusBadgeClass(lesson.status)}`;
+            }
+
+            // Render lesson content
+            renderLessonContent(lesson);
+            renderLessonActions(lesson);
+        }
+
+        // Get status badge class based on status
+        function getStatusBadgeClass(status) {
+            switch (status) {
+                case 'completed': return 'bg-success';
+                case 'in-progress': return 'bg-warning';
+                default: return 'bg-secondary';
+            }
+        }
+
+        // Render lesson content sections
+        function renderLessonContent(lesson) {
+            const contentContainer = document.getElementById('lessonContent');
+            let contentHTML = '';
+
+            // Learning Objectives
+            contentHTML += `
+                <div class="card shadow-soft mb-4">
+                    <div class="card-body">
+                        <h3 class="card-title mb-4">
+                            <i class="fas fa-lightbulb text-${getStatusColor(lesson.status)} me-2"></i>Learning Objectives
+                        </h3>
+                        <ul class="list-unstyled">
+                            ${lesson.objectives.map(obj => `
+                                <li class="mb-2">
+                                    <i class="fas fa-${lesson.status === 'completed' ? 'check' : 'clock'} text-${lesson.status === 'completed' ? 'success' : 'muted'} me-2"></i>
+                                    ${obj}
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `;
+
+            // Render sections
+            lesson.sections.forEach(section => {
+                contentHTML += renderSection(section);
+            });
+
+            contentContainer.innerHTML = contentHTML;
+
+            if (lesson.sections.some(function (s) { return s.type === 'user-video'; })) {
+                initUserInsertedVideoPanel(lesson.id);
+            }
+        }
+
+        // Render individual section
+        function renderSection(section) {
+            switch (section.type) {
+                case 'text':
+                    return `
+                        <div class="card shadow-soft mb-4">
+                            <div class="card-body">
+                                <h4 class="mb-3">${section.title}</h4>
+                                <div style="white-space: pre-line;">${section.content}</div>
+                            </div>
+                        </div>
+                    `;
+
+                case 'user-video':
+                    return `
+                        <div class="card shadow-soft mb-4">
+                            <div class="card-body">
+                                <h4 class="mb-3">${section.title}</h4>
+                                <p class="text-muted mb-3">${section.content || ''}</p>
+                                <div class="input-group mb-2">
+                                    <input type="url" class="form-control" id="userInsertedVideoUrl" placeholder="https://www.youtube.com/watch?v=... or https://youtu.be/..." autocomplete="off">
+                                    <button type="button" class="btn btn-primary" id="userInsertedVideoSaveBtn">Save &amp; embed</button>
+                                </div>
+                                <button type="button" class="btn btn-link btn-sm text-secondary p-0 mb-2" id="userInsertedVideoClearBtn" style="display:none;">Remove saved video</button>
+                                <div id="userInsertedVideoEmbedHost" class="mt-3"></div>
+                            </div>
+                        </div>
+                    `;
+
+                case 'technologies':
+                    return `
+                        <div class="card shadow-soft mb-4">
+                            <div class="card-body">
+                                <h4 class="mb-3">${section.title}</h4>
+                                <div class="row mt-4">
+                                    ${section.content.map((tech, index) => `
+                                        <div class="col-md-4 mb-3">
+                                            <div class="prompt-card text-center p-3 border rounded position-relative">
+                                                ${tech.copyToClipboard ? `
+                                                    <button class="btn btn-sm btn-primary copy-btn-prompt" onclick="copyPromptToClipboard('prompt-${index}', this)" title="Copy prompt" style="position: absolute !important; top: 5px !important; right: 5px !important; z-index: 1000 !important; background-color: #0d6efd !important; color: white !important; border: none !important; box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important; padding: 4px 8px !important; min-width: 60px !important;">
+                                                        <i class="fas fa-copy"></i> Copy
+                                                    </button>
+                                                ` : ''}
+                                                <i class="${tech.icon} fa-2x ${tech.color} mb-2"></i>
+                                                <h6>${tech.name}</h6>
+                                                <p class="small text-muted ${tech.copyToClipboard ? 'prompt-preview' : ''}" id="prompt-${index}" data-full-text="${(tech.promptText || tech.description).replace(/"/g, '&quot;').replace(/\n/g, '&#10;')}">${tech.description}</p>
+                                                ${tech.link ? `
+                                                    <a href="${tech.link}" target="_blank" class="btn btn-outline-primary btn-sm mt-2">
+                                                        <i class="fas fa-external-link-alt me-1"></i>Visit Website
+                                                    </a>
+                                                ` : ''}
+                                                ${tech.downloadLink ? `
+                                                    <a href="${tech.downloadLink}" target="_blank" class="btn btn-outline-primary btn-sm mt-2">
+                                                        <i class="fas fa-download me-1"></i>Download
+                                                    </a>
+                                                ` : ''}
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                case 'projects':
+                    return `
+                        <div class="card shadow-soft mb-4">
+                            <div class="card-body">
+                                <h4 class="mb-3">${section.title}</h4>
+                                <p>This lesson focuses on applying your knowledge to real-world scenarios.</p>
+                                <div class="row mt-4">
+                                    ${section.content.map(project => `
+                                        <div class="col-md-6 mb-3">
+                                            <div class="card h-100">
+                                                <div class="card-body">
+                                                    <h6><i class="${project.icon} ${project.color} me-2"></i>${project.name}</h6>
+                                                    <p class="small text-muted">${project.description}</p>
+                                                    ${project.link ? `
+                                                        <a href="${project.link}" target="_blank" class="btn btn-outline-primary btn-sm mt-2">
+                                                            <i class="fas fa-external-link-alt me-1"></i>Visit Tool
+                                                        </a>
+                                                    ` : ''}
+                                                    ${project.progress !== undefined ? `
+                                                        <div class="progress mt-2" style="height: 4px;">
+                                                            <div class="progress-bar ${project.color.replace('text-', 'bg-')}" style="width: ${project.progress}%"></div>
+                                                        </div>
+                                                    ` : ''}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                case 'accordion':
+                    return `
+                        <div class="card shadow-soft mb-4">
+                            <div class="card-body">
+                                <h4 class="mb-3">${section.title}</h4>
+                                <div class="accordion" id="lessonAccordion">
+                                    ${section.content.map((item, index) => `
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header">
+                                                <button class="accordion-button ${index === 0 ? '' : 'collapsed'}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${index}">
+                                                    ${item.title}
+                                                </button>
+                                            </h2>
+                                            <div id="collapse${index}" class="accordion-collapse collapse ${index === 0 ? 'show' : ''}" data-bs-parent="#lessonAccordion">
+                                                <div class="accordion-body">
+                                                    ${item.image ? `<img src="${item.image}" alt="${item.title}" class="img-fluid rounded mb-3" style="max-width: 100%; height: auto; ${item.imageWidth ? 'width: ' + item.imageWidth + ';' : ''}">` : ''}
+                                                    ${item.description && item.description.includes('\n') ? `
+                                                        <ul class="mb-3">
+                                                            ${item.description.split('\n').filter(line => line.trim()).map(line => `
+                                                                <li>${line.trim()}</li>
+                                                            `).join('')}
+                                                        </ul>
+                                                    ` : item.description ? `<p>${item.description}</p>` : ''}
+                                                    ${item.type === 'video' && item.link ? `
+                                                        <div class="ratio ratio-16x9 mb-3">
+                                                            <iframe src="${getYouTubeEmbedUrl(item.link)}" title="${item.title}" allowfullscreen></iframe>
+                                                        </div>
+                                                        <div class="d-flex gap-2 flex-wrap">
+                                                            <a href="${item.link}" target="_blank" class="btn btn-outline-primary btn-sm">
+                                                                <i class="fab fa-youtube me-1"></i>Watch on YouTube
+                                                            </a>
+                                                            ${item.chatHistoryLink ? `
+                                                                <a href="${item.chatHistoryLink}" target="_blank" class="btn btn-outline-primary btn-sm">
+                                                                    <i class="fas fa-project-diagram me-1"></i>Summary Map
+                                                                </a>
+                                                            ` : ''}
+                                                        </div>
+                                                    ` : item.type === 'article' && item.link ? `
+                                                        <div class="d-flex gap-2 flex-wrap">
+                                                            <a href="${item.link}" target="_blank" class="btn btn-primary btn-sm">
+                                                                <i class="fas fa-external-link-alt me-1"></i>App Sample
+                                                            </a>
+                                                            ${item.chatHistoryLink ? `
+                                                                <a href="${item.chatHistoryLink}" target="_blank" class="btn btn-outline-primary btn-sm">
+                                                                    <i class="fas fa-comments me-1"></i>Chat History
+                                                                </a>
+                                                            ` : ''}
+                                                        </div>
+                                                    ` : item.code ? `<pre><code>${item.code}</code></pre>` : ''}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                case 'best-practices':
+                    return `
+                        <div class="card shadow-soft mb-4">
+                            <div class="card-body">
+                                <h4 class="mb-3">${section.title}</h4>
+                                <div class="row">
+                                    ${section.content.map(practice => `
+                                        <div class="col-md-6">
+                                            <h6><i class="fas fa-code text-primary me-2"></i>${practice.title}</h6>
+                                            <ul class="small">
+                                                ${practice.items.map(item => `<li>${item}</li>`).join('')}
+                                            </ul>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                case 'exercise-instructions':
+                    return `
+                        <div class="card shadow-soft mb-4">
+                            <div class="card-body">
+                                <h4 class="mb-3">
+                                    <i class="fas fa-tasks text-primary me-2"></i>${section.title}
+                                </h4>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th style="width: 30%;"><i class="fas fa-tag me-2"></i>Field</th>
+                                                <th><i class="fas fa-info-circle me-2"></i>Details</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${section.content.map(item => `
+                                                <tr>
+                                                    <td class="fw-bold text-primary">${item.field}</td>
+                                                    <td>${item.value}</td>
+                                                </tr>
+                                            `).join('')}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                default:
+                    return `
+                        <div class="card shadow-soft mb-4">
+                            <div class="card-body">
+                                <h4 class="mb-3">${section.title}</h4>
+                                <p>${section.content}</p>
+                            </div>
+                        </div>
+                    `;
+            }
+        }
+
+        // Render lesson actions (exercise-only completion)
+        function renderLessonActions(lesson) {
+            const actionsCard = document.getElementById('lessonActionsCard');
+            const actionTitle = document.getElementById('actionTitle');
+            const actionDescription = document.getElementById('actionDescription');
+            const actionButtons = document.getElementById('actionButtons');
+
+            if (lesson.actions && lesson.actions.hideActionsPanel) {
+                if (actionsCard) actionsCard.style.display = 'none';
+                return;
+            }
+            if (actionsCard) actionsCard.style.display = '';
+
+            const readOnlyComplete = lesson.actions && lesson.actions.readOnlyComplete;
+            const exerciseButtonOnly = lesson.actions && lesson.actions.exerciseButtonOnly;
+
+            if (readOnlyComplete) {
+                actionTitle.style.display = '';
+                actionTitle.textContent = 'No graded task';
+                actionDescription.style.display = '';
+                actionDescription.textContent = 'When you have finished the reading, mark this lesson complete.';
+                actionDescription.style.whiteSpace = '';
+            } else if (exerciseButtonOnly) {
+                actionTitle.style.display = 'none';
+                actionTitle.textContent = '';
+                actionDescription.style.display = 'none';
+                actionDescription.textContent = '';
+            } else {
+                actionTitle.style.display = '';
+                actionTitle.textContent = 'Submit Exercise to Complete';
+                actionDescription.style.display = '';
+                const defaultDesc = 'Complete this lesson by submitting your exercise.';
+                if (lesson.actions && lesson.actions.submissionHelp) {
+                    actionDescription.textContent = defaultDesc + '\n\n' + lesson.actions.submissionHelp;
+                    actionDescription.style.whiteSpace = 'pre-line';
+                } else {
+                    actionDescription.textContent = defaultDesc;
+                    actionDescription.style.whiteSpace = '';
+                }
+            }
+
+            // Render action buttons
+            let buttonsHTML = '';
+
+            if (readOnlyComplete) {
+                if (lesson.actions.primary) {
+                    buttonsHTML += `
+                        <button type="button" class="btn btn-success" onclick="${lesson.actions.primary.onclick}">
+                            <i class="fas fa-check me-2"></i>${lesson.actions.primary.text}
+                        </button>
+                    `;
+                }
+                if (lesson.actions.next) {
+                    buttonsHTML += `
+                        <a class="btn btn-outline-primary" href="${lesson.actions.next.href}">
+                            <i class="fas fa-arrow-right me-2"></i>${lesson.actions.next.text}
+                        </a>
+                    `;
+                }
+            } else if (lesson.actions && lesson.actions.exercise) {
+                buttonsHTML += `
+                    <button class="btn btn-outline-info" onclick="${lesson.actions.exercise.onclick}">
+                        <i class="fas fa-paper-plane me-2"></i>${lesson.actions.exercise.text}
+                    </button>
+                `;
+            }
+
+            actionButtons.innerHTML = buttonsHTML;
+        }
+
+        // Get status color
+        function getStatusColor(status) {
+            switch (status) {
+                case 'completed': return 'success';
+                case 'in-progress': return 'warning';
+                default: return 'muted';
+            }
+        }
+
+        // Initialize lesson
+        async function initLesson() {
+            const lessonId = getLessonFromURL();
+            const data = await loadLessonsData();
+
+            if (data) {
+                const lesson = findLessonById(lessonId);
+                currentLesson = lesson;
+
+                // Get user's actual lesson status and submissions
+                const userStatus = await getUserLessonStatus(lessonId);
+                const hasSubmissions = await checkUserSubmissions(lessonId);
+                const readOnlyComplete = lesson.actions && lesson.actions.readOnlyComplete;
+                const treatAsDone = readOnlyComplete
+                    ? (userStatus === 'completed')
+                    : (userStatus === 'completed' && hasSubmissions);
+
+                // Update lesson status based on actual user progress
+                lesson.status = treatAsDone ? 'completed' : 'not-started';
+                lesson.statusText = lesson.status === 'completed' ? 'Completed' : 'Not Started';
+
+                renderLesson(lesson);
+            } else {
+                document.getElementById('lessonContent').innerHTML = '<div class="alert alert-danger">Error loading lesson data!</div>';
+            }
+        }
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDd77LjKa3wuaumWHtYhN_3tsVpD99juK0",
+            authDomain: "ggt-2025.firebaseapp.com",
+            projectId: "ggt-2025",
+            storageBucket: "ggt-2025.firebasestorage.app",
+            messagingSenderId: "822726025795",
+            appId: "1:822726025795:web:4e059a32a26e5bc336eaf6",
+            measurementId: "G-72DQBYXSVN"
+        };
+
+        // Initialize Firebase
+        let db = null;
+        let auth = null;
+
+        // Initialize Firebase (always real, even on localhost)
+        function initializeFirebase() {
+            if (typeof firebase === 'undefined') return;
+            if (!firebase.apps || !firebase.apps.length) {
+                try { firebase.initializeApp(firebaseConfig); } catch (e) { /* ignore if already initialized */ }
+            }
+            db = firebase.firestore();
+            auth = firebase.auth();
+        }
+
+        // Get current user ID from Netlify Identity or Firebase Auth
+        function getCurrentUserId() {
+            // Check Netlify Identity first
+            if (window.netlifyIdentity && window.netlifyIdentity.currentUser()) {
+                return window.netlifyIdentity.currentUser().id;
+            }
+
+            // Check Firebase Auth
+            if (auth && auth.currentUser) {
+                return auth.currentUser.uid;
+            }
+
+            // Fallback for unauthenticated users
+            return 'anonymous-user';
+        }
+
+        // Get current user email
+        function getCurrentUserEmail() {
+            // Check Netlify Identity first
+            if (window.netlifyIdentity && window.netlifyIdentity.currentUser()) {
+                return window.netlifyIdentity.currentUser().email;
+            }
+
+            // Check Firebase Auth
+            if (auth && auth.currentUser) {
+                return auth.currentUser.email;
+            }
+
+            // Fallback for unauthenticated users
+            return 'student@gmail.com';
+        }
+
+        // Save student progress to Firebase
+        async function saveStudentProgress(lessonId, action, data = {}) {
+            try {
+                const userId = getCurrentUserId();
+                const userEmail = getCurrentUserEmail();
+                const progressData = {
+                    lessonId: lessonId,
+                    action: action,
+                    data: data,
+                    timestamp: new Date().toISOString(),
+                    userId: userId,
+                    userEmail: userEmail
+                };
+
+                // Save to Firebase
+                await db.collection('studentProgress').add(progressData);
+
+                // Also update lesson status
+                await updateLessonStatus(userId, userEmail, lessonId, action);
+
+                console.log('Progress saved:', progressData);
+            } catch (error) {
+                console.error('Error saving progress:', error);
+            }
+        }
+
+        // Update lesson status for user
+        async function updateLessonStatus(userId, userEmail, lessonId, action) {
+            try {
+                const userProgressRef = db.collection('userProgress').doc(userId);
+                const doc = await userProgressRef.get();
+
+                if (doc.exists) {
+                    const userData = doc.data();
+                    if (!userData.lessons) {
+                        userData.lessons = {};
+                    }
+
+                    if (action === 'lesson_completed') {
+                        userData.lessons[lessonId] = {
+                            status: 'completed',
+                            completedAt: new Date().toISOString()
+                        };
+                    } else if (action === 'lesson_started') {
+                        userData.lessons[lessonId] = {
+                            status: 'in-progress',
+                            startedAt: new Date().toISOString()
+                        };
+                    }
+
+                    userData.lastUpdated = new Date().toISOString();
+                    await userProgressRef.update(userData);
+                } else {
+                    const newUserData = {
+                        userId: userId,
+                        email: userEmail,
+                        lessons: {
+                            [lessonId]: {
+                                status: action === 'lesson_completed' ? 'completed' : 'in-progress',
+                                [action === 'lesson_completed' ? 'completedAt' : 'startedAt']: new Date().toISOString()
+                            }
+                        },
+                        createdAt: new Date().toISOString(),
+                        lastUpdated: new Date().toISOString()
+                    };
+                    await userProgressRef.set(newUserData);
+                }
+            } catch (error) {
+                console.error('Error updating lesson status:', error);
+            }
+        }
+
+        // Get user's lesson status
+        async function getUserLessonStatus(lessonId) {
+            try {
+                const userId = getCurrentUserId();
+                const userProgressRef = db.collection('userProgress').doc(userId);
+                const doc = await userProgressRef.get();
+
+                if (doc.exists) {
+                    const userData = doc.data();
+                    return userData.lessons && userData.lessons[lessonId] ? userData.lessons[lessonId].status : 'not-started';
+                }
+                return 'not-started';
+            } catch (error) {
+                console.error('Error getting lesson status:', error);
+                return 'not-started';
+            }
+        }
+
+        // Check if user has submissions for a lesson
+        async function checkUserSubmissions(lessonId) {
+            try {
+                const userId = getCurrentUserId();
+                const submissionsRef = db.collection('exerciseSubmissions')
+                    .where('userId', '==', userId)
+                    .where('lessonId', '==', lessonId);
+
+                const snapshot = await submissionsRef.get();
+                return !snapshot.empty;
+            } catch (error) {
+                console.error('Error checking submissions:', error);
+                return false;
+            }
+        }
+
+        // Restart lesson function
+        function restartLesson(lessonId) {
+            saveStudentProgress(lessonId, 'lesson_restarted');
+            showAlert('Lesson restarted! You can now start fresh.', 'info');
+            // Reload the page to reset the lesson
+            window.location.reload();
+        }
+
+        // Override the markLessonComplete function to save to Firebase
+        function markLessonComplete(lessonId) {
+            requireAuth(() => {
+                saveStudentProgress(lessonId, 'lesson_completed');
+                updateStudentProgress('lesson_completed', { lessonId: lessonId });
+                showAlert('Lesson marked as complete!', 'success');
+            });
+        }
+
+        // Check Firebase connectivity (read-only)
+        async function checkFirebaseConnectivity() {
+            try {
+                if (typeof firebase === 'undefined') {
+                    console.warn('Firebase SDK not loaded');
+                    if (typeof showAlert === 'function') showAlert('Firebase SDK not loaded', 'warning');
+                    return false;
+                }
+                if (!firebase.apps || !firebase.apps.length) {
+                    console.warn('Firebase app not initialized');
+                    if (typeof showAlert === 'function') showAlert('Firebase app not initialized', 'warning');
+                    return false;
+                }
+                if (db && typeof db.collection === 'function') {
+                    // Fallback for local development
+                    if (typeof db.collection('diagnostics').limit === 'function') {
+                        await db.collection('diagnostics').limit(1).get();
+                    } else {
+                        await db.collection('diagnostics').get?.();
+                    }
+                    console.log('Firebase Firestore connectivity: OK');
+                    if (typeof showAlert === 'function') showAlert('Connected to Firebase', 'success');
+                    return true;
+                } else {
+                    console.log('Firebase app initialized (no Firestore check)');
+                    if (typeof showAlert === 'function') showAlert('Firebase app initialized', 'info');
+                    return true;
+                }
+            } catch (err) {
+                console.error('Firebase connectivity check failed:', err);
+                if (typeof showAlert === 'function') showAlert('Firebase connection failed. See console.', 'danger');
+                return false;
+            }
+        }
+
+        // Check authentication before allowing access to lesson
+        let modalShown = false; // Track if modal has been shown to prevent multiple displays
+        function checkAuthentication() {
+            // Store the current lesson URL for redirect after login
+            const currentLesson = getLessonFromURL();
+            if (currentLesson) {
+                // Store the lesson ID in sessionStorage for redirect after login
+                sessionStorage.setItem('redirectAfterLogin', `lesson.html?lesson=${currentLesson}`);
+            }
+
+            // Wait for Firebase to initialize and check auth state
+            if (typeof firebase === 'undefined') {
+                // Firebase not loaded yet, wait and retry
+                setTimeout(checkAuthentication, 100);
+                return;
+            }
+
+            if (!firebase.apps || !firebase.apps.length) {
+                // Firebase not initialized yet, wait and retry
+                setTimeout(checkAuthentication, 100);
+                return;
+            }
+
+            const auth = firebase.auth();
+            auth.onAuthStateChanged(user => {
+                if (!user) {
+                    // User not authenticated, show login modal (only once)
+                    if (!modalShown) {
+                        modalShown = true;
+                        const loginModalElement = document.getElementById('loginRequiredModal');
+                        if (loginModalElement) {
+                            // Wait for Bootstrap to be available
+                            if (typeof bootstrap !== 'undefined') {
+                                const loginModal = new bootstrap.Modal(loginModalElement);
+                                loginModal.show();
+                            } else {
+                                // Fallback if Bootstrap not loaded yet
+                                setTimeout(() => {
+                                    if (typeof bootstrap !== 'undefined') {
+                                        const loginModal = new bootstrap.Modal(loginModalElement);
+                                        loginModal.show();
+                                    }
+                                }, 100);
+                            }
+                        }
+                    }
+
+                    // Wire up the login button (only once)
+                    const modalLoginBtn = document.getElementById('modalLoginBtn');
+                    if (modalLoginBtn && !modalLoginBtn.hasAttribute('data-wired')) {
+                        modalLoginBtn.setAttribute('data-wired', 'true');
+                        modalLoginBtn.onclick = async function () {
+                            try {
+                                const provider = new firebase.auth.GoogleAuthProvider();
+                                provider.setCustomParameters({ prompt: 'select_account' });
+
+                                // Show loading state
+                                modalLoginBtn.disabled = true;
+                                modalLoginBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Signing in...';
+
+                                await firebase.auth().signInWithPopup(provider);
+                                // Modal will close automatically when auth state changes
+                            } catch (error) {
+                                console.error('Login error:', error);
+                                modalLoginBtn.disabled = false;
+                                modalLoginBtn.innerHTML = '<i class="fab fa-google me-2"></i>Sign in with Google';
+
+                                // Handle popup blocked - fallback to redirect
+                                if (error.code === 'auth/popup-blocked' || error.code === 'auth/popup-closed-by-user') {
+                                    try {
+                                        await firebase.auth().signInWithRedirect(provider);
+                                        return;
+                                    } catch (redirectError) {
+                                        console.error('Redirect login error:', redirectError);
+                                    }
+                                }
+
+                                if (typeof showAlert === 'function') {
+                                    showAlert('Login failed. Please try again.', 'danger');
+                                } else {
+                                    alert('Login failed. Please try again.');
+                                }
+                            }
+                        };
+                    }
+                    return;
+                }
+
+                // User is authenticated, close modal if open and proceed with lesson initialization
+                modalShown = false; // Reset flag for next time
+                const loginModalElement = document.getElementById('loginRequiredModal');
+                if (loginModalElement) {
+                    if (typeof bootstrap !== 'undefined') {
+                        const loginModal = bootstrap.Modal.getInstance(loginModalElement);
+                        if (loginModal) {
+                            loginModal.hide();
+                        }
+                    }
+                }
+
+                initializeFirebase();
+                initLesson();
+                setTimeout(checkFirebaseConnectivity, 300);
+            });
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            checkAuthentication();
+            initializeAIToolsNavigation();
+            initializeMilestoneNavigation();
+        });
+
+        // Initialize AI Tools navigation with lesson parameter
+        function initializeAIToolsNavigation() {
+            const aiToolsBtn = document.getElementById('aiToolsBtn');
+            const aiToolsChevron = document.getElementById('aiToolsChevron');
+
+            if (aiToolsBtn && aiToolsChevron) {
+                // Handle chevron rotation on collapse toggle
+                aiToolsBtn.addEventListener('click', function () {
+                    setTimeout(() => {
+                        const isExpanded = aiToolsBtn.getAttribute('aria-expanded') === 'true';
+                        if (isExpanded) {
+                            aiToolsChevron.classList.remove('fa-chevron-down');
+                            aiToolsChevron.classList.add('fa-chevron-up');
+                        } else {
+                            aiToolsChevron.classList.remove('fa-chevron-up');
+                            aiToolsChevron.classList.add('fa-chevron-down');
+                        }
+                    }, 100);
+                });
+            }
+        }
+
+        // Initialize Milestone Projects navigation
+        function initializeMilestoneNavigation() {
+            const milestoneBtn = document.getElementById('milestoneBtn');
+            const milestoneChevron = document.getElementById('milestoneChevron');
+
+            if (milestoneBtn && milestoneChevron) {
+                // Handle chevron rotation on collapse toggle
+                milestoneBtn.addEventListener('click', function () {
+                    setTimeout(() => {
+                        const isExpanded = milestoneBtn.getAttribute('aria-expanded') === 'true';
+                        if (isExpanded) {
+                            milestoneChevron.classList.remove('fa-chevron-down');
+                            milestoneChevron.classList.add('fa-chevron-up');
+                        } else {
+                            milestoneChevron.classList.remove('fa-chevron-up');
+                            milestoneChevron.classList.add('fa-chevron-down');
+                        }
+                    }, 100);
+                });
+            }
+        }
+
+        // Modal functions for milestone projects
+        function showProjectSubmissionModal() {
+            // Use existing exercise submission functionality
+            const currentLesson = getLessonFromURL();
+            if (currentLesson) {
+                // Trigger the existing exercise submission modal
+                const submitBtn = document.querySelector('button[onclick*="submitExercise"]');
+                if (submitBtn) {
+                    submitBtn.click();
+                }
+            }
+        }
+
+        function showQuizModal() {
+            // Show quiz modal (you can implement this based on your quiz system)
+            alert('Quiz functionality will be implemented here. This will open the lesson quiz.');
+        }
+
+        function showSubmissionsModal() {
+            // Show submissions modal (you can implement this based on your submission system)
+            alert('View submissions functionality will be implemented here. This will show your submitted projects.');
+        }
+
+        // Copy prompt to clipboard
+        function copyPromptToClipboard(promptId, button) {
+            const promptElement = document.getElementById(promptId);
+            let textToCopy = promptElement.getAttribute('data-full-text') || promptElement.textContent;
+            // Decode HTML entities (including &#10; for newlines)
+            const textarea = document.createElement('textarea');
+            textarea.innerHTML = textToCopy;
+            textToCopy = textarea.value;
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                // Visual feedback
+                const originalHTML = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check"></i>';
+                button.classList.remove('btn-outline-primary');
+                button.classList.add('btn-success');
+
+                setTimeout(() => {
+                    button.innerHTML = originalHTML;
+                    button.classList.remove('btn-success');
+                    button.classList.add('btn-outline-primary');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+                alert('Failed to copy prompt to clipboard. Please try again.');
+            });
+        }
+    </script>
+
+    <!-- Login Required Modal -->
+    <div class="modal fade" id="loginRequiredModal" tabindex="-1" aria-labelledby="loginRequiredModalLabel"
+        aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="loginRequiredModalLabel">
+                        <i class="fas fa-lock me-2"></i>Login Required
+                    </h5>
+                </div>
+                <div class="modal-body text-center">
+                    <i class="fas fa-user-lock fa-4x text-primary mb-3"></i>
+                    <h4 class="mb-3">Please Login to Access Lessons</h4>
+                    <p class="text-muted mb-4">You need to be logged in to view lesson content. Please sign in with your
+                        Google account to continue.</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-primary btn-lg" id="modalLoginBtn">
+                        <i class="fab fa-google me-2"></i>Sign in with Google
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,70 @@
+[build]
+  publish = "."
+  command = "echo 'No build command needed for static site'"
+
+[functions]
+  directory = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+# Redirect rules for SPA behavior
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Headers for security and performance
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.googleapis.com https://apis.google.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; script-src-elem 'self' 'unsafe-inline' https://www.gstatic.com https://www.googleapis.com https://apis.google.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; img-src 'self' data: blob: https: https://firebasestorage.googleapis.com https://storage.googleapis.com https://*.googleusercontent.com; connect-src 'self' https://www.googleapis.com https://firestore.googleapis.com https://www.gstatic.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com https://firebasestorage.googleapis.com https://storage.googleapis.com https://cdn.jsdelivr.net https://*.youtube.com https://*.googlevideo.com https://api.deepseek.com; frame-src 'self' https://accounts.google.com https://*.googleusercontent.com https://ggt-2025.firebaseapp.com https://*.youtube.com https://*.youtube-nocookie.com https://ggt-ai-2025.netlify.app; child-src 'self' https://*.youtube.com https://*.youtube-nocookie.com; font-src 'self' https://fonts.gstatic.com data:;"
+
+# Allow ai_animation.html to be framed
+[[headers]]
+  for = "/ai_animation.html"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+
+# Cache static assets
+[[headers]]
+  for = "/styles.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "/script.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+# Netlify Identity configuration
+[context.production.environment]
+  NETLIFY_IDENTITY_URL = "https://identity.netlify.com"
+
+# Form handling (if needed for contact forms)
+[build.processing]
+  skip_processing = false
+
+[build.processing.css]
+  bundle = true
+  minify = true
+
+[build.processing.js]
+  bundle = true
+  minify = true
+
+[build.processing.html]
+  pretty_urls = true
